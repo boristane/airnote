@@ -1,3 +1,4 @@
+import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,7 @@ class AirnoteTextInputField extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hint,
                   hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.grey.shade300),
+                      fontWeight: FontWeight.bold, color: AirnoteColors.lightGrey),
                   suffixIcon: suffix,
                 ),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

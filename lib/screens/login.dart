@@ -2,6 +2,7 @@ import 'package:airnote/components/app-bar.dart';
 import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/text-input-field.dart';
 import 'package:airnote/screens/signup.dart';
+import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -58,10 +59,10 @@ class _LoginState extends State<Login> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text("New here? ", style: TextStyle(color: Colors.black)),
+                            Text("New here? ", style: TextStyle(color: AirnoteColors.grey)),
                             GestureDetector(
                               onTap: _handleSignupTap,
-                              child: Text("Sign Up", style: TextStyle(color: Color(0xFF3C4858)),),
+                              child: Text("Sign Up", style: TextStyle(color: AirnoteColors.primary),),
                             )
                           ],
                         ),

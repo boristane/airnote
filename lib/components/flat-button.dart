@@ -1,3 +1,4 @@
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteFlatButton extends Container {
@@ -19,10 +20,10 @@ class AirnoteFlatButton extends Container {
           text,
           style: TextStyle(fontSize: 18.0),
         ),
-        color: Colors.white,
+        color: AirnoteColors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
-            side: BorderSide(color: Color(0xFFC4C4C4), width: 1.2)),
+            side: BorderSide(color: AirnoteColors.inactive, width: 1.2)),
       ),
     );
   }

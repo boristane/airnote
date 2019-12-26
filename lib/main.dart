@@ -2,6 +2,7 @@ import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/screens/intro.dart';
 import 'package:airnote/screens/login.dart';
 import 'package:airnote/screens/signup.dart';
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: AirnoteColors.swatch,
       ),
       home: Airnote(),
     );
@@ -27,17 +28,17 @@ class Airnote extends StatelessWidget {
       title: "Airnote",
       theme: ThemeData(
         inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(color: Color(0xFFC4C4C4), fontSize: 20.0),
+          hintStyle: TextStyle(color: AirnoteColors.inactive, fontSize: 20.0),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF3C4858), width: 2.0),
+            borderSide: BorderSide(color: AirnoteColors.primary, width: 2.0),
           ),
           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black45, width: 2.0))
         ),
-        primaryColor: Color(0xFF3C4858),
-        primaryIconTheme: IconThemeData(color: Color(0xFF3C4858)),
+        primaryColor: AirnoteColors.primary,
+        primaryIconTheme: IconThemeData(color: AirnoteColors.primary),
         textTheme: TextTheme(
-          title: TextStyle(color: Color(0xFF414A53)),
-          subhead: TextStyle(color: Color(0xFF686B6F)),
+          title: TextStyle(color: AirnoteColors.text),
+          subhead: TextStyle(color: AirnoteColors.grey),
         )
       ),
       builder: (context, widget) => Navigator(

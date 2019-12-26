@@ -1,3 +1,4 @@
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteDotIndicator extends StatelessWidget {
@@ -13,12 +14,12 @@ class AirnoteDotIndicator extends StatelessWidget {
         boxShadow: active
             ? [
                 BoxShadow(
-                    color: Colors.black.withOpacity(.6),
+                    color: AirnoteColors.primary.withOpacity(.4),
                     offset: Offset(1, 1),
                     blurRadius: 3)
               ]
             : null,
-        color: active ? Color(0xFF3C4858) : Color(0xFFC4C4C4),
+        color: active ? AirnoteColors.primary : AirnoteColors.inactive,
       ),
     );
   }

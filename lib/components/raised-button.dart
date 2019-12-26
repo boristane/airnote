@@ -1,3 +1,4 @@
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteRaisedButton extends Container {
@@ -16,7 +17,7 @@ class AirnoteRaisedButton extends Container {
         borderRadius: BorderRadius.circular(30.0),
         boxShadow: [
           BoxShadow(
-              color: Color(0xFF3C4858).withOpacity(.4),
+              color: AirnoteColors.primary.withOpacity(.4),
               offset: Offset(10.0, 10.0),
               blurRadius: 10.0),
         ],
@@ -27,9 +28,9 @@ class AirnoteRaisedButton extends Container {
         },
         child: Text(
           text,
-          style: TextStyle(color: Colors.white, fontSize: 18.0),
+          style: TextStyle(color: AirnoteColors.white, fontSize: 18.0),
         ),
-        color: Color(0xFF3C4858),
+        color: AirnoteColors.primary,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       ),

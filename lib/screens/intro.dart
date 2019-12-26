@@ -4,15 +4,18 @@ import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/data/slide.dart';
 import 'package:airnote/screens/login.dart';
 import 'package:airnote/screens/signup.dart';
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AirnoteRaisedButton _signupButton =
-        AirnoteRaisedButton(text: "Signup", onPressed: () => Navigator.of(context).pushNamed(Signup.routeName));
-    final AirnoteFlatButton _loginButton =
-        AirnoteFlatButton(text: "Login", onPressed: () => Navigator.of(context).pushNamed(Login.routeName));
+    final AirnoteRaisedButton _signupButton = AirnoteRaisedButton(
+        text: "Signup",
+        onPressed: () => Navigator.of(context).pushNamed(Signup.routeName));
+    final AirnoteFlatButton _loginButton = AirnoteFlatButton(
+        text: "Login",
+        onPressed: () => Navigator.of(context).pushNamed(Login.routeName));
 
     return Scaffold(
       body: SafeArea(
@@ -107,7 +110,7 @@ class IntroSlideCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
-                  color: Color(0xFF3C4858).withOpacity(.4),
+                  color: AirnoteColors.primary.withOpacity(.4),
                   offset: Offset(6.0, 10.0),
                   blurRadius: 20.0),
             ],
@@ -126,12 +129,12 @@ class IntroSlideCard extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
-                color: Colors.blueGrey.withOpacity(0.8),
+                color: AirnoteColors.primary.withOpacity(0.8),
               ),
               child: Text(
                 _currentSlide.title,
                 style: TextStyle(
-                    color: Colors.white,
+                    color: AirnoteColors.white,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold),
               ),

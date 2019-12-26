@@ -1,3 +1,4 @@
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteHeaderText extends StatelessWidget {
@@ -12,7 +13,7 @@ class AirnoteHeaderText extends StatelessWidget {
       style: TextStyle(
           fontSize: 30,
           fontWeight: FontWeight.bold,
-          color: Colors.grey.shade700,
+          color: AirnoteColors.grey,
           letterSpacing: 1.0,
           fontFamily: "Raleway"),
     );
