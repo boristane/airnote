@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class AirnoteRaisedButton extends Container {
   final String text;
   final Function onPressed;
-  AirnoteRaisedButton({Key key, this.text, this.onPressed}) : super(key: key);
+  final Icon icon;
+  AirnoteRaisedButton({Key key, this.text, this.onPressed, this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

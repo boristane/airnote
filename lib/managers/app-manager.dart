@@ -6,7 +6,7 @@ class AppManager extends StatefulWidget {
   const AppManager({Key key, this.child}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AppManagerState();
+  State<AppManager> createState() => _AppManagerState();
 }
 
 class _AppManagerState extends State<AppManager> {
