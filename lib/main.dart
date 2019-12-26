@@ -1,5 +1,4 @@
 import 'package:airnote/managers/app-manager.dart';
-import 'package:airnote/screens/home.dart';
 import 'package:airnote/screens/intro.dart';
 import 'package:flutter/material.dart';
 

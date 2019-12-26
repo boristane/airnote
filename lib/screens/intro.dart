@@ -32,7 +32,7 @@ class Intro extends StatelessWidget {
 }
 
 class IntroSlide extends StatefulWidget {
-  List _data;
+  final List _data;
 
   IntroSlide(this._data);
   @override
@@ -84,8 +84,8 @@ class _IntroSlideState extends State<IntroSlide> {
 }
 
 class IntroSlideCard extends StatelessWidget {
-  double _height;
-  SlideInfo _currentSlide;
+  final double _height;
+  final SlideInfo _currentSlide;
 
   IntroSlideCard(this._height, this._currentSlide);
 
