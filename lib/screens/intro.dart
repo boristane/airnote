@@ -2,15 +2,17 @@ import 'package:airnote/components/dot-indicator.dart';
 import 'package:airnote/components/flat-button.dart';
 import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/data/slide.dart';
+import 'package:airnote/screens/login.dart';
+import 'package:airnote/screens/signup.dart';
 import 'package:flutter/material.dart';
 
 class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AirnoteRaisedButton _signupButton =
-        AirnoteRaisedButton(text: "Signup", onPressed: () => print("Signup"));
+        AirnoteRaisedButton(text: "Signup", onPressed: () => Navigator.of(context).pushNamed(Signup.routeName));
     final AirnoteFlatButton _loginButton =
-        AirnoteFlatButton(text: "Login", onPressed: () => print("Login"));
+        AirnoteFlatButton(text: "Login", onPressed: () => Navigator.of(context).pushNamed(Login.routeName));
 
     return Scaffold(
       body: SafeArea(

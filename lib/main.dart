@@ -1,11 +1,13 @@
 import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/screens/intro.dart';
+import 'package:airnote/screens/login.dart';
+import 'package:airnote/screens/signup.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,7 +48,8 @@ class Airnote extends StatelessWidget {
         ),
       ),
       routes: {
-        // "/": (context) => Home(),
+        Login.routeName: (context) => Login(),
+        Signup.routeName: (context) => Signup(),
       },
       home: Intro(),
     );
