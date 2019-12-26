@@ -60,22 +60,24 @@ class _IntroSlideState extends State<IntroSlide> {
     );
 
     return Container(
+      height: cardHeight * 1.05,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // PageView.builder(
-          //   itemCount: widget._data.length,
-          //   onPageChanged: (int position) {
-          //     setState(() {
-          //       _currentIndex = position;
-          //     });
-          //   },
-          //   itemBuilder: (BuildContext context, int position) {
-          //     // final currentSlide = widget._data[position];
-          //     // return IntroSlideCard(cardHeight, currentSlide);
-          //     return Container();
-          //   },
-          // ),
-          IntroSlideCard(cardHeight, widget._data[0]),
+          Flexible(
+            child: PageView.builder(
+              itemCount: widget._data.length,
+              onPageChanged: (int position) {
+                setState(() {
+                  _currentIndex = position;
+                });
+              },
+              itemBuilder: (BuildContext context, int position) {
+                final currentSlide = widget._data[position];
+                return IntroSlideCard(cardHeight, currentSlide);
+              },
+            ),
+          ),
           dots,
         ],
       ),
