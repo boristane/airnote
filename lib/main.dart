@@ -2,10 +2,27 @@ import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/screens/intro.dart';
 import 'package:airnote/screens/login.dart';
 import 'package:airnote/screens/signup.dart';
+import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+
+  return runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => UserViewModel(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
 
