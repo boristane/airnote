@@ -1,5 +1,4 @@
 import 'package:airnote/utils/colors.dart';
-import 'package:airnote/utils/input-validator.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteTextInputField extends StatelessWidget {

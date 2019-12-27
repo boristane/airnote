@@ -4,7 +4,6 @@ import 'package:airnote/components/text-input-field.dart';
 import 'package:airnote/screens/signup.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../components/raised-button.dart';
