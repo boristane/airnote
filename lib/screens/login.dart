@@ -1,12 +1,12 @@
 import 'package:airnote/components/app-bar.dart';
 import 'package:airnote/components/header-text.dart';
+import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/components/text-input-field.dart';
 import 'package:airnote/screens/signup.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:flutter/material.dart';
 
-import '../components/raised-button.dart';
 
 class Login extends StatefulWidget {
   static final routeName = "login";
@@ -51,8 +51,9 @@ class _LoginState extends State<Login> {
                         hint: "Our little secret",
                         validator: InputValidator.password,
                         suffix: Icon(Icons.lock_outline),
+                        obscure: true
                       ),
-                      AirnoteRaisedButton(text: "Login", onPressed: () => print("Login"),),
+                      AirnoteSubmitButton(text: "Login", onPressed: () => print("Login"),),
                       Container(
                         alignment: Alignment.center,
                         child: Row(

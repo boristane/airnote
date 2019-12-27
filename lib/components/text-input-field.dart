@@ -6,9 +6,10 @@ class AirnoteTextInputField extends StatelessWidget {
   final Function validator;
   final String hint;
   final Icon suffix;
+  final bool obscure;
 
   AirnoteTextInputField(
-      {Key key, this.label, this.hint, this.suffix, this.validator})
+      {Key key, this.label, this.hint, this.suffix, this.validator, this.obscure = false})
       : super(key: key);
 
   @override
@@ -32,6 +33,7 @@ class AirnoteTextInputField extends StatelessWidget {
                 ),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 validator: validator,
+                obscureText: obscure,
                 // onSaved: (value) => _formData['email'] = value,
               ),
             ),
