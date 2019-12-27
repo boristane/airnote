@@ -3,16 +3,17 @@ import 'package:dio/dio.dart';
 
 class UserService {
   Dio apiClient;
-  static const String _baseUrl = "http://localhost:8080";
+  static final String _baseUrl = "http://10.0.2.2:8080/users";
   static ApiService apiService = ApiService(baseUrl: _baseUrl);
 
   UserService() : this.apiClient = apiService.client;
 
   Future<Response> login(Map<String, String> data) async {
     final url = "/login";
-    return apiClient.post(url, data: {
+    final response = await apiClient.post(url, data: {
       "email": data["email"],
       "password": data["password"],
     });
+    return response;
   }
 }

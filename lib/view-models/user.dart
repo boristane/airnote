@@ -15,7 +15,6 @@ class UserViewModel extends BaseViewModel {
     try {
       print("Logging In");
       response = await _userService.login(formData);
-      print("Got 200 a response");
       final String token = response.data["token"] ?? "";
       if (token.isEmpty) {
         setStatus(ViewStatus.READY);
@@ -23,12 +22,11 @@ class UserViewModel extends BaseViewModel {
       }
       AuthHelper.saveToken(token);
     } on DioError catch (e) {
-      print("Got an error");
       final data = e.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.UnknownError;
       print("Dialog $message");
     }
     setStatus(ViewStatus.READY);
-    return response.statusCode == 200;
+    return response?.statusCode == 200;
   }
 }

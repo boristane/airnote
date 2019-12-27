@@ -5,7 +5,10 @@ import 'package:airnote/components/text-input-field.dart';
 import 'package:airnote/screens/signup.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
+import 'package:airnote/view-models/base.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class Login extends StatefulWidget {
@@ -15,11 +18,38 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final _loginFormKey = GlobalKey<FormState>();
-  Map<String, String> _formData;
+  final _formKey = GlobalKey<FormState>();
+  Map<String, String> _formData = {};
+
+  setEmail(value) {
+    setState(() {
+      _formData['email'] = value;
+    });
+  }
+
+  setPassword(value) {
+    setState(() {
+      _formData['password'] = value;
+    });
+  }
 
   _handleSignupTap() {
     Navigator.of(context).pushNamed(Signup.routeName);
+  }
+
+  _handleLoginTap() async {
+    final status = Provider.of<UserViewModel>(context).getStatus();
+    if (status == ViewStatus.LOADING) return;
+    final form = _formKey.currentState;
+    if (!form.validate()) return;
+    form.save();
+    final api = Provider.of<UserViewModel>(context);
+    final success = await api.login(_formData);
+    if (success) {
+      print("Logged in");
+    } else {
+      print("Failed logging in");
+    }
   }
 
   @override
@@ -37,7 +67,7 @@ class _LoginState extends State<Login> {
                 child: AirnoteHeaderText(text: "Welcome Back!"),
               ),
               Form(
-                  key: _loginFormKey,
+                  key: _formKey,
                   child: Column(
                     children: <Widget>[
                       AirnoteTextInputField(
@@ -45,15 +75,17 @@ class _LoginState extends State<Login> {
                         hint: "me@mail.com",
                         validator: InputValidator.email,
                         suffix: Icon(Icons.alternate_email),
+                        save: setEmail,
                       ),
                       AirnoteTextInputField(
                         label: "Password",
                         hint: "Our little secret",
                         validator: InputValidator.password,
                         suffix: Icon(Icons.lock_outline),
-                        obscure: true
+                        obscure: true,
+                        save: setPassword,
                       ),
-                      AirnoteSubmitButton(text: "Login", onPressed: () => print("Login"),),
+                      AirnoteSubmitButton(text: "Login", onPressed: _handleLoginTap,),
                       Container(
                         alignment: Alignment.center,
                         child: Row(
