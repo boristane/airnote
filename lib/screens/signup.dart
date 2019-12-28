@@ -21,9 +21,15 @@ class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   Map<String, String> _formData = {};
 
-  setName(value) {
+  setForename(value) {
     setState(() {
       _formData['forename'] = value;
+    });
+  }
+
+  setSurname(value) {
+    setState(() {
+      _formData['surname'] = value;
     });
   }
 
@@ -50,7 +56,7 @@ class _SignupState extends State<Signup> {
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    final success = await userModelView.login(_formData); // TODO
+    final success = await userModelView.signup(_formData);
     if (success) {
       print("Signed Up");
     } else {
@@ -78,9 +84,16 @@ class _SignupState extends State<Signup> {
                     children: <Widget>[
                       AirnoteTextInputField(
                         hint: "How should we call you?",
-                        label: "Name",
+                        label: "Forename",
                         validator: InputValidator.name,
-                        save: setName,
+                        save: setForename,
+                        suffix: Icon(Icons.person_outline),
+                      ),
+                      AirnoteTextInputField(
+                        hint: "How should we call you?",
+                        label: "Surname",
+                        validator: InputValidator.name,
+                        save: setSurname,
                         suffix: Icon(Icons.person_outline),
                       ),
                       AirnoteTextInputField(
@@ -94,7 +107,7 @@ class _SignupState extends State<Signup> {
                         hint: "Our little secret",
                         label: "Password",
                         validator: InputValidator.password,
-                        save: setEmail,
+                        save: setPassword,
                         suffix: Icon(Icons.lock_outline),
                       ),
                       AirnoteSubmitButton(

@@ -30,4 +30,27 @@ class UserViewModel extends BaseViewModel {
     setStatus(ViewStatus.READY);
     return response?.statusCode == 200;
   }
+
+  Future<bool> signup(Map<String, String> formData) async {
+    setStatus(ViewStatus.LOADING);
+
+    Response response;
+    try {
+      response = await _userService.signup(formData);
+      response = await _userService.login(formData);
+      final String token = response.data["token"] ?? "";
+      if (token.isEmpty) {
+        setStatus(ViewStatus.READY);
+        return false;
+      }
+      AuthHelper.saveToken(token);
+    } on DioError catch(err) {
+      final data = err.response?.data ?? {};
+      final message = data["message"] ?? AirnoteMessage.UnknownError;
+      _dialogService.showDialog("Ooops!", message, () => _dialogService.dialogCompleted);
+    }
+
+    setStatus(ViewStatus.READY);
+    return response?.statusCode == 200;
+  }
 }

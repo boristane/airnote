@@ -1,3 +1,4 @@
+import 'package:airnote/components/flat-button.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteDialog extends StatefulWidget {
@@ -15,17 +16,20 @@ class _AirnoteDialogState extends State<AirnoteDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       title: Text(widget.title),
       content: SingleChildScrollView(
         child: Text(widget.content),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            // Navigator.of(context, rootNavigator: true).pop();
-            widget.onPressed();
-          }
+        Container(
+          child: AirnoteFlatButton(
+            text: "OK",
+            onPressed: () {
+              // Navigator.of(context, rootNavigator: true).pop();
+              widget.onPressed();
+            }
+          ),
         ),
       ],
     );
