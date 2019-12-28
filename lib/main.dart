@@ -2,6 +2,7 @@ import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/managers/dialog-manager.dart';
 import 'package:airnote/screens/intro.dart';
 import 'package:airnote/screens/login.dart';
+import 'package:airnote/screens/root.dart';
 import 'package:airnote/screens/signup.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
@@ -75,7 +76,7 @@ class Airnote extends StatelessWidget {
         Login.routeName: (context) => Login(),
         Signup.routeName: (context) => Signup(),
       },
-      home: Intro(),
+      home: Root(),
     );
   }
 }

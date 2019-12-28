@@ -13,7 +13,8 @@ class AuthHelper {
   }
 
   static Future<String> getToken() async {
-    final token = (await SharedPreferences.getInstance()).getString("auth-token");
+    final userPreferences = await SharedPreferences.getInstance();
+    final token = userPreferences.getString("auth-token") ?? "";
     return token;
   }
 

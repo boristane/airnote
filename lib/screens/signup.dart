@@ -3,6 +3,7 @@ import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/components/text-input-field.dart';
 import 'package:airnote/screens/login.dart';
+import 'package:airnote/screens/root.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
@@ -56,12 +57,8 @@ class _SignupState extends State<Signup> {
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    final success = await userModelView.signup(_formData);
-    if (success) {
-      print("Signed Up");
-    } else {
-      print("Failed signing up");
-    }
+    await userModelView.signup(_formData);
+    Navigator.of(context).pushNamedAndRemoveUntil(Root.routeName, (Route<dynamic> route) => false);
   }
 
   @override
