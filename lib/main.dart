@@ -1,12 +1,10 @@
-import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/managers/dialog-manager.dart';
-import 'package:airnote/screens/intro.dart';
-import 'package:airnote/screens/login.dart';
-import 'package:airnote/screens/root.dart';
-import 'package:airnote/screens/signup.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/login.dart';
+import 'package:airnote/views/root.dart';
+import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

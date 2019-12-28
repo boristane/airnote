@@ -2,9 +2,9 @@ import 'package:airnote/components/dot-indicator.dart';
 import 'package:airnote/components/flat-button.dart';
 import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/data/slide.dart';
-import 'package:airnote/screens/login.dart';
-import 'package:airnote/screens/signup.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/views/login.dart';
+import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
 
 class Intro extends StatelessWidget {

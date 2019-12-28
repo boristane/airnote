@@ -1,6 +1,6 @@
-import 'package:airnote/screens/home.dart';
-import 'package:airnote/screens/intro.dart';
 import 'package:airnote/utils/auth.dart';
+import 'package:airnote/views/home.dart';
+import 'package:airnote/views/intro.dart';
 import 'package:flutter/material.dart';
 
 class Root extends StatefulWidget {

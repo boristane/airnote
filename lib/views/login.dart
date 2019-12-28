@@ -2,11 +2,11 @@ import 'package:airnote/components/app-bar.dart';
 import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/components/text-input-field.dart';
-import 'package:airnote/screens/signup.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
