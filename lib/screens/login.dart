@@ -58,6 +58,7 @@ class _LoginState extends State<Login> {
       body: SafeArea(
         child: SingleChildScrollView(
             child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -66,50 +67,50 @@ class _LoginState extends State<Login> {
                 child: AirnoteHeaderText(text: "Welcome Back!"),
               ),
               Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      AirnoteTextInputField(
-                        label: "Email",
-                        hint: "me@mail.com",
-                        validator: InputValidator.email,
-                        suffix: Icon(Icons.alternate_email),
-                        save: setEmail,
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    AirnoteTextInputField(
+                      label: "Email",
+                      hint: "me@mail.com",
+                      validator: InputValidator.email,
+                      suffix: Icon(Icons.alternate_email),
+                      save: setEmail,
+                    ),
+                    AirnoteTextInputField(
+                      label: "Password",
+                      hint: "Our little secret",
+                      validator: InputValidator.password,
+                      suffix: Icon(Icons.lock_outline),
+                      obscure: true,
+                      save: setPassword,
+                    ),
+                    AirnoteSubmitButton(
+                      text: "Login",
+                      onPressed: _handleLoginTap,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("New here? ",
+                        style: TextStyle(color: AirnoteColors.grey)),
+                    GestureDetector(
+                      onTap: _handleSignupTap,
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(color: AirnoteColors.primary),
                       ),
-                      AirnoteTextInputField(
-                        label: "Password",
-                        hint: "Our little secret",
-                        validator: InputValidator.password,
-                        suffix: Icon(Icons.lock_outline),
-                        obscure: true,
-                        save: setPassword,
-                      ),
-                      AirnoteSubmitButton(
-                        text: "Login",
-                        onPressed: _handleLoginTap,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("New here? ",
-                                style: TextStyle(color: AirnoteColors.grey)),
-                            GestureDetector(
-                              onTap: _handleSignupTap,
-                              child: Text(
-                                "Sign Up",
-                                style: TextStyle(color: AirnoteColors.primary),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ))
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
-          padding: EdgeInsets.symmetric(horizontal: 25.0),
         )),
       ),
     );

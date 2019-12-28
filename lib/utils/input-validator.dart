@@ -23,4 +23,11 @@ class InputValidator {
     }
     return null;
   }
+
+  static String name(String value) {
+    if (value.isEmpty) {
+      return "Please provide your name";
+    }
+    return null;
+  }
 }
