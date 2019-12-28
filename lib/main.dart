@@ -1,4 +1,5 @@
 import 'package:airnote/managers/app-manager.dart';
+import 'package:airnote/managers/dialog-manager.dart';
 import 'package:airnote/screens/intro.dart';
 import 'package:airnote/screens/login.dart';
 import 'package:airnote/screens/signup.dart';
@@ -25,7 +26,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,26 +41,32 @@ class MyApp extends StatelessWidget {
 class Airnote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _inputDecorationTheme = InputDecorationTheme(
+        hintStyle: TextStyle(color: AirnoteColors.inactive, fontSize: 20.0),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: AirnoteColors.primary, width: 2.0),
+        ),
+        enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black45, width: 2.0)));
+
+    final _textTheme = TextTheme(
+      title: TextStyle(color: AirnoteColors.text),
+      subhead: TextStyle(color: AirnoteColors.grey),
+    );
+
+    final _theme = ThemeData(
+      inputDecorationTheme: _inputDecorationTheme,
+      primaryColor: AirnoteColors.primary,
+      primaryIconTheme: IconThemeData(color: AirnoteColors.primary),
+      textTheme: _textTheme,
+    );
+
     return MaterialApp(
       title: "Airnote",
-      theme: ThemeData(
-        inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(color: AirnoteColors.inactive, fontSize: 20.0),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: AirnoteColors.primary, width: 2.0),
-          ),
-          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black45, width: 2.0))
-        ),
-        primaryColor: AirnoteColors.primary,
-        primaryIconTheme: IconThemeData(color: AirnoteColors.primary),
-        textTheme: TextTheme(
-          title: TextStyle(color: AirnoteColors.text),
-          subhead: TextStyle(color: AirnoteColors.grey),
-        )
-      ),
+      theme: _theme,
       builder: (context, widget) => Navigator(
-        onGenerateRoute: (settings) => MaterialPageRoute(
-          builder: (context) => AppManager(
+        onGenerateRoute: (RouteSettings settings) => MaterialPageRoute(
+          builder: (context) => DialogManager(
             child: widget,
           ),
         ),

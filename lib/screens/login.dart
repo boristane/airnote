@@ -10,7 +10,6 @@ import 'package:airnote/view-models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class Login extends StatefulWidget {
   static final routeName = "login";
   @override
@@ -38,13 +37,13 @@ class _LoginState extends State<Login> {
   }
 
   _handleLoginTap() async {
-    final status = Provider.of<UserViewModel>(context).getStatus();
+    final userModelView = Provider.of<UserViewModel>(context);
+    final status = userModelView.getStatus();
     if (status == ViewStatus.LOADING) return;
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    final api = Provider.of<UserViewModel>(context);
-    final success = await api.login(_formData);
+    final success = await userModelView.login(_formData);
     if (success) {
       print("Logged in");
     } else {
@@ -85,20 +84,26 @@ class _LoginState extends State<Login> {
                         obscure: true,
                         save: setPassword,
                       ),
-                      AirnoteSubmitButton(text: "Login", onPressed: _handleLoginTap,),
+                      AirnoteSubmitButton(
+                        text: "Login",
+                        onPressed: _handleLoginTap,
+                      ),
                       Container(
                         alignment: Alignment.center,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text("New here? ", style: TextStyle(color: AirnoteColors.grey)),
+                            Text("New here? ",
+                                style: TextStyle(color: AirnoteColors.grey)),
                             GestureDetector(
                               onTap: _handleSignupTap,
-                              child: Text("Sign Up", style: TextStyle(color: AirnoteColors.primary),),
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(color: AirnoteColors.primary),
+                              ),
                             )
                           ],
                         ),
-
                       )
                     ],
                   ))
