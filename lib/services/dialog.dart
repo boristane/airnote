@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 class DialogService {
   Completer _dialogCompleter;
   Function _onShowListener;

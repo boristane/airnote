@@ -6,6 +6,7 @@ import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/root.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,12 +44,8 @@ class _LoginState extends State<Login> {
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    final success = await userModelView.login(_formData);
-    if (success) {
-      print("Logged in");
-    } else {
-      print("Failed logging in");
-    }
+    await userModelView.login(_formData);
+    Navigator.of(context).pushNamedAndRemoveUntil(Root.routeName, (Route<dynamic> route) => false);
   }
 
   @override
