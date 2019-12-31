@@ -1,6 +1,7 @@
 import 'package:airnote/managers/dialog-manager.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/view-models/note.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/login.dart';
 import 'package:airnote/views/root.dart';
@@ -17,6 +18,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => UserViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NoteViewModel(),
         ),
       ],
       child: MyApp(),

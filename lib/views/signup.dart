@@ -80,7 +80,7 @@ class _SignupState extends State<Signup> {
                   child: Column(
                     children: <Widget>[
                       AirnoteTextInputField(
-                        hint: "How should we call you?",
+                        hint: "Nice to meet you!",
                         label: "Forename",
                         validator: InputValidator.name,
                         save: setForename,

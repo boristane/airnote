@@ -5,7 +5,7 @@ import 'package:airnote/utils/messages.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:dio/dio.dart';
 
-class NoteViewMOdel extends BaseViewModel {
+class NoteViewModel extends BaseViewModel {
   List<Note> _notes;
   String _message;
 

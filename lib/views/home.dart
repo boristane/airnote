@@ -1,3 +1,4 @@
+import 'package:airnote/views/notes-list.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -39,13 +40,12 @@ class _HomeState extends State<Home> {
             print("Clicked home");
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            child: Text("Home"),
-          ),
-        ),
-      ),
+      body: IndexedStack(
+        children: <Widget>[
+          NotesList()
+        ],
+        index: _currentIndex,
+      )
     );
   }
 }
