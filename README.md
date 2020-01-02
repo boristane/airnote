@@ -20,6 +20,10 @@ samples, guidance on mobile development, and a full API reference.
 flutter packages pub run build_runner build
 ```
 
+## Local Dev
+
+Android: `10.0.2.2`
+
 ## References
 
 Photo by bruce mars from Pexels

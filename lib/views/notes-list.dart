@@ -1,4 +1,7 @@
+import 'package:airnote/components/loading.dart';
+import 'package:airnote/components/note-list-item.dart';
 import 'package:airnote/models/note.dart';
+import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/note.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,15 +38,45 @@ class _NotesListState extends State<NotesList> {
         child: Container(child: Consumer<NoteViewModel>(
           builder: (context, model, child) {
             List<Note> notes = model.notes;
-            if (notes.length < 1) return Text("No note");
+            if (model.getStatus() == ViewStatus.LOADING)
+              return AirnoteLoadingScreen();
+            if (notes.length < 1) return NoNoteFound();
             return ListView.builder(
                 itemCount: notes.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Text(notes[index].title);
+                  final note = notes[index];
+                  return GestureDetector(
+                    onTap: () => print("Clicked on note ${note.id}"),
+                    child: AirnoteNoteListItem(note: note,)
+                  );
                 });
           },
         )),
       ),
+    );
+  }
+}
+
+class NoNoteFound extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(bottom: 15.0),
+          alignment: Alignment.center,
+          child: Text(
+            "Nothing yet to see...",
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Text("Add the + button to start recording"),
+        )
+      ],
     );
   }
 }

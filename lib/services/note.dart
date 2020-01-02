@@ -3,8 +3,9 @@ import 'package:dio/dio.dart';
 
 class NotesService {
   Dio _apiClient;
-  static final String _baseUrl =
-      "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com:8080/notes";
+  // static final String _baseUrl =
+  //     "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com:8080/notes";
+  static final String _baseUrl = "http://10.0.2.2:8080/notes";
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   NotesService() {
@@ -29,7 +30,8 @@ class NotesService {
     final FormData formData = FormData.fromMap({
       "title": data["title"],
       "content": data["content"],
-      "image": await MultipartFile.fromFile(data["image"], filename: "upload.txt")
+      "image":
+          await MultipartFile.fromFile(data["image"], filename: "upload.txt")
     });
 
     final response = _apiClient.post(url, data: formData);

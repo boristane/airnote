@@ -1,5 +1,8 @@
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/view-models/base.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:airnote/view-models/user.dart';
 
 class AirnoteSubmitButton extends Container {
   final String text;
@@ -8,8 +11,8 @@ class AirnoteSubmitButton extends Container {
   AirnoteSubmitButton({Key key, this.text, this.onPressed, this.icon})
       : super(key: key);
 
-  Widget _getText() {
-    final isLoading = false;
+  Widget _getText(BuildContext context) {
+    final isLoading = Provider.of<UserViewModel>(context).getStatus() == ViewStatus.LOADING;
     if (isLoading) {
       return SizedBox(
         width: 20.0,
@@ -49,7 +52,7 @@ class AirnoteSubmitButton extends Container {
             Expanded(
               child: Container(
                 alignment: Alignment.center,
-                child: _getText(),
+                child: _getText(context),
               ),
             ),
             Container(
