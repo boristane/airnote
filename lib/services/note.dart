@@ -43,4 +43,9 @@ class NotesService {
     final response = _apiClient.delete(url);
     return response;
   }
+
+  void setupClient() {
+    _apiService.clientSetup();
+    this._apiClient = _apiService.client;
+  }
 }

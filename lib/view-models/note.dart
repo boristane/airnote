@@ -18,6 +18,7 @@ class NoteViewModel extends BaseViewModel {
     setStatus(ViewStatus.LOADING);
     try {
       _message = "";
+      _noteService.setupClient();
       final response = await _noteService.getNotes();
       final List<dynamic> data = response.data ?? [];
       _notes = List<Note>.from(data.map((n) => Note.fromJson(n)));

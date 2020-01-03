@@ -49,6 +49,7 @@ class UserViewModel extends BaseViewModel {
         return false;
       }
       AuthHelper.saveToken(token);
+      _userService.setupClient();
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.UnknownError;
@@ -71,5 +72,10 @@ class UserViewModel extends BaseViewModel {
       _dialogService.showDialog("Ooops!", message, () => _dialogService.dialogCompleted);
     }
     setStatus(ViewStatus.READY);
+  }
+
+  void logout() async {
+    await AuthHelper.deleteToken();
+    _userService.setupClient();
   }
 }

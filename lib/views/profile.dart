@@ -4,6 +4,7 @@ import 'package:airnote/models/user.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/root.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +59,8 @@ class _ProfileState extends State<Profile> {
                         child: AirnoteRaisedButton(
                       text: "Log out",
                       onPressed: () {
-                        print("Login out");
+                        model.logout();
+                        Navigator.of(context).pushNamedAndRemoveUntil(Root.routeName, (Route<dynamic> route) => false);
                       },
                       shadow: false,
                     )),

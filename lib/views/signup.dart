@@ -84,7 +84,7 @@ class _SignupState extends State<Signup> {
                         label: "Forename",
                         validator: InputValidator.name,
                         save: setForename,
-                        suffix: Icon(Icons.person_outline),
+                        suffix: Icon(Icons.face),
                       ),
                       AirnoteTextInputField(
                         hint: "How should we call you?",

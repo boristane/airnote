@@ -16,7 +16,6 @@ class ApiService {
 
   Future<void> clientSetup() async {
     final token = await AuthHelper.getToken();
-    if (token.isEmpty) return;
     setToken(token);
   }
 }
