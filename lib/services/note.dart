@@ -44,8 +44,8 @@ class NotesService {
     return response;
   }
 
-  void setupClient() {
-    _apiService.clientSetup();
+  Future<void> setupClient() async {
+    await _apiService.clientSetup();
     this._apiClient = _apiService.client;
   }
 }

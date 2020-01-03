@@ -76,6 +76,6 @@ class UserViewModel extends BaseViewModel {
 
   void logout() async {
     await AuthHelper.deleteToken();
-    _userService.setupClient();
+    await _userService.setupClient();
   }
 }
