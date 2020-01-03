@@ -4,8 +4,19 @@ import 'package:flutter/material.dart';
 class AirnoteRaisedButton extends Container {
   final String text;
   final Function onPressed;
-  final Icon icon;
-  AirnoteRaisedButton({Key key, this.text, this.onPressed, this.icon}) : super(key: key);
+  final bool shadow;
+  AirnoteRaisedButton({Key key, this.text, this.onPressed, this.shadow = true})
+      : super(key: key);
+
+  _getShadow() {
+    if (shadow) {
+      return BoxShadow(
+          color: AirnoteColors.primary.withOpacity(.4),
+          offset: Offset(10.0, 10.0),
+          blurRadius: 10.0);
+    }
+    return BoxShadow();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +26,7 @@ class AirnoteRaisedButton extends Container {
       margin: EdgeInsets.only(top: 20.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.0),
-        boxShadow: [
-          BoxShadow(
-              color: AirnoteColors.primary.withOpacity(.4),
-              offset: Offset(10.0, 10.0),
-              blurRadius: 10.0),
-        ],
+        boxShadow: [_getShadow()],
       ),
       child: RaisedButton(
         onPressed: () {
