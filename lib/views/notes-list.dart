@@ -12,23 +12,17 @@ class NotesList extends StatefulWidget {
 }
 
 class _NotesListState extends State<NotesList> {
-  List<Note> _notes;
-  NoteViewModel noteViewModel;
-
-  _getNotes() async {
-    final noteModelView = Provider.of<NoteViewModel>(context);
-    final notes = await noteModelView.getNotes();
-  }
+  NoteViewModel _noteViewModel;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final _noteModelView = Provider.of<NoteViewModel>(context);
-    if (this.noteViewModel == _noteModelView) {
+    if (this._noteViewModel == _noteModelView) {
       return;
     }
-    this.noteViewModel = _noteModelView;
-    Future.microtask(this.noteViewModel.getNotes);
+    this._noteViewModel = _noteModelView;
+    Future.microtask(this._noteViewModel.getNotes);
   }
 
   @override

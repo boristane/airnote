@@ -7,7 +7,10 @@ class UserService {
   static final String _baseUrl = "http://10.0.2.2:8081/users";
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
-  UserService() : this._apiClient = _apiService.client;
+  UserService() {
+    _apiService.clientSetup();
+    this._apiClient = _apiService.client;
+  }
 
   Future<Response> login(Map<String, String> data) async {
     final url = "/login";
@@ -18,6 +21,11 @@ class UserService {
     return response;
   }
 
+  void setupClient() {
+    _apiService.clientSetup();
+    this._apiClient = _apiService.client;
+  }
+
   Future<Response> signup(Map<String, String> data) {
     final url = "/signup";
     final response = _apiClient.post(url, data: {
@@ -26,6 +34,12 @@ class UserService {
       "password": data["password"],
       "email": data["email"],
     });
+    return response;
+  }
+
+  Future<Response> getUser() {
+    final url = "/me/all";
+    final response = _apiClient.get(url);
     return response;
   }
 }

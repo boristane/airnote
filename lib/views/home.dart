@@ -1,4 +1,5 @@
 import 'package:airnote/views/notes-list.dart';
+import 'package:airnote/views/profile.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -37,12 +38,13 @@ class _HomeState extends State<Home> {
           child: Icon(Icons.add),
           onPressed: () {
             // Navigator.of(context).push(SlideUpRoute(widget: AddEntry())),
-            print("Clicked home");
+            print("Clicked add");
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(
         children: <Widget>[
-          NotesList()
+          NotesList(),
+          Profile(),
         ],
         index: _currentIndex,
       )
