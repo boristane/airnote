@@ -3,7 +3,9 @@ import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/note.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/home.dart';
 import 'package:airnote/views/login.dart';
+import 'package:airnote/views/note.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +79,8 @@ class Airnote extends StatelessWidget {
       routes: {
         Login.routeName: (context) => Login(),
         Signup.routeName: (context) => Signup(),
+        NoteView.routeName: (context) => NoteView(),
+        Home.routeName: (context) => Home(),
       },
       home: Root(),
     );
