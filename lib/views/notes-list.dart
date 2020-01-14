@@ -3,6 +3,7 @@ import 'package:airnote/components/note-list-item.dart';
 import 'package:airnote/models/note.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/note.dart';
+import 'package:airnote/views/note.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +41,7 @@ class _NotesListState extends State<NotesList> {
                 itemBuilder: (BuildContext context, int index) {
                   final note = notes[index];
                   return GestureDetector(
-                    onTap: () => print("Clicked on note ${note.id}"),
+                    onTap: () => Navigator.of(context).pushNamed(NoteView.routeName, arguments: note.id),
                     child: AirnoteNoteListItem(note: note,)
                   );
                 });
