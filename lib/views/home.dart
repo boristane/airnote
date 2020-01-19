@@ -1,3 +1,4 @@
+import 'package:airnote/utils/colors.dart';
 import 'package:airnote/views/notes-list.dart';
 import 'package:airnote/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> {
         onTap: _onBottomNavTapped,
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xFF3C4858),
+          backgroundColor: AirnoteColors.primary,
           child: Icon(Icons.add),
           onPressed: () {
             // Navigator.of(context).push(SlideUpRoute(widget: AddEntry())),

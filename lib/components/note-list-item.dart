@@ -71,7 +71,7 @@ class AirnoteNoteImage extends StatelessWidget {
                   ),
           boxShadow: [
             BoxShadow(
-                color: Color(0xFF3C4858).withOpacity(.4),
+                color: AirnoteColors.primary.withOpacity(.4),
                 offset: Offset(5.0, 5.0),
                 blurRadius: 10.0),
           ],
@@ -116,7 +116,7 @@ class AirnoteNoteDescription extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: AirnoteColors.grey,
+                    color: AirnoteColors.text,
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold),
               ),

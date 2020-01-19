@@ -33,7 +33,7 @@ class _NotesListState extends State<NotesList> {
         child: Container(child: Consumer<NoteViewModel>(
           builder: (context, model, child) {
             List<Note> notes = model.notes;
-            if (model.getStatus() == ViewStatus.LOADING)
+            if (model.getStatus() == ViewStatus.LOADING || notes == null)
               return AirnoteLoadingScreen();
             if (notes.length < 1) return NoNoteFound();
             return ListView.builder(

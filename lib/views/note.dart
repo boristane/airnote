@@ -23,6 +23,9 @@ class _NoteViewState extends State<NoteView>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getNote();
+    });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _optionsAnimation = Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0))
@@ -34,10 +37,8 @@ class _NoteViewState extends State<NoteView>
           ..addStatusListener(_setOptionsStatus);
   }
 
-  @override
-  void didChangeDependencies() async {
+  _getNote() async {
     final noteViewModel = Provider.of<NoteViewModel>(context);
-    super.didChangeDependencies();
     if (this._noteViewModel == noteViewModel) {
       return;
     }
@@ -54,6 +55,9 @@ class _NoteViewState extends State<NoteView>
           return AirnoteLoadingScreen();
         }
         final note = model.currentNote;
+        if (note == null) {
+          return AirnoteLoadingScreen();
+        }
         final heroTag = "note-image-${note.id}";
         return Stack(
           children: <Widget>[
@@ -91,10 +95,74 @@ class _NoteViewState extends State<NoteView>
                               fontWeight: FontWeight.w700),
                         ),
                       ),
-                    )
+                    ),
+                    Positioned(
+                      top: 330.0,
+                      width: MediaQuery.of(context).size.width,
+                      child: Container(
+                        height: 10,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.0),
+                                topLeft: Radius.circular(20.0)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AirnoteColors.primary.withOpacity(.4),
+                                offset: Offset(0.0, -8),
+                                blurRadius: 6,
+                              )
+                            ]),
+                      ),
+                    ),
                   ],
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 50),
+                  child: Text(
+                    note.content,
+                    style: TextStyle(
+                        fontSize: 16,
+                        height: 1.2,
+                        color: AirnoteColors.text.withOpacity(0.8)),
+                  ),
                 )
               ],
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Row(
+                    children: <Widget>[
+                      InkResponse(
+                        onTap: () {
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AirnoteColors.white,
+                            border: Border.all(color: Colors.black12),
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: AirnoteColors.primary.withOpacity(.5),
+                                  offset: Offset(1.0, 10.0),
+                                  blurRadius: 10.0),
+                            ],
+                          ),
+                          child: Icon(Icons.arrow_downward,
+                              color: AirnoteColors.primary),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             )
           ],
         );
@@ -143,8 +211,8 @@ class NoteHeaderImage extends StatelessWidget {
             image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                    AirnoteColors.primary, BlendMode.lighten))),
+                colorFilter:
+                    ColorFilter.mode(AirnoteColors.white, BlendMode.lighten))),
       ),
     );
   }
