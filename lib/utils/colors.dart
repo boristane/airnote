@@ -8,4 +8,5 @@ class AirnoteColors {
   static final inactive = Color(0xFFC4C4C4);
   static final text = Color(0xFF414A53);
   static final grey = Colors.grey.shade700;
+  static final danger = Colors.red;
 }

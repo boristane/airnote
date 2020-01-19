@@ -1,3 +1,5 @@
+import 'package:airnote/components/circular-button.dart';
+import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
@@ -5,6 +7,7 @@ import 'package:airnote/view-models/note.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 class NoteView extends StatefulWidget {
   static const routeName = 'view-entry';
@@ -65,36 +68,13 @@ class _NoteViewState extends State<NoteView>
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    CachedNetworkImage(
+                    _NoteHeader(
+                      heroTag: heroTag,
                       imageUrl: note.imageUrl,
-                      imageBuilder: (context, imageProvider) => NoteHeaderImage(
-                        heroTag: heroTag,
-                        imageProvider: imageProvider,
-                      ),
-                      placeholder: (context, url) => NoteHeaderImage(
-                        heroTag: heroTag,
-                        imageProvider: AssetImage("assets/placeholder.jpg"),
-                      ),
-                      errorWidget: (context, url, error) => NoteHeaderImage(
-                        heroTag: heroTag,
-                        imageProvider: AssetImage("assets/placeholder.jpg"),
-                      ),
                     ),
                     Positioned(
                       top: 200,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(horizontal: 30),
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          note.title,
-                          style: TextStyle(
-                              color: AirnoteColors.white,
-                              fontSize: 24,
-                              letterSpacing: 0.8,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
+                      child: _NoteTitle(title: note.title),
                     ),
                     Positioned(
                       top: 330.0,
@@ -135,29 +115,44 @@ class _NoteViewState extends State<NoteView>
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      InkResponse(
-                        onTap: () {
-                          if (Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AirnoteColors.white,
-                            border: Border.all(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(100),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AirnoteColors.primary.withOpacity(.5),
-                                  offset: Offset(1.0, 10.0),
-                                  blurRadius: 10.0),
-                            ],
+                      AirnoteCircularButton(
+                        icon: Icon(Icons.arrow_downward,
+                            color: AirnoteColors.primary),
+                        onTap: _onCloseNoteTap,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          AirnoteCircularButton(
+                            icon: _getOptionButtonIcon(),
+                            onTap: _onOptionsTap,
                           ),
-                          child: Icon(Icons.arrow_downward,
-                              color: AirnoteColors.primary),
-                        ),
+                          Transform.translate(
+                              offset: _optionsAnimation.value,
+                              child: AirnoteCircularButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: AirnoteColors.primary,
+                                ),
+                                onTap: () {
+                                  print("Editing");
+                                },
+                              )),
+                          Transform.translate(
+                              offset: _optionsAnimation.value,
+                              child: AirnoteCircularButton(
+                                icon: Icon(
+                                  Icons.delete_outline,
+                                  color: AirnoteColors.danger,
+                                ),
+                                onTap: () {
+                                  print("Deleting");
+                                },
+                              ))
+                        ],
                       )
                     ],
                   ),
@@ -190,13 +185,58 @@ class _NoteViewState extends State<NoteView>
   void _closeOptions() {
     _optionsAnimationController.reverse();
   }
+
+  void _onCloseNoteTap() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _onOptionsTap() {
+    _isOptionOpened ? _closeOptions() : _openOptions();
+  }
+
+  Icon _getOptionButtonIcon() {
+    if (_isOptionOpened) {
+      return Icon(
+        Icons.close,
+        color: AirnoteColors.primary,
+      );
+    }
+    return Icon(
+      Icons.more_horiz,
+      color: AirnoteColors.primary,
+    );
+  }
 }
 
-class NoteHeaderImage extends StatelessWidget {
+class _NoteTitle extends StatelessWidget {
+  final String title;
+
+  _NoteTitle({Key key, this.title}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      alignment: Alignment.bottomLeft,
+      child: Text(
+        title,
+        style: TextStyle(
+            color: AirnoteColors.white,
+            fontSize: 24,
+            letterSpacing: 0.8,
+            fontWeight: FontWeight.w700),
+      ),
+    );
+  }
+}
+
+class _NoteHeaderImage extends StatelessWidget {
   final String heroTag;
   final ImageProvider imageProvider;
 
-  NoteHeaderImage({Key key, this.heroTag, this.imageProvider})
+  _NoteHeaderImage({Key key, this.heroTag, this.imageProvider})
       : super(key: key);
 
   @override
@@ -211,8 +251,33 @@ class NoteHeaderImage extends StatelessWidget {
             image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.cover,
-                colorFilter:
-                    ColorFilter.mode(AirnoteColors.white, BlendMode.lighten))),
+                colorFilter: ColorFilter.mode(
+                    AirnoteColors.primary, BlendMode.lighten))),
+      ),
+    );
+  }
+}
+
+class _NoteHeader extends StatelessWidget {
+  final String heroTag;
+  final String imageUrl;
+
+  _NoteHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      imageBuilder: (context, imageProvider) => _NoteHeaderImage(
+        heroTag: heroTag,
+        imageProvider: imageProvider,
+      ),
+      placeholder: (context, url) => _NoteHeaderImage(
+        heroTag: heroTag,
+        imageProvider: AssetImage("assets/placeholder.jpg"),
+      ),
+      errorWidget: (context, url, error) => _NoteHeaderImage(
+        heroTag: heroTag,
+        imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
     );
   }
