@@ -18,18 +18,19 @@ class _HomeState extends State<Home> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("Home"),
+            icon: Icon(Icons.home, color: _currentIndex == 0 ? AirnoteColors.primary : AirnoteColors.inactive,),
+            title: Text("Home", style: TextStyle(color: _currentIndex == 0 ? AirnoteColors.primary : AirnoteColors.inactive),),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            title: Text("Profile"),
+            icon: Icon(Icons.person, color: _currentIndex == 1 ? AirnoteColors.primary : AirnoteColors.inactive,),
+            title: Text("Profile", style: TextStyle(color: _currentIndex == 1 ? AirnoteColors.primary : AirnoteColors.inactive),),
           ),
         ],
         onTap: _onBottomNavTapped,
