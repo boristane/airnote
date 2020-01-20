@@ -33,17 +33,27 @@ class _NotesListState extends State<NotesList> {
         child: Container(child: Consumer<NoteViewModel>(
           builder: (context, model, child) {
             List<Note> notes = model.notes;
-            if (model.getStatus() == ViewStatus.LOADING || notes == null)
+            if (model.getStatus() == ViewStatus.LOADING) {
               return AirnoteLoadingScreen();
+            }
+            if (notes == null) {
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 25.0),
+                alignment: Alignment.center,
+                child: Text("Ooops ! There was a problem getting the data..."),
+              );
+            }
             if (notes.length < 1) return NoNoteFound();
             return ListView.builder(
                 itemCount: notes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final note = notes[index];
                   return GestureDetector(
-                    onTap: () => Navigator.of(context).pushNamed(NoteView.routeName, arguments: note.id),
-                    child: AirnoteNoteListItem(note: note,)
-                  );
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(NoteView.routeName, arguments: note.id),
+                      child: AirnoteNoteListItem(
+                        note: note,
+                      ));
                 });
           },
         )),
