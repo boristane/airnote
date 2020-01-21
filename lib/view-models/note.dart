@@ -24,7 +24,7 @@ class NoteViewModel extends BaseViewModel {
       _message = "";
       await _noteService.setupClient();
       final response = await _noteService.getNotes();
-      final List<dynamic> data = response.data ?? [];
+      final List<dynamic> data = response.data["notes"] ?? [];
       _notes = List<Note>.from(data.map((n) => Note.fromJson(n)));
     } on DioError catch(err) {
       final data = err.response?.data ?? {};

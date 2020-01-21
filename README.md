@@ -17,7 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Generate Json Annotations
 ```bash
-flutter packages pub run build_runner build
+flutter packages pub run build_runner build --delete-conflicting-outputs
 ```
 
 ## Local Dev
