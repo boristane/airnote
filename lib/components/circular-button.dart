@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 class AirnoteCircularButton extends StatelessWidget {
   final Widget icon;
   final Function onTap;
+  final bool isLarge;
 
-  AirnoteCircularButton({Key key, this.icon, this.onTap}) : super(key: key);
+  AirnoteCircularButton({Key key, this.icon, this.onTap, this.isLarge = false}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return InkResponse(
       onTap: this.onTap,
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(isLarge ? 15 : 10),
         margin: EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: AirnoteColors.white,
