@@ -1,5 +1,4 @@
 import 'package:airnote/components/circular-button.dart';
-import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
@@ -7,7 +6,6 @@ import 'package:airnote/view-models/note.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
 
 class NoteView extends StatefulWidget {
   static const routeName = 'view-entry';
@@ -19,7 +17,7 @@ class _NoteViewState extends State<NoteView>
     with SingleTickerProviderStateMixin {
   NoteViewModel _noteViewModel;
   AnimationController _optionsAnimationController;
-  Animation<Offset> _optionsAnimation, _optionsDelayedAnimation;
+  Animation<Offset> _optionsAnimation;
 
   bool _isOptionOpened = false;
 
@@ -62,7 +60,6 @@ class _NoteViewState extends State<NoteView>
           return AirnoteLoadingScreen();
         }
         final heroTag = "note-image-${note.id}";
-        var pinkColor = Color(0xFFff6b80);
         return Stack(
           children: <Widget>[
             ListView(
@@ -72,45 +69,13 @@ class _NoteViewState extends State<NoteView>
                   color: AirnoteColors.white,
                   child: Stack(
                     children: <Widget>[
-                      Stack(
-                        children: <Widget>[
-                          _NoteHeader(
-                            heroTag: heroTag,
-                            imageUrl: note.imageUrl,
-                          ),
-                          Positioned(
-                            top: 200,
-                            child: _NoteTitle(title: note.title),
-                          ),
-                        ],
+                      _NoteHeader(
+                        heroTag: heroTag,
+                        imageUrl: note.imageUrl,
                       ),
                       Positioned(
-                        top: 265,
-                        child: Container(
-                            margin: EdgeInsets.fromLTRB(25, 0, 20, 0),
-                            child: AirnoteCircularButton(
-                                icon: Icon(
-                                  Icons.play_arrow,
-                                  color: AirnoteColors.primary,
-                                ),
-                                onTap: () {
-                                  print("Playing");
-                                },
-                                isLarge: true,
-                              )),
-                      ),
-                      Positioned(
-                        top: 268,
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(75, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width/1.3,
-                          child: Slider(
-                            onChanged: (double value) {},
-                            value: 0.2,
-                            activeColor: AirnoteColors.primary,
-                            inactiveColor: AirnoteColors.inactive,
-                          ),
-                        ),
+                        top: 200,
+                        child: _NoteTitle(title: note.title),
                       ),
                     ],
                   ),
@@ -175,6 +140,56 @@ class _NoteViewState extends State<NoteView>
                       )
                     ],
                   ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                color: AirnoteColors.white,
+                child: Column(
+                  children: <Widget>[
+                    Slider(
+                      onChanged: (double value) {},
+                      value: 0.2,
+                      activeColor: AirnoteColors.primary,
+                      inactiveColor: AirnoteColors.inactive,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            '2:10',
+                            style:
+                                TextStyle(color: Colors.black.withOpacity(0.7)),
+                          ),
+                          Text('-03:56',
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.7)))
+                        ],
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            child: AirnoteCircularButton(
+                          icon: Icon(
+                            Icons.play_arrow,
+                            color: AirnoteColors.primary,
+                          ),
+                          onTap: () {
+                            print("Playing");
+                          },
+                          isLarge: true,
+                        )),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             )
