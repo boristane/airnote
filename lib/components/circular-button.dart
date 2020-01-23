@@ -13,7 +13,7 @@ class AirnoteCircularButton extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: AirnoteColors.white,
+        color: AirnoteColors.backgroundColor,
         border: Border.all(color: Colors.black12),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
@@ -24,6 +24,7 @@ class AirnoteCircularButton extends StatelessWidget {
         ],
       ),
       child: Material(
+        color: AirnoteColors.backgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0),),
         child: InkWell(
           customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0),),
