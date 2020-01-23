@@ -1,11 +1,13 @@
 import 'package:airnote/components/audio-player.dart';
 import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/components/loading.dart';
+import 'package:airnote/models/sentiment.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/note.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class NoteView extends StatefulWidget {
@@ -75,7 +77,16 @@ class _NoteViewState extends State<NoteView>
                       ),
                       Positioned(
                         top: 200,
-                        child: _NoteTitle(title: note.title),
+                        child: _NoteTitle(
+                          title: note.title,
+                          date: note.createdAt,
+                        ),
+                      ),
+                      Positioned(
+                        top: 250,
+                        child: _Sentiments(
+                          sentiments: note.sentiments,
+                        ),
                       ),
                     ],
                   ),
@@ -146,7 +157,9 @@ class _NoteViewState extends State<NoteView>
             Positioned(
               bottom: 0,
               width: MediaQuery.of(context).size.width,
-              child: AirnoteAudioPlayer(audioUrl: note.audioUrl,),
+              child: AirnoteAudioPlayer(
+                audioUrl: note.audioUrl,
+              ),
             )
           ],
         );
@@ -199,23 +212,85 @@ class _NoteViewState extends State<NoteView>
   }
 }
 
-class _NoteTitle extends StatelessWidget {
-  final String title;
+class _Sentiments extends StatelessWidget {
+  final List<Sentiment> sentiments;
 
-  _NoteTitle({Key key, this.title}) : super(key: key);
+  _Sentiments({Key key, this.sentiments}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> w = sentiments
+        .map((sentiment) => _SentimentItem(
+              sentiment: sentiment,
+            ))
+        .toList();
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: w,
+      ),
+    );
+  }
+}
+
+class _SentimentItem extends StatelessWidget {
+  final Sentiment sentiment;
+  _SentimentItem({Key key, this.sentiment}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        child: Text(sentiment.emoji,
+            style: TextStyle(
+              fontSize: 30,
+            )));
+  }
+}
+
+class _NoteTitle extends StatelessWidget {
+  final String title;
+  final String date;
+
+  _NoteTitle({Key key, this.title, this.date}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final dateTime = DateTime.parse(date);
+    final formatter = new DateFormat("MMM d, y");
+    final dateString = formatter.format(dateTime);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       alignment: Alignment.bottomLeft,
-      child: Text(
-        title,
-        style: TextStyle(
-            color: AirnoteColors.primary,
-            fontSize: 24,
-            letterSpacing: 0.8,
-            fontWeight: FontWeight.w700),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(
+                color: AirnoteColors.primary,
+                fontSize: 24,
+                letterSpacing: 0.8,
+                fontWeight: FontWeight.w700),
+          ),
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.event_note,
+                size: 18,
+                color: AirnoteColors.grey,
+              ),
+              Text(
+                dateString,
+                style: TextStyle(
+                  color: AirnoteColors.primary.withOpacity(0.7),
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
