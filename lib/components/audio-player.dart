@@ -1,18 +1,140 @@
 import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteAudioPlayer extends StatefulWidget {
+  final String audioUrl;
+
+  AirnoteAudioPlayer({
+    Key key,
+    this.audioUrl,
+  }) : super(key: key);
   @override
   State<AirnoteAudioPlayer> createState() => _AirnoteAudioPlayerState();
 }
 
 class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   double _position = 0.0;
+  bool _isPlaying = false;
+  int _totalDuration = 0;
+  AudioPlayer _audioPlayer = AudioPlayer();
+
+  void _play() async {
+    int result = await _audioPlayer.resume();
+    if (result == 1) {
+      print("Playing sound");
+    } else {
+      print("Not playing sound");
+    }
+  }
+
+  void _pause() async {
+    int result = await _audioPlayer.pause();
+    if (result == 1) {
+      print("Paused sound");
+    } else {
+      print("Not paused sound");
+    }
+  }
+
+  void seek() async {
+    int result = await _audioPlayer
+        .seek(Duration(milliseconds: (_totalDuration * _position).toInt()));
+    if (result == 1) {
+      print("Seek worked");
+    } else {
+      print("Seek failed");
+    }
+  }
+
+  Icon _getMainButtonIcon() {
+    if (_isPlaying) {
+      return Icon(
+        Icons.pause,
+        color: AirnoteColors.primary,
+      );
+    }
+    return Icon(
+      Icons.play_arrow,
+      color: AirnoteColors.primary,
+    );
+  }
+
+  void _onMainButtonTapped() {
+    _isPlaying ? _pause() : _play();
+    setState(() {
+      _isPlaying = !_isPlaying;
+    });
+  }
+
+  String _getElapsedTime() {
+    Duration duration = Duration(milliseconds: (_position * _totalDuration).toInt());
+    int minutes =  duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+    return "${minutes.toString().padLeft(2,"0")}:${seconds.toString().padLeft(2, "0")}";
+  }
+
+  String _getRemainingTime() {
+    Duration duration = Duration(milliseconds: ((1 - _position) * _totalDuration).toInt());
+    int minutes =  duration.inMinutes.remainder(60);
+    int seconds = duration.inSeconds.remainder(60);
+    return "${minutes.toString().padLeft(2,"0")}:${seconds.toString().padLeft(2, "0")}";
+  }
+
+  void _initialisePlayer() async {
+    await _audioPlayer.setUrl(widget.audioUrl);
+    _audioPlayer.onAudioPositionChanged.listen((Duration d) async {
+      int currentPosition = await _audioPlayer.getCurrentPosition();
+      setState(
+          () => _position = (currentPosition / _totalDuration).clamp(0.0, 1.0));
+    });
+    _audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
+      if (s == AudioPlayerState.COMPLETED) {
+        _audioPlayer.stop();
+        setState(() {
+          _position = 0;
+          _isPlaying = false;
+        });
+      }
+    });
+    _audioPlayer.onDurationChanged.listen((Duration d) async {
+      int totalDuration = await _audioPlayer.getDuration();
+      setState(() {
+        _totalDuration = totalDuration;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // AudioPlayer.logEnabled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _initialisePlayer();
+    });
+    print(widget.audioUrl);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _initialisePlayer();
+    });
+    print(widget.audioUrl);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void deactivate() async {
+    await _audioPlayer.stop();
+    await _audioPlayer.release();
+    await _audioPlayer.dispose();
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // return Container(child: Text("Whatever"),);
     return Container(
       decoration: BoxDecoration(
         color: AirnoteColors.backgroundColor,
@@ -33,10 +155,11 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
                 overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
               ),
               child: Slider(
-                onChanged: (double value){
+                onChanged: (double value) {
                   setState(() {
                     _position = value;
                   });
+                  seek();
                 },
                 value: _position,
               ),
@@ -50,11 +173,11 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      '2:10',
-                      style: TextStyle(color: Colors.black.withOpacity(0.7)),
+                      _getElapsedTime(),
+                      style: TextStyle(color: AirnoteColors.text.withOpacity(0.7)),
                     ),
-                    Text('-03:56',
-                        style: TextStyle(color: Colors.black.withOpacity(0.7)))
+                    Text( _getRemainingTime(),
+                        style: TextStyle(color: AirnoteColors.text.withOpacity(0.7)))
                   ],
                 ),
               ),
@@ -73,13 +196,8 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
                       ),
                       Container(
                           child: AirnoteCircularButton(
-                        icon: Icon(
-                          Icons.play_arrow,
-                          color: AirnoteColors.primary,
-                        ),
-                        onTap: () {
-                          print("Playing");
-                        },
+                        icon: _getMainButtonIcon(),
+                        onTap: _onMainButtonTapped,
                         isLarge: true,
                       )),
                       Icon(

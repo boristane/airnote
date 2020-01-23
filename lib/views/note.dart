@@ -146,7 +146,7 @@ class _NoteViewState extends State<NoteView>
             Positioned(
               bottom: 0,
               width: MediaQuery.of(context).size.width,
-              child: AirnoteAudioPlayer(),
+              child: AirnoteAudioPlayer(audioUrl: note.audioUrl,),
             )
           ],
         );
