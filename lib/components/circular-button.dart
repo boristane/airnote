@@ -14,13 +14,12 @@ class AirnoteCircularButton extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: AirnoteColors.backgroundColor,
-        border: Border.all(color: Colors.black12),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
               color: AirnoteColors.primary.withOpacity(.5),
-              offset: Offset(1.0, 10.0),
-              blurRadius: 10.0),
+              offset: Offset(1.0, 3.0),
+              blurRadius: 5.0),
         ],
       ),
       child: Material(
