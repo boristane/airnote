@@ -279,12 +279,12 @@ class _NoteTitle extends StatelessWidget {
               Icon(
                 Icons.event_note,
                 size: 18,
-                color: AirnoteColors.grey,
+                color: AirnoteColors.grey.withOpacity(0.7),
               ),
               Text(
                 dateString,
                 style: TextStyle(
-                  color: AirnoteColors.primary.withOpacity(0.7),
+                  color: AirnoteColors.grey.withOpacity(0.7),
                   fontSize: 14,
                 ),
               ),
