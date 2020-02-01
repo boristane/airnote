@@ -65,8 +65,8 @@ class _NoteViewState extends State<NoteView>
     this._noteViewModel = noteViewModel;
     final id = ModalRoute.of(context).settings.arguments;
     final success = await this._noteViewModel.getCurrentNote(id);
-    if (!success) {
-      Navigator.of(context).pushNamed(Home.routeName);
+    if (!success && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
     }
   }
 
@@ -74,7 +74,10 @@ class _NoteViewState extends State<NoteView>
     onYes() async {
       final id = ModalRoute.of(context).settings.arguments;
       await this._noteViewModel.deleteCurrentNote(id);
-      Navigator.of(context).pushNamed(Home.routeName);
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(Home.routeName);
+      }
     }
 
     _dialogService.showQuestionDialog(
