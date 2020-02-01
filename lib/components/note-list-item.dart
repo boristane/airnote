@@ -13,80 +13,86 @@ class AirnoteNoteListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final heroTag = "note-image-${note.id}";
     return Container(
-        margin: EdgeInsets.only(bottom: 15.0, top: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            LimitedBox(
-              maxWidth: MediaQuery.of(context).size.width * .9,
-              maxHeight: 280,
-              child: Stack(children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: note.imageUrl,
-                  imageBuilder: (context, imageProvider) => AirnoteNoteImage(
-                    heroTag: heroTag,
-                    imageProvider: imageProvider,
-                  ),
-                  placeholder: (context, url) => AirnoteNoteImage(
-                    heroTag: heroTag,
-                    imageProvider: AssetImage("assets/placeholder.jpg"),
-                  ),
-                  errorWidget: (context, url, error) => AirnoteNoteImage(
-                    heroTag: heroTag,
-                    imageProvider: AssetImage("assets/placeholder.jpg"),
-                  ),
-                ),
-                Positioned(
-                  left: 0.0,
-                  top: 30.0,
-                  child: AirnoteNoteDescription(note: note),
-                )
-              ]),
-            ),
-          ],
-        ));
+        margin: EdgeInsets.only(top: 15, left: 15, right: 15),
+        height: 150,
+        child: Stack(children: <Widget>[
+          _NoteHeader(
+            heroTag: heroTag,
+            imageUrl: note.imageUrl,
+          ),
+          Positioned(
+            top: 75.0,
+            child: _NoteDescription(note: note),
+          )
+        ]));
   }
 }
 
-class AirnoteNoteImage extends StatelessWidget {
+class _NoteHeader extends StatelessWidget {
   final String heroTag;
-  final ImageProvider imageProvider;
+  final String imageUrl;
 
-  AirnoteNoteImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
-
+  _NoteHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: heroTag,
-      child: Container(
-        width: 200,
-        height: 250,
-        margin: EdgeInsets.only(left: 100),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-              colorFilter:
-                  ColorFilter.mode(AirnoteColors.primary, BlendMode.lighten)
-                  ),
-          boxShadow: [
-            BoxShadow(
-                color: AirnoteColors.primary.withOpacity(.4),
-                offset: Offset(5.0, 5.0),
-                blurRadius: 10.0),
-          ],
-          borderRadius: BorderRadius.circular(10),
-        ),
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      imageBuilder: (context, imageProvider) => _NoteImage(
+        heroTag: heroTag,
+        imageProvider: imageProvider,
+      ),
+      placeholder: (context, url) => _NoteImage(
+        heroTag: heroTag,
+        imageProvider: AssetImage("assets/placeholder.jpg"),
+      ),
+      errorWidget: (context, url, error) => _NoteImage(
+        heroTag: heroTag,
+        imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
     );
   }
 }
 
+class _NoteImage extends StatelessWidget {
+  final String heroTag;
+  final ImageProvider imageProvider;
 
-class AirnoteNoteDescription extends StatelessWidget {
+  _NoteImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: heroTag,
+      child: Stack(children: <Widget>[
+        Container(
+          height: 150,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        Container(
+          height: 150,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                AirnoteColors.primary.withOpacity(0.0),
+                AirnoteColors.primary
+              ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+            borderRadius: BorderRadius.circular(10),
+            ),
+        )
+      ]),
+    );
+  }
+}
+
+class _NoteDescription extends StatelessWidget {
   final Note note;
 
-  AirnoteNoteDescription({Key key, this.note}) : super(key: key);
+  _NoteDescription({Key key, this.note}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,21 +100,9 @@ class AirnoteNoteDescription extends StatelessWidget {
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
     return Container(
-        width: 200,
-        height: 180,
-        decoration: BoxDecoration(
-            color: AirnoteColors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(0.0, 0.0),
-                  blurRadius: 10.0),
-            ]),
         child: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
@@ -116,37 +110,27 @@ class AirnoteNoteDescription extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: AirnoteColors.text,
+                    color: AirnoteColors.white,
                     fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.w700),
               ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.event_note,
-                          size: 18,
-                          color: AirnoteColors.grey,
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.event_note,
+                    size: 18,
+                    color: AirnoteColors.white.withOpacity(0.7),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        dateString,
+                        style: TextStyle(
+                          color: AirnoteColors.white.withOpacity(0.7),
+                          fontSize: 14,
                         ),
-                        Padding(
-                            padding: EdgeInsets.all(8), child: Text(dateString))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Icon(
-                          Icons.arrow_forward,
-                          size: 26.0,
-                          color: Colors.blueGrey,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+                      ))
+                ],
               ),
             ],
           ),

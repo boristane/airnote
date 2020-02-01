@@ -269,7 +269,7 @@ class _NoteTitle extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                color: AirnoteColors.primary,
+                color: AirnoteColors.text,
                 fontSize: 24,
                 letterSpacing: 0.8,
                 fontWeight: FontWeight.w700),
@@ -281,11 +281,14 @@ class _NoteTitle extends StatelessWidget {
                 size: 18,
                 color: AirnoteColors.grey.withOpacity(0.7),
               ),
-              Text(
-                dateString,
-                style: TextStyle(
-                  color: AirnoteColors.grey.withOpacity(0.7),
-                  fontSize: 14,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  dateString,
+                  style: TextStyle(
+                    color: AirnoteColors.grey.withOpacity(0.7),
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ],
