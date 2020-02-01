@@ -18,7 +18,7 @@ class _DialogManagerState extends State<DialogManager> {
   @override
   void initState() {
     super.initState();
-    _dialogService.setOnShowListener(_showDialog);
+    _dialogService.setOnShowListener(_showDialogInfo, _showDialogQuestion);
   }
 
   @override
@@ -26,12 +26,37 @@ class _DialogManagerState extends State<DialogManager> {
     return widget.child;
   }
 
-  void _showDialog({String title, String content, Function onPressed}) {
-    void onPressed () {
-            Navigator.of(context, rootNavigator: true).pop();
-            _dialogService.dialogCompleted();
-          }
-    final dialog = AirnoteDialog(title: title, content: content, onPressed: onPressed);
+  void _showDialogInfo({String title, String content, Function onPressed}) {
+    void onPressedEdited() async {
+      await onPressed();
+      Navigator.of(context, rootNavigator: true).pop();
+      _dialogService.dialogCompleted();
+    }
+
+    final dialog = AirnoteDialogInfo(
+        title: title, content: content, onPressed: onPressedEdited);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => dialog,
+    );
+  }
+
+  void _showDialogQuestion(
+      {String title, String content, Function onYes, Function onNo}) {
+    void onYesEdited() async {
+      await onYes();
+      Navigator.of(context, rootNavigator: true).pop();
+      _dialogService.dialogCompleted();
+    }
+
+    void onNoEdited() async {
+      await onNo();
+      Navigator.of(context, rootNavigator: true).pop();
+      _dialogService.dialogCompleted();
+    }
+
+    final dialog = AirnoteDialogQuestion(
+        title: title, content: content, onYes: onYesEdited, onNo: onNoEdited);
     showDialog(
       context: context,
       builder: (BuildContext context) => dialog,

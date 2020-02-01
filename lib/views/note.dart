@@ -2,13 +2,17 @@ import 'package:airnote/components/audio-player.dart';
 import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/sentiment.dart';
+import 'package:airnote/services/locator.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/note.dart';
+import 'package:airnote/views/home.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:airnote/services/dialog.dart';
 
 class NoteView extends StatefulWidget {
   static const routeName = 'view-entry';
@@ -22,6 +26,7 @@ class _NoteViewState extends State<NoteView>
   AnimationController _optionsAnimationController;
   Animation<Offset> _editButtonAnimation;
   Animation<Offset> _deleteButtonAnimation;
+  final _dialogService = locator<DialogService>();
 
   bool _isOptionOpened = false;
 
@@ -33,21 +38,23 @@ class _NoteViewState extends State<NoteView>
     });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    _editButtonAnimation = Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0))
-        .animate(CurvedAnimation(
-            parent: _optionsAnimationController, curve: Curves.easeOutBack))
+    _editButtonAnimation =
+        Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0)).animate(
+            CurvedAnimation(
+                parent: _optionsAnimationController, curve: Curves.easeOutBack))
           ..addListener(() {
             setState(() {});
           })
           ..addStatusListener(_setOptionsStatus);
-    _deleteButtonAnimation = Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0))
-    .animate(CurvedAnimation(
-            parent: _optionsAnimationController, curve: Interval(0.3, 1.0, curve: Curves.easeOutBack)))
+    _deleteButtonAnimation =
+        Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0)).animate(
+            CurvedAnimation(
+                parent: _optionsAnimationController,
+                curve: Interval(0.3, 1.0, curve: Curves.easeOutBack)))
           ..addListener(() {
             setState(() {});
           })
           ..addStatusListener(_setOptionsStatus);
-
   }
 
   _getNote() async {
@@ -57,7 +64,24 @@ class _NoteViewState extends State<NoteView>
     }
     this._noteViewModel = noteViewModel;
     final id = ModalRoute.of(context).settings.arguments;
-    await this._noteViewModel.getCurrentNote(id);
+    final success = await this._noteViewModel.getCurrentNote(id);
+    if (!success) {
+      Navigator.of(context).pushNamed(Home.routeName);
+    }
+  }
+
+  _deleteNote() async {
+    onYes() async {
+      final id = ModalRoute.of(context).settings.arguments;
+      await this._noteViewModel.deleteCurrentNote(id);
+      Navigator.of(context).pushNamed(Home.routeName);
+    }
+
+    _dialogService.showQuestionDialog(
+        title: "Are you sure?",
+        content: "Deleting a note is irreversible",
+        onYes: onYes,
+        onNo: () {});
   }
 
   @override
@@ -141,7 +165,7 @@ class _NoteViewState extends State<NoteView>
                                   Icons.edit,
                                   color: AirnoteColors.primary,
                                 ),
-                                onTap: () {
+                                onTap: () async {
                                   print("Editing");
                                 },
                               )),
@@ -152,8 +176,9 @@ class _NoteViewState extends State<NoteView>
                                   Icons.delete_outline,
                                   color: AirnoteColors.danger,
                                 ),
-                                onTap: () {
-                                  print("Deleting");
+                                onTap: () async {
+                                  print("Deletingg");
+                                  await _deleteNote();
                                 },
                               ))
                         ],
@@ -177,7 +202,7 @@ class _NoteViewState extends State<NoteView>
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     _optionsAnimationController.dispose();
     super.dispose();
   }
