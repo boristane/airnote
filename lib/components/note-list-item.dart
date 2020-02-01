@@ -15,6 +15,16 @@ class AirnoteNoteListItem extends StatelessWidget {
     return Container(
         margin: EdgeInsets.only(top: 15, left: 15, right: 15),
         height: 150,
+        decoration: BoxDecoration(
+          color: AirnoteColors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                color: AirnoteColors.primary.withOpacity(.5),
+                offset: Offset(1.0, 3.0),
+                blurRadius: 5.0),
+          ],
+        ),
         child: Stack(children: <Widget>[
           _NoteHeader(
             heroTag: heroTag,
@@ -77,12 +87,12 @@ class _NoteImage extends StatelessWidget {
         Container(
           height: 150,
           decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                AirnoteColors.primary.withOpacity(0.0),
-                AirnoteColors.primary
-              ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+            gradient: LinearGradient(colors: [
+              AirnoteColors.primary.withOpacity(0.0),
+              AirnoteColors.primary
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(10),
-            ),
+          ),
         )
       ]),
     );
@@ -101,39 +111,39 @@ class _NoteDescription extends StatelessWidget {
     final dateString = formatter.format(date);
     return Container(
         child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      padding: EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            note.title,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                color: AirnoteColors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w700),
+          ),
+          Row(
             children: <Widget>[
-              Text(
-                note.title,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: AirnoteColors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w700),
+              Icon(
+                Icons.event_note,
+                size: 18,
+                color: AirnoteColors.white.withOpacity(0.7),
               ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.event_note,
-                    size: 18,
-                    color: AirnoteColors.white.withOpacity(0.7),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        dateString,
-                        style: TextStyle(
-                          color: AirnoteColors.white.withOpacity(0.7),
-                          fontSize: 14,
-                        ),
-                      ))
-                ],
-              ),
+              Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    dateString,
+                    style: TextStyle(
+                      color: AirnoteColors.white.withOpacity(0.7),
+                      fontSize: 14,
+                    ),
+                  ))
             ],
           ),
-        ));
+        ],
+      ),
+    ));
   }
 }

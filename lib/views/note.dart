@@ -20,7 +20,8 @@ class _NoteViewState extends State<NoteView>
     with SingleTickerProviderStateMixin {
   NoteViewModel _noteViewModel;
   AnimationController _optionsAnimationController;
-  Animation<Offset> _optionsAnimation;
+  Animation<Offset> _editButtonAnimation;
+  Animation<Offset> _deleteButtonAnimation;
 
   bool _isOptionOpened = false;
 
@@ -32,13 +33,21 @@ class _NoteViewState extends State<NoteView>
     });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    _optionsAnimation = Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0))
+    _editButtonAnimation = Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0))
         .animate(CurvedAnimation(
             parent: _optionsAnimationController, curve: Curves.easeOutBack))
           ..addListener(() {
             setState(() {});
           })
           ..addStatusListener(_setOptionsStatus);
+    _deleteButtonAnimation = Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0))
+    .animate(CurvedAnimation(
+            parent: _optionsAnimationController, curve: Interval(0.3, 1.0, curve: Curves.easeOutBack)))
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(_setOptionsStatus);
+
   }
 
   _getNote() async {
@@ -126,7 +135,7 @@ class _NoteViewState extends State<NoteView>
                             onTap: _onOptionsTap,
                           ),
                           Transform.translate(
-                              offset: _optionsAnimation.value,
+                              offset: _editButtonAnimation.value,
                               child: AirnoteCircularButton(
                                 icon: Icon(
                                   Icons.edit,
@@ -137,7 +146,7 @@ class _NoteViewState extends State<NoteView>
                                 },
                               )),
                           Transform.translate(
-                              offset: _optionsAnimation.value,
+                              offset: _deleteButtonAnimation.value,
                               child: AirnoteCircularButton(
                                 icon: Icon(
                                   Icons.delete_outline,
