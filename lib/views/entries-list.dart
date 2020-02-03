@@ -1,58 +1,58 @@
 import 'package:airnote/components/loading.dart';
-import 'package:airnote/components/note-list-item.dart';
-import 'package:airnote/models/note.dart';
+import 'package:airnote/components/entry-list-item.dart';
+import 'package:airnote/models/entry.dart';
 import 'package:airnote/view-models/base.dart';
-import 'package:airnote/view-models/note.dart';
-import 'package:airnote/views/note.dart';
+import 'package:airnote/view-models/entry.dart';
+import 'package:airnote/views/entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NotesList extends StatefulWidget {
+class EntriesList extends StatefulWidget {
   @override
-  State<NotesList> createState() => _NotesListState();
+  State<EntriesList> createState() => _EntriesListState();
 }
 
-class _NotesListState extends State<NotesList> {
-  NoteViewModel _noteViewModel;
+class _EntriesListState extends State<EntriesList> {
+  EntryViewModel _entryViewModel;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final _noteModelView = Provider.of<NoteViewModel>(context);
-    if (this._noteViewModel == _noteModelView) {
+    final _noteModelView = Provider.of<EntryViewModel>(context);
+    if (this._entryViewModel == _noteModelView) {
       return;
     }
-    this._noteViewModel = _noteModelView;
-    Future.microtask(this._noteViewModel.getNotes);
+    this._entryViewModel = _noteModelView;
+    Future.microtask(this._entryViewModel.getEntries);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: SafeArea(
-        child: Container(child: Consumer<NoteViewModel>(
+        child: Container(child: Consumer<EntryViewModel>(
           builder: (context, model, child) {
-            List<Note> notes = model.notes;
+            List<Entry> entries = model.entries;
             if (model.getStatus() == ViewStatus.LOADING) {
               return AirnoteLoadingScreen();
             }
-            if (notes == null) {
+            if (entries == null) {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
                 alignment: Alignment.center,
                 child: Text("Ooops ! There was a problem getting the data..."),
               );
             }
-            if (notes.length < 1) return NoNoteFound();
+            if (entries.length < 1) return NoEntryFound();
             return ListView.builder(
-                itemCount: notes.length,
+                itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final note = notes[index];
+                  final entry = entries[index];
                   return GestureDetector(
                       onTap: () => Navigator.of(context)
-                          .pushNamed(NoteView.routeName, arguments: note.id),
-                      child: AirnoteNoteListItem(
-                        note: note,
+                          .pushNamed(EntryView.routeName, arguments: entry.id),
+                      child: AirnoteEntryListItem(
+                        entry: entry,
                       ));
                 });
           },
@@ -62,7 +62,7 @@ class _NotesListState extends State<NotesList> {
   }
 }
 
-class NoNoteFound extends StatelessWidget {
+class NoEntryFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(

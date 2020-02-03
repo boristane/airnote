@@ -1,17 +1,17 @@
-import 'package:airnote/models/note.dart';
+import 'package:airnote/models/entry.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AirnoteNoteListItem extends StatelessWidget {
-  final Note note;
+class AirnoteEntryListItem extends StatelessWidget {
+  final Entry entry;
 
-  AirnoteNoteListItem({Key key, this.note}) : super(key: key);
+  AirnoteEntryListItem({Key key, this.entry}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final heroTag = "note-image-${note.id}";
+    final heroTag = "entry-image-${entry.id}";
     return Container(
         margin: EdgeInsets.only(top: 15, left: 15, right: 15),
         height: 150,
@@ -26,36 +26,36 @@ class AirnoteNoteListItem extends StatelessWidget {
           ],
         ),
         child: Stack(children: <Widget>[
-          _NoteHeader(
+          _EntryHeader(
             heroTag: heroTag,
-            imageUrl: note.imageUrl,
+            imageUrl: entry.imageUrl,
           ),
           Positioned(
             top: 75.0,
-            child: _NoteDescription(note: note),
+            child: _EntryDescription(entry: entry),
           )
         ]));
   }
 }
 
-class _NoteHeader extends StatelessWidget {
+class _EntryHeader extends StatelessWidget {
   final String heroTag;
   final String imageUrl;
 
-  _NoteHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  _EntryHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => _NoteImage(
+      imageBuilder: (context, imageProvider) => _EntryImage(
         heroTag: heroTag,
         imageProvider: imageProvider,
       ),
-      placeholder: (context, url) => _NoteImage(
+      placeholder: (context, url) => _EntryImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
-      errorWidget: (context, url, error) => _NoteImage(
+      errorWidget: (context, url, error) => _EntryImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
@@ -63,11 +63,11 @@ class _NoteHeader extends StatelessWidget {
   }
 }
 
-class _NoteImage extends StatelessWidget {
+class _EntryImage extends StatelessWidget {
   final String heroTag;
   final ImageProvider imageProvider;
 
-  _NoteImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
+  _EntryImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +99,14 @@ class _NoteImage extends StatelessWidget {
   }
 }
 
-class _NoteDescription extends StatelessWidget {
-  final Note note;
+class _EntryDescription extends StatelessWidget {
+  final Entry entry;
 
-  _NoteDescription({Key key, this.note}) : super(key: key);
+  _EntryDescription({Key key, this.entry}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.parse(note.createdAt);
+    final date = DateTime.parse(entry.createdAt);
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
     return Container(
@@ -116,7 +116,7 @@ class _NoteDescription extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            note.title,
+            entry.title,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(

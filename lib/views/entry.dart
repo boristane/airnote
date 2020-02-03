@@ -3,10 +3,9 @@ import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/sentiment.dart';
 import 'package:airnote/services/locator.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
-import 'package:airnote/view-models/note.dart';
+import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/views/home.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +13,15 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:airnote/services/dialog.dart';
 
-class NoteView extends StatefulWidget {
+class EntryView extends StatefulWidget {
   static const routeName = 'view-entry';
   @override
-  State<NoteView> createState() => _NoteViewState();
+  State<EntryView> createState() => _EntryViewState();
 }
 
-class _NoteViewState extends State<NoteView>
+class _EntryViewState extends State<EntryView>
     with SingleTickerProviderStateMixin {
-  NoteViewModel _noteViewModel;
+  EntryViewModel _entryViewModel;
   AnimationController _optionsAnimationController;
   Animation<Offset> _editButtonAnimation;
   Animation<Offset> _deleteButtonAnimation;
@@ -34,7 +33,7 @@ class _NoteViewState extends State<NoteView>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getNote();
+      _getEntry();
     });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
@@ -57,23 +56,23 @@ class _NoteViewState extends State<NoteView>
           ..addStatusListener(_setOptionsStatus);
   }
 
-  _getNote() async {
-    final noteViewModel = Provider.of<NoteViewModel>(context);
-    if (this._noteViewModel == noteViewModel) {
+  _getEntry() async {
+    final entryViewModel = Provider.of<EntryViewModel>(context);
+    if (this._entryViewModel == entryViewModel) {
       return;
     }
-    this._noteViewModel = noteViewModel;
+    this._entryViewModel = entryViewModel;
     final id = ModalRoute.of(context).settings.arguments;
-    final success = await this._noteViewModel.getCurrentNote(id);
+    final success = await this._entryViewModel.getCurrentEntry(id);
     if (!success && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
   }
 
-  _deleteNote() async {
+  _deleteEntry() async {
     onYes() async {
       final id = ModalRoute.of(context).settings.arguments;
-      await this._noteViewModel.deleteCurrentNote(id);
+      await this._entryViewModel.deleteCurrentEntry(id);
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(Home.routeName);
@@ -82,7 +81,7 @@ class _NoteViewState extends State<NoteView>
 
     _dialogService.showQuestionDialog(
         title: "Are you sure?",
-        content: "Deleting a note is irreversible",
+        content: "Deleting an entry is irreversible",
         onYes: onYes,
         onNo: () {});
   }
@@ -90,15 +89,15 @@ class _NoteViewState extends State<NoteView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<NoteViewModel>(builder: (context, model, child) {
+      body: Consumer<EntryViewModel>(builder: (context, model, child) {
         if (model.getStatus() == ViewStatus.LOADING) {
           return AirnoteLoadingScreen();
         }
-        final note = model.currentNote;
-        if (note == null) {
+        final entry = model.currentEntry;
+        if (entry == null) {
           return AirnoteLoadingScreen();
         }
-        final heroTag = "note-image-${note.id}";
+        final heroTag = "entry-image-${entry.id}";
         return Stack(
           children: <Widget>[
             ListView(
@@ -107,21 +106,21 @@ class _NoteViewState extends State<NoteView>
                   height: 300,
                   child: Stack(
                     children: <Widget>[
-                      _NoteHeader(
+                      _EntryHeader(
                         heroTag: heroTag,
-                        imageUrl: note.imageUrl,
+                        imageUrl: entry.imageUrl,
                       ),
                       Positioned(
                         top: 200,
-                        child: _NoteTitle(
-                          title: note.title,
-                          date: note.createdAt,
+                        child: _EntryTitle(
+                          title: entry.title,
+                          date: entry.createdAt,
                         ),
                       ),
                       Positioned(
                         top: 250,
                         child: _Sentiments(
-                          sentiments: note.sentiments,
+                          sentiments: entry.sentiments,
                         ),
                       ),
                     ],
@@ -131,7 +130,7 @@ class _NoteViewState extends State<NoteView>
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 150),
                   color: AirnoteColors.backgroundColor,
                   child: Text(
-                    note.content,
+                    entry.content,
                     style: TextStyle(
                         fontSize: 16,
                         height: 1.2,
@@ -152,7 +151,7 @@ class _NoteViewState extends State<NoteView>
                       AirnoteCircularButton(
                         icon: Icon(Icons.arrow_downward,
                             color: AirnoteColors.primary),
-                        onTap: _onCloseNoteTap,
+                        onTap: _onCloseEntryTap,
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.min,
@@ -181,7 +180,7 @@ class _NoteViewState extends State<NoteView>
                                 ),
                                 onTap: () async {
                                   print("Deletingg");
-                                  await _deleteNote();
+                                  await _deleteEntry();
                                 },
                               ))
                         ],
@@ -195,7 +194,7 @@ class _NoteViewState extends State<NoteView>
               bottom: 0,
               width: MediaQuery.of(context).size.width,
               child: AirnoteAudioPlayer(
-                audioUrl: note.audioUrl,
+                audioUrl: entry.audioUrl,
               ),
             )
           ],
@@ -225,7 +224,7 @@ class _NoteViewState extends State<NoteView>
     _optionsAnimationController.reverse();
   }
 
-  void _onCloseNoteTap() {
+  void _onCloseEntryTap() {
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
@@ -287,11 +286,11 @@ class _SentimentItem extends StatelessWidget {
   }
 }
 
-class _NoteTitle extends StatelessWidget {
+class _EntryTitle extends StatelessWidget {
   final String title;
   final String date;
 
-  _NoteTitle({Key key, this.title, this.date}) : super(key: key);
+  _EntryTitle({Key key, this.title, this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final dateTime = DateTime.parse(date);
@@ -336,11 +335,11 @@ class _NoteTitle extends StatelessWidget {
   }
 }
 
-class _NoteHeaderImage extends StatelessWidget {
+class _EntryHeaderImage extends StatelessWidget {
   final String heroTag;
   final ImageProvider imageProvider;
 
-  _NoteHeaderImage({Key key, this.heroTag, this.imageProvider})
+  _EntryHeaderImage({Key key, this.heroTag, this.imageProvider})
       : super(key: key);
 
   @override
@@ -370,24 +369,24 @@ class _NoteHeaderImage extends StatelessWidget {
   }
 }
 
-class _NoteHeader extends StatelessWidget {
+class _EntryHeader extends StatelessWidget {
   final String heroTag;
   final String imageUrl;
 
-  _NoteHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  _EntryHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => _NoteHeaderImage(
+      imageBuilder: (context, imageProvider) => _EntryHeaderImage(
         heroTag: heroTag,
         imageProvider: imageProvider,
       ),
-      placeholder: (context, url) => _NoteHeaderImage(
+      placeholder: (context, url) => _EntryHeaderImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
-      errorWidget: (context, url, error) => _NoteHeaderImage(
+      errorWidget: (context, url, error) => _EntryHeaderImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),

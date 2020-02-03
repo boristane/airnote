@@ -1,10 +1,10 @@
 import 'package:airnote/models/sentiment.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'note.g.dart';
+part 'entry.g.dart';
 
 @JsonSerializable()
-class Note {
+class Entry {
   final int id;
   final String title;
   final String content;
@@ -13,7 +13,7 @@ class Note {
   final String createdAt;
   final List<Sentiment> sentiments;
 
-  Note({this.id, this.content, this.createdAt, this.imageUrl, this.title, this.audioUrl, this.sentiments});
-  factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
-  Map<String, dynamic> toJson() => _$NoteToJson(this);
+  Entry({this.id, this.content, this.createdAt, this.imageUrl, this.title, this.audioUrl, this.sentiments});
+  factory Entry.fromJson(Map<String, dynamic> json) => _$EntryFromJson(json);
+  Map<String, dynamic> toJson() => _$EntryToJson(this);
 }

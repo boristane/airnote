@@ -1,11 +1,11 @@
 import 'package:airnote/managers/dialog-manager.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
-import 'package:airnote/view-models/note.dart';
+import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/login.dart';
-import 'package:airnote/views/note.dart';
+import 'package:airnote/views/entry.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ void main() async {
           create: (context) => UserViewModel(),
         ),
         ChangeNotifierProvider(
-          create: (context) => NoteViewModel(),
+          create: (context) => EntryViewModel(),
         ),
       ],
       child: MyApp(),
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Lesley',
       theme: ThemeData(
         primarySwatch: AirnoteColors.swatch,
       ),
@@ -79,7 +79,7 @@ class Airnote extends StatelessWidget {
       routes: {
         Login.routeName: (context) => Login(),
         Signup.routeName: (context) => Signup(),
-        NoteView.routeName: (context) => NoteView(),
+        EntryView.routeName: (context) => EntryView(),
         Home.routeName: (context) => Home(),
       },
       home: Root(),

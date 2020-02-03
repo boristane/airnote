@@ -12,9 +12,9 @@ User _$UserFromJson(Map<String, dynamic> json) {
     id: json['id'] as int,
     surname: json['surname'] as String,
     forename: json['forename'] as String,
-    notes: (json['notes'] as List)
+    entries: (json['entries'] as List)
         ?.map(
-            (e) => e == null ? null : Note.fromJson(e as Map<String, dynamic>))
+            (e) => e == null ? null : Entry.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
@@ -24,5 +24,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'surname': instance.surname,
       'email': instance.email,
       'id': instance.id,
-      'notes': instance.notes,
+      'entries': instance.entries,
     };

@@ -1,5 +1,5 @@
 import 'package:airnote/utils/colors.dart';
-import 'package:airnote/views/notes-list.dart';
+import 'package:airnote/views/entries-list.dart';
 import 'package:airnote/views/profile.dart';
 import 'package:flutter/material.dart';
 
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(
         children: <Widget>[
-          NotesList(),
+          EntriesList(),
           Profile(),
         ],
         index: _currentIndex,
