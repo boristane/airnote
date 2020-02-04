@@ -141,7 +141,7 @@ class DetailsCard extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(bottom: 20.0),
                     child: Text(
-                      profile.forename + " " + profile.surname,
+                      profile.forename,
                       style: mainTextStyle,
                     ),
                   ),

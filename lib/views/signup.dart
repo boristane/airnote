@@ -2,8 +2,8 @@ import 'package:airnote/components/app-bar.dart';
 import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/components/text-input-field.dart';
+import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/login.dart';
-import 'package:airnote/views/root.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
@@ -25,12 +25,6 @@ class _SignupState extends State<Signup> {
   setForename(value) {
     setState(() {
       _formData['forename'] = value;
-    });
-  }
-
-  setSurname(value) {
-    setState(() {
-      _formData['surname'] = value;
     });
   }
 
@@ -58,7 +52,7 @@ class _SignupState extends State<Signup> {
     if (!form.validate()) return;
     form.save();
     await userModelView.signup(_formData);
-    Navigator.of(context).pushNamedAndRemoveUntil(Root.routeName, (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(CreatePassPhrase.routeName, (Route<dynamic> route) => false);
   }
 
   @override
@@ -87,13 +81,6 @@ class _SignupState extends State<Signup> {
                         suffix: Icon(Icons.face),
                       ),
                       AirnoteTextInputField(
-                        hint: "How should we call you?",
-                        label: "Surname",
-                        validator: InputValidator.name,
-                        save: setSurname,
-                        suffix: Icon(Icons.person_outline),
-                      ),
-                      AirnoteTextInputField(
                         hint: "How can we reach you?",
                         label: "Email",
                         validator: InputValidator.email,
@@ -105,6 +92,7 @@ class _SignupState extends State<Signup> {
                         label: "Password",
                         validator: InputValidator.password,
                         save: setPassword,
+                        obscure: true,
                         suffix: Icon(Icons.lock_outline),
                       ),
                       AirnoteSubmitButton(

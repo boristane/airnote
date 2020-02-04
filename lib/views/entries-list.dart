@@ -1,7 +1,7 @@
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/entry.dart';
-import 'package:airnote/services/local_auth.dart';
+import 'package:airnote/services/local-auth.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
@@ -60,7 +60,7 @@ class _EntriesListState extends State<EntriesList> {
             children: <Widget>[
               Flexible(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0),
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: ListView.builder(
                       itemCount: entries.length,
                       itemBuilder: (BuildContext context, int index) {

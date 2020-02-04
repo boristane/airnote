@@ -24,6 +24,16 @@ class InputValidator {
     return null;
   }
 
+  static String passphrase(String value) {
+    if (value.isEmpty) {
+      return "Please provide your passphrase";
+    }
+    if (value.length < 15) {
+      return "Passwords should be at leat 15 characters long";
+    }
+    return null;
+  }
+
   static String name(String value) {
     if (value.isEmpty) {
       return "Please provide your name";
