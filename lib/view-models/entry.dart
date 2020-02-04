@@ -33,7 +33,7 @@ class EntryViewModel extends BaseViewModel {
     setStatus(ViewStatus.READY);
   }
 
-  Future<bool> getCurrentEntry(int id) async {
+  Future<bool> getEntry(int id) async {
     setStatus(ViewStatus.LOADING);
     bool success = false;
     try {
@@ -45,13 +45,13 @@ class EntryViewModel extends BaseViewModel {
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {setStatus(ViewStatus.READY);});
+      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
     }
     setStatus(ViewStatus.READY);
     return success;
   }
 
-  Future<void> deleteCurrentEntry(int id) async {
+  Future<void> deleteEntry(int id) async {
     setStatus(ViewStatus.LOADING);
     try {
       _message = "";
@@ -61,9 +61,22 @@ class EntryViewModel extends BaseViewModel {
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => {});
+      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
     }
     setStatus(ViewStatus.READY);
   }
 
+  Future<void> updateIsLocked(int id, bool newValue) async {
+    setStatus(ViewStatus.LOADING);
+    try {
+      _message = "";
+      _noteService.setupClient();
+      await _noteService.updateIsLockedEntry(id, newValue);
+    } on DioError catch(err) {
+      final data = err.response?.data ?? {};
+      final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
+      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
+    }
+    setStatus(ViewStatus.READY);
+  }
 }

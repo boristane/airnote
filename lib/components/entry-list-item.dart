@@ -3,6 +3,7 @@ import 'package:airnote/utils/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
 
 class AirnoteEntryListItem extends StatelessWidget {
   final Entry entry;
@@ -16,7 +17,6 @@ class AirnoteEntryListItem extends StatelessWidget {
         margin: EdgeInsets.only(top: 15, left: 15, right: 15),
         height: 150,
         decoration: BoxDecoration(
-          color: AirnoteColors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -33,7 +33,19 @@ class AirnoteEntryListItem extends StatelessWidget {
           Positioned(
             top: 75.0,
             child: _EntryDescription(entry: entry),
-          )
+          ),
+          _EntryBlur(isLocked: entry.isLocked,),
+          Positioned(
+            top: 10,
+            right: 10,
+            child: entry.isLocked
+                ? Icon(
+                    Icons.lock,
+                    size: 18,
+                    color: AirnoteColors.white.withOpacity(0.9),
+                  )
+                : Container(),
+          ),
         ]));
   }
 }
@@ -145,5 +157,43 @@ class _EntryDescription extends StatelessWidget {
         ],
       ),
     ));
+  }
+}
+
+class _EntryBlur extends StatelessWidget {
+  final isLocked;
+
+  _EntryBlur({Key key, this.isLocked}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return isLocked
+        ? BlurryEffect(opacity: 0, blurry: 3, shade: Colors.transparent,)
+        : Container();
+  }
+}
+
+class BlurryEffect extends StatelessWidget {
+  final double opacity;
+  final double blurry;
+  final Color shade;
+
+  BlurryEffect({this.opacity,this.blurry,this.shade});
+
+    @override  Widget build(BuildContext context) {
+    return Container(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child:  BackdropFilter(
+          filter:  ui.ImageFilter.blur(sigmaX:blurry, sigmaY:blurry),
+            child:  Container(
+              width: double.infinity,
+              height:  double.infinity,
+          
+              decoration:  BoxDecoration(color: shade.withOpacity(opacity),),
+             ),
+           ),
+          ),
+        );
   }
 }

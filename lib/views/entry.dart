@@ -23,7 +23,7 @@ class _EntryViewState extends State<EntryView>
     with SingleTickerProviderStateMixin {
   EntryViewModel _entryViewModel;
   AnimationController _optionsAnimationController;
-  Animation<Offset> _editButtonAnimation;
+  Animation<Offset> _lockButtonAnimation;
   Animation<Offset> _deleteButtonAnimation;
   final _dialogService = locator<DialogService>();
 
@@ -32,12 +32,9 @@ class _EntryViewState extends State<EntryView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getEntry();
-    });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
-    _editButtonAnimation =
+    _lockButtonAnimation =
         Tween<Offset>(begin: Offset(100, 0), end: Offset(0, 0)).animate(
             CurvedAnimation(
                 parent: _optionsAnimationController, curve: Curves.easeOutBack))
@@ -56,6 +53,12 @@ class _EntryViewState extends State<EntryView>
           ..addStatusListener(_setOptionsStatus);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getEntry();
+  }
+
   _getEntry() async {
     final entryViewModel = Provider.of<EntryViewModel>(context);
     if (this._entryViewModel == entryViewModel) {
@@ -63,7 +66,7 @@ class _EntryViewState extends State<EntryView>
     }
     this._entryViewModel = entryViewModel;
     final id = ModalRoute.of(context).settings.arguments;
-    final success = await this._entryViewModel.getCurrentEntry(id);
+    final success = await this._entryViewModel.getEntry(id);
     if (!success && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
@@ -72,7 +75,7 @@ class _EntryViewState extends State<EntryView>
   _deleteEntry() async {
     onYes() async {
       final id = ModalRoute.of(context).settings.arguments;
-      await this._entryViewModel.deleteCurrentEntry(id);
+      await this._entryViewModel.deleteEntry(id);
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(Home.routeName);
@@ -115,6 +118,7 @@ class _EntryViewState extends State<EntryView>
                         child: _EntryTitle(
                           title: entry.title,
                           date: entry.createdAt,
+                          isLocked: entry.isLocked,
                         ),
                       ),
                       Positioned(
@@ -161,14 +165,15 @@ class _EntryViewState extends State<EntryView>
                             onTap: _onOptionsTap,
                           ),
                           Transform.translate(
-                              offset: _editButtonAnimation.value,
+                              offset: _lockButtonAnimation.value,
                               child: AirnoteCircularButton(
                                 icon: Icon(
-                                  Icons.edit,
+                                  entry.isLocked ? Icons.lock_open : Icons.lock_outline,
                                   color: AirnoteColors.primary,
                                 ),
                                 onTap: () async {
-                                  print("Editing");
+                                  this._entryViewModel.updateIsLocked(entry.id, !entry.isLocked);
+                                  this._entryViewModel = null;
                                 },
                               )),
                           Transform.translate(
@@ -179,7 +184,6 @@ class _EntryViewState extends State<EntryView>
                                   color: AirnoteColors.danger,
                                 ),
                                 onTap: () async {
-                                  print("Deletingg");
                                   await _deleteEntry();
                                 },
                               ))
@@ -289,8 +293,9 @@ class _SentimentItem extends StatelessWidget {
 class _EntryTitle extends StatelessWidget {
   final String title;
   final String date;
+  final bool isLocked;
 
-  _EntryTitle({Key key, this.title, this.date}) : super(key: key);
+  _EntryTitle({Key key, this.title, this.date, this.isLocked}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final dateTime = DateTime.parse(date);
@@ -302,13 +307,25 @@ class _EntryTitle extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-                color: AirnoteColors.text,
-                fontSize: 24,
-                letterSpacing: 0.8,
-                fontWeight: FontWeight.w700),
+          Row(
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(
+                    color: AirnoteColors.text,
+                    fontSize: 24,
+                    letterSpacing: 0.8,
+                    fontWeight: FontWeight.w700),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: isLocked ? Icon(
+                  Icons.lock_outline,
+                  size: 24,
+                  color: AirnoteColors.primary.withOpacity(0.7),
+                ) : Container(),
+              ),
+            ],
           ),
           Row(
             children: <Widget>[

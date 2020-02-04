@@ -11,9 +11,10 @@ class Entry {
   final String imageUrl;
   final String audioUrl;
   final String createdAt;
+  final bool isLocked;
   final List<Sentiment> sentiments;
 
-  Entry({this.id, this.content, this.createdAt, this.imageUrl, this.title, this.audioUrl, this.sentiments});
+  Entry({this.id, this.content, this.createdAt, this.imageUrl, this.title, this.audioUrl, this.sentiments, this.isLocked});
   factory Entry.fromJson(Map<String, dynamic> json) => _$EntryFromJson(json);
   Map<String, dynamic> toJson() => _$EntryToJson(this);
 }

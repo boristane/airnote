@@ -18,6 +18,7 @@ Entry _$EntryFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : Sentiment.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    isLocked: json['isLocked'] as bool,
   );
 }
 
@@ -28,5 +29,6 @@ Map<String, dynamic> _$EntryToJson(Entry instance) => <String, dynamic>{
       'imageUrl': instance.imageUrl,
       'audioUrl': instance.audioUrl,
       'createdAt': instance.createdAt,
+      'isLocked': instance.isLocked,
       'sentiments': instance.sentiments,
     };

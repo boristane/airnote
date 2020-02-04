@@ -44,6 +44,12 @@ class EntryService {
     return response;
   }
 
+  Future<Response> updateIsLockedEntry(int id, bool lock) {
+    final url = "/lock/$id";
+    final response = _apiClient.post(url, data: {"isLocked": lock});
+    return response;
+  }
+
   Future<void> setupClient() async {
     await _apiService.clientSetup();
     this._apiClient = _apiService.client;

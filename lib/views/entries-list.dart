@@ -49,8 +49,13 @@ class _EntriesListState extends State<EntriesList> {
                 itemBuilder: (BuildContext context, int index) {
                   final entry = entries[index];
                   return GestureDetector(
-                      onTap: () => Navigator.of(context)
-                          .pushNamed(EntryView.routeName, arguments: entry.id),
+                      onTap: () {
+                        if (entry.isLocked) {
+                          return print("Trying to open a locked entry");
+                        }
+                        Navigator.of(context)
+                          .pushNamed(EntryView.routeName, arguments: entry.id);
+                      },
                       child: AirnoteEntryListItem(
                         entry: entry,
                       ));
