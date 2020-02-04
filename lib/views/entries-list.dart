@@ -1,6 +1,8 @@
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/entry.dart';
+import 'package:airnote/services/local_auth.dart';
+import 'package:airnote/services/locator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/views/entry.dart';
@@ -14,6 +16,7 @@ class EntriesList extends StatefulWidget {
 
 class _EntriesListState extends State<EntriesList> {
   EntryViewModel _entryViewModel;
+  final LocalAuthService _localAuth = locator<LocalAuthService>();
 
   @override
   void didChangeDependencies() {
@@ -24,6 +27,16 @@ class _EntriesListState extends State<EntriesList> {
     }
     this._entryViewModel = _noteModelView;
     Future.microtask(this._entryViewModel.getEntries);
+  }
+
+  _openEntry(Entry entry) async {
+    if (entry.isLocked) {
+      await _localAuth.authenticate();
+      if (!_localAuth.isAuthenticated) {
+        return;
+      }
+    }
+    Navigator.of(context).pushNamed(EntryView.routeName, arguments: entry.id);
   }
 
   @override
@@ -49,12 +62,8 @@ class _EntriesListState extends State<EntriesList> {
                 itemBuilder: (BuildContext context, int index) {
                   final entry = entries[index];
                   return GestureDetector(
-                      onTap: () {
-                        if (entry.isLocked) {
-                          return print("Trying to open a locked entry");
-                        }
-                        Navigator.of(context)
-                          .pushNamed(EntryView.routeName, arguments: entry.id);
+                      onTap: () async {
+                        await _openEntry(entry);
                       },
                       child: AirnoteEntryListItem(
                         entry: entry,

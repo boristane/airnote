@@ -7,7 +7,6 @@ import 'dart:ui' as ui;
 
 class AirnoteEntryListItem extends StatelessWidget {
   final Entry entry;
-
   AirnoteEntryListItem({Key key, this.entry}) : super(key: key);
 
   @override
