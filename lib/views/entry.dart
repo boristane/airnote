@@ -28,7 +28,7 @@ class _EntryViewState extends State<EntryView>
   final _dialogService = locator<DialogService>();
 
   bool _isOptionOpened = false;
-  bool _isLocked;
+  bool _isLocked = false;
   bool _hasPlayer = false;
 
   @override
@@ -92,7 +92,16 @@ class _EntryViewState extends State<EntryView>
         title: "Are you sure?",
         content: "Deleting an entry is irreversible",
         onYes: onYes,
-        onNo: () {});
+        onNo: _closeOptions);
+  }
+
+  _lockEntry() async {
+    final id = ModalRoute.of(context).settings.arguments;
+    await this._entryViewModel.updateIsLocked(id, !_isLocked);
+    setState(() {
+      _isLocked = !_isLocked;
+    });
+    _closeOptions();
   }
 
   @override
@@ -138,7 +147,9 @@ class _EntryViewState extends State<EntryView>
                   ),
                 ),
                 Container(
-                  padding: _hasPlayer ? EdgeInsets.fromLTRB(20, 10, 20, 150) : EdgeInsets.fromLTRB(20, 10, 20, 20),
+                  padding: _hasPlayer
+                      ? EdgeInsets.fromLTRB(20, 10, 20, 150)
+                      : EdgeInsets.fromLTRB(20, 10, 20, 20),
                   color: AirnoteColors.backgroundColor,
                   child: Text(
                     entry.content,
@@ -180,14 +191,7 @@ class _EntryViewState extends State<EntryView>
                                       : Icons.lock_outline,
                                   color: AirnoteColors.primary,
                                 ),
-                                onTap: () async {
-                                  await this
-                                      ._entryViewModel
-                                      .updateIsLocked(entry.id, !_isLocked);
-                                  setState(() {
-                                    _isLocked = !_isLocked;
-                                  });
-                                },
+                                onTap: _lockEntry,
                               )),
                           Transform.translate(
                               offset: _deleteButtonAnimation.value,
@@ -210,9 +214,13 @@ class _EntryViewState extends State<EntryView>
             Positioned(
               bottom: 0,
               width: MediaQuery.of(context).size.width,
-              child: _hasPlayer ? AirnoteAudioPlayer(
-                audioFilePath: localRecordingFilePath,
-              ): Container(height: 0,),
+              child: _hasPlayer
+                  ? AirnoteAudioPlayer(
+                      audioFilePath: localRecordingFilePath,
+                    )
+                  : Container(
+                      height: 0,
+                    ),
             )
           ],
         );
