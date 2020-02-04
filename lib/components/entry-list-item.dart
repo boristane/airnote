@@ -33,7 +33,9 @@ class AirnoteEntryListItem extends StatelessWidget {
             top: 75.0,
             child: _EntryDescription(entry: entry),
           ),
-          _EntryBlur(isLocked: entry.isLocked,),
+          _EntryBlur(
+            isLocked: entry.isLocked,
+          ),
           Positioned(
             top: 10,
             right: 10,
@@ -86,7 +88,6 @@ class _EntryImage extends StatelessWidget {
       tag: heroTag,
       child: Stack(children: <Widget>[
         Container(
-          height: 150,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: imageProvider,
@@ -96,7 +97,6 @@ class _EntryImage extends StatelessWidget {
           ),
         ),
         Container(
-          height: 150,
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
               AirnoteColors.primary.withOpacity(0.0),
@@ -167,7 +167,11 @@ class _EntryBlur extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isLocked
-        ? BlurryEffect(opacity: 0, blurry: 3, shade: Colors.transparent,)
+        ? BlurryEffect(
+            opacity: 0,
+            blurry: 3,
+            shade: Colors.transparent,
+          )
         : Container();
   }
 }
@@ -177,22 +181,24 @@ class BlurryEffect extends StatelessWidget {
   final double blurry;
   final Color shade;
 
-  BlurryEffect({this.opacity,this.blurry,this.shade});
+  BlurryEffect({this.opacity, this.blurry, this.shade});
 
-    @override  Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child:  BackdropFilter(
-          filter:  ui.ImageFilter.blur(sigmaX:blurry, sigmaY:blurry),
-            child:  Container(
-              width: double.infinity,
-              height:  double.infinity,
-          
-              decoration:  BoxDecoration(color: shade.withOpacity(opacity),),
-             ),
-           ),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: blurry, sigmaY: blurry),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: shade.withOpacity(opacity),
+            ),
           ),
-        );
+        ),
+      ),
+    );
   }
 }

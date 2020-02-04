@@ -3,6 +3,7 @@ import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/sentiment.dart';
 import 'package:airnote/services/locator.dart';
+import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
@@ -26,6 +27,7 @@ class _EntryViewState extends State<EntryView>
   Animation<Offset> _lockButtonAnimation;
   Animation<Offset> _deleteButtonAnimation;
   final _dialogService = locator<DialogService>();
+  final _snackBarService = locator<SnackBarService>();
 
   bool _isOptionOpened = false;
   bool _isLocked = false;
@@ -98,6 +100,7 @@ class _EntryViewState extends State<EntryView>
   _lockEntry() async {
     final id = ModalRoute.of(context).settings.arguments;
     await this._entryViewModel.updateIsLocked(id, !_isLocked);
+    _snackBarService.showSnackBar(icon: Icon(Icons.lock), text: "Entry locked");
     setState(() {
       _isLocked = !_isLocked;
     });

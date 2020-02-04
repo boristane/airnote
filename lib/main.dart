@@ -1,4 +1,4 @@
-import 'package:airnote/managers/dialog-manager.dart';
+import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/entry.dart';
@@ -57,10 +57,14 @@ class Airnote extends StatelessWidget {
     return MaterialApp(
       title: "Lesley",
       theme: _theme,
-      builder: (context, widget) => Navigator(
-        onGenerateRoute: (RouteSettings settings) => MaterialPageRoute(
-          builder: (context) => DialogManager(
-            child: widget,
+      builder: (context, widget) => Scaffold(
+        body: Builder(
+          builder: (context) => Navigator(
+            onGenerateRoute: (RouteSettings settings) => MaterialPageRoute(
+              builder: (context) => AppManager(
+                child: widget,
+              ),
+            ),
           ),
         ),
       ),
