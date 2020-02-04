@@ -67,7 +67,7 @@ class EntryViewModel extends BaseViewModel {
   }
 
   Future<void> updateIsLocked(int id, bool newValue) async {
-    setStatus(ViewStatus.LOADING);
+    // setStatus(ViewStatus.LOADING);
     try {
       _message = "";
       _noteService.setupClient();
@@ -77,6 +77,6 @@ class EntryViewModel extends BaseViewModel {
       final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
       _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
     }
-    setStatus(ViewStatus.READY);
+    // setStatus(ViewStatus.READY);
   }
 }

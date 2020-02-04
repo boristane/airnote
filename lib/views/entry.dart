@@ -28,10 +28,14 @@ class _EntryViewState extends State<EntryView>
   final _dialogService = locator<DialogService>();
 
   bool _isOptionOpened = false;
+  bool _isLocked;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getEntry();
+    });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _lockButtonAnimation =
@@ -53,11 +57,6 @@ class _EntryViewState extends State<EntryView>
           ..addStatusListener(_setOptionsStatus);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _getEntry();
-  }
 
   _getEntry() async {
     final entryViewModel = Provider.of<EntryViewModel>(context);
@@ -68,8 +67,11 @@ class _EntryViewState extends State<EntryView>
     final id = ModalRoute.of(context).settings.arguments;
     final success = await this._entryViewModel.getEntry(id);
     if (!success && Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
+      return Navigator.of(context).pop();
     }
+        setState(() {
+      _isLocked = this._entryViewModel.currentEntry.isLocked;
+    });
   }
 
   _deleteEntry() async {
@@ -118,7 +120,7 @@ class _EntryViewState extends State<EntryView>
                         child: _EntryTitle(
                           title: entry.title,
                           date: entry.createdAt,
-                          isLocked: entry.isLocked,
+                          isLocked: _isLocked,
                         ),
                       ),
                       Positioned(
@@ -168,12 +170,14 @@ class _EntryViewState extends State<EntryView>
                               offset: _lockButtonAnimation.value,
                               child: AirnoteCircularButton(
                                 icon: Icon(
-                                  entry.isLocked ? Icons.lock_open : Icons.lock_outline,
+                                  _isLocked ? Icons.lock_open : Icons.lock_outline,
                                   color: AirnoteColors.primary,
                                 ),
                                 onTap: () async {
-                                  this._entryViewModel.updateIsLocked(entry.id, !entry.isLocked);
-                                  this._entryViewModel = null;
+                                  await this._entryViewModel.updateIsLocked(entry.id, !_isLocked);
+                                  setState(() {
+                                    _isLocked = !_isLocked;
+                                  });
                                 },
                               )),
                           Transform.translate(
@@ -318,7 +322,7 @@ class _EntryTitle extends StatelessWidget {
                     fontWeight: FontWeight.w700),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: isLocked ? Icon(
                   Icons.lock_outline,
                   size: 24,
