@@ -10,11 +10,13 @@ class EntryViewModel extends BaseViewModel {
   List<Entry> _entries;
   String _message;
   Entry _currentEntry;
+  String _currentEntryRecording = "";
   final _dialogService = locator<DialogService>();
 
   String get message => _message;
   List<Entry> get entries => _entries;
   Entry get currentEntry => _currentEntry;
+  String get currentEntryRecording => _currentEntryRecording;
 
   final _noteService = locator<EntryService>();
 
@@ -75,8 +77,22 @@ class EntryViewModel extends BaseViewModel {
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
+      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
     }
     // setStatus(ViewStatus.READY);
+  }
+
+  Future<void> getRecording(int id) async {
+    try {
+      _message = "";
+      _noteService.setupClient();
+      final path = await _noteService.loadRecording(id);
+      _currentEntryRecording= path;
+    } on DioError catch(err) {
+      final data = err.response?.data ?? {};
+      final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
+      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
+      _currentEntryRecording= "";
+    }
   }
 }

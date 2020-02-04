@@ -1,6 +1,5 @@
 import 'package:airnote/components/primary-flat-button.dart';
 import 'package:airnote/components/secondary-flat-button.dart';
-import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteDialogInfo extends StatefulWidget {

@@ -4,11 +4,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteAudioPlayer extends StatefulWidget {
-  final String audioUrl;
+  final String audioFilePath;
 
   AirnoteAudioPlayer({
     Key key,
-    this.audioUrl,
+    this.audioFilePath,
   }) : super(key: key);
   @override
   State<AirnoteAudioPlayer> createState() => _AirnoteAudioPlayerState();
@@ -83,7 +83,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   }
 
   void _initialisePlayer() async {
-    await _audioPlayer.setUrl(widget.audioUrl);
+    await _audioPlayer.setUrl(widget.audioFilePath, isLocal: true);
     _audioPlayer.onAudioPositionChanged.listen((Duration d) async {
       int currentPosition = await _audioPlayer.getCurrentPosition();
       setState(
@@ -112,7 +112,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
     _initialisePlayer();
     });
-    print(widget.audioUrl);
+    print(widget.audioFilePath);
     super.initState();
   }
 
@@ -121,7 +121,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
     _initialisePlayer();
     });
-    print(widget.audioUrl);
+    print(widget.audioFilePath);
     super.didChangeDependencies();
   }
 

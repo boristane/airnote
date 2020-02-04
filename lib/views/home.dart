@@ -34,6 +34,8 @@ class _HomeState extends State<Home> {
           ),
         ],
         onTap: _onBottomNavTapped,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: AirnoteColors.primary,

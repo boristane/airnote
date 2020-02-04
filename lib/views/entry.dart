@@ -29,12 +29,13 @@ class _EntryViewState extends State<EntryView>
 
   bool _isOptionOpened = false;
   bool _isLocked;
+  bool _hasPlayer = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getEntry();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _getEntry();
     });
     _optionsAnimationController =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
@@ -57,7 +58,6 @@ class _EntryViewState extends State<EntryView>
           ..addStatusListener(_setOptionsStatus);
   }
 
-
   _getEntry() async {
     final entryViewModel = Provider.of<EntryViewModel>(context);
     if (this._entryViewModel == entryViewModel) {
@@ -69,8 +69,12 @@ class _EntryViewState extends State<EntryView>
     if (!success && Navigator.of(context).canPop()) {
       return Navigator.of(context).pop();
     }
-        setState(() {
+    setState(() {
       _isLocked = this._entryViewModel.currentEntry.isLocked;
+    });
+    await this._entryViewModel.getRecording(id);
+    setState(() {
+      _hasPlayer = _entryViewModel.currentEntryRecording == "" ? false : true;
     });
   }
 
@@ -102,6 +106,7 @@ class _EntryViewState extends State<EntryView>
         if (entry == null) {
           return AirnoteLoadingScreen();
         }
+        final localRecordingFilePath = model.currentEntryRecording;
         final heroTag = "entry-image-${entry.id}";
         return Stack(
           children: <Widget>[
@@ -133,7 +138,7 @@ class _EntryViewState extends State<EntryView>
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 150),
+                  padding: _hasPlayer ? EdgeInsets.fromLTRB(20, 10, 20, 150) : EdgeInsets.fromLTRB(20, 10, 20, 20),
                   color: AirnoteColors.backgroundColor,
                   child: Text(
                     entry.content,
@@ -170,11 +175,15 @@ class _EntryViewState extends State<EntryView>
                               offset: _lockButtonAnimation.value,
                               child: AirnoteCircularButton(
                                 icon: Icon(
-                                  _isLocked ? Icons.lock_open : Icons.lock_outline,
+                                  _isLocked
+                                      ? Icons.lock_open
+                                      : Icons.lock_outline,
                                   color: AirnoteColors.primary,
                                 ),
                                 onTap: () async {
-                                  await this._entryViewModel.updateIsLocked(entry.id, !_isLocked);
+                                  await this
+                                      ._entryViewModel
+                                      .updateIsLocked(entry.id, !_isLocked);
                                   setState(() {
                                     _isLocked = !_isLocked;
                                   });
@@ -201,9 +210,9 @@ class _EntryViewState extends State<EntryView>
             Positioned(
               bottom: 0,
               width: MediaQuery.of(context).size.width,
-              child: AirnoteAudioPlayer(
-                audioUrl: entry.audioUrl,
-              ),
+              child: _hasPlayer ? AirnoteAudioPlayer(
+                audioFilePath: localRecordingFilePath,
+              ): Container(height: 0,),
             )
           ],
         );
@@ -243,14 +252,8 @@ class _EntryViewState extends State<EntryView>
   }
 
   Icon _getOptionButtonIcon() {
-    if (_isOptionOpened) {
-      return Icon(
-        Icons.close,
-        color: AirnoteColors.primary,
-      );
-    }
     return Icon(
-      Icons.more_horiz,
+      _isOptionOpened ? Icons.close : Icons.more_horiz,
       color: AirnoteColors.primary,
     );
   }
@@ -299,7 +302,8 @@ class _EntryTitle extends StatelessWidget {
   final String date;
   final bool isLocked;
 
-  _EntryTitle({Key key, this.title, this.date, this.isLocked}) : super(key: key);
+  _EntryTitle({Key key, this.title, this.date, this.isLocked})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final dateTime = DateTime.parse(date);
@@ -323,11 +327,13 @@ class _EntryTitle extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: isLocked ? Icon(
-                  Icons.lock_outline,
-                  size: 24,
-                  color: AirnoteColors.primary.withOpacity(0.7),
-                ) : Container(),
+                child: isLocked
+                    ? Icon(
+                        Icons.lock_outline,
+                        size: 24,
+                        color: AirnoteColors.primary.withOpacity(0.7),
+                      )
+                    : Container(),
               ),
             ],
           ),

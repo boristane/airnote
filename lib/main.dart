@@ -25,22 +25,9 @@ void main() async {
           create: (context) => EntryViewModel(),
         ),
       ],
-      child: MyApp(),
+      child: Airnote(),
     ),
   );
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Lesley',
-      theme: ThemeData(
-        primarySwatch: AirnoteColors.swatch,
-      ),
-      home: Airnote(),
-    );
-  }
 }
 
 class Airnote extends StatelessWidget {
@@ -63,11 +50,12 @@ class Airnote extends StatelessWidget {
       inputDecorationTheme: _inputDecorationTheme,
       primaryColor: AirnoteColors.primary,
       primaryIconTheme: IconThemeData(color: AirnoteColors.primary),
+      primarySwatch: AirnoteColors.swatch,
       textTheme: _textTheme,
     );
 
     return MaterialApp(
-      title: "Airnote",
+      title: "Lesley",
       theme: _theme,
       builder: (context, widget) => Navigator(
         onGenerateRoute: (RouteSettings settings) => MaterialPageRoute(

@@ -1,5 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:airnote/services/api.dart';
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:async';
+import 'dart:io';
+
+typedef void OnError(Exception exception);
 
 class EntryService {
   Dio _apiClient;
@@ -53,5 +60,38 @@ class EntryService {
   Future<void> setupClient() async {
     await _apiService.clientSetup();
     this._apiClient = _apiService.client;
+  }
+
+  Future<String> loadRecording(int id) async {
+    final bytes = await _streamRecordingBytes(id,
+        onError: (Exception exception) =>
+            print('audio_provider.load => exception $exception'));
+
+    final dir = await getTemporaryDirectory();
+    final file = new File('${dir.path}/audio.mp3');
+    final sink = file.openWrite();
+    bytes.listen((data) => sink.add(data), onDone: () => sink.close(), onError: (_) => sink.close());
+
+    if (await file.exists()) {
+      return file.path;
+    }
+    return "";
+  }
+
+  Future<Stream<Uint8List>> _streamRecordingBytes(int id,
+      {OnError onError}) async {
+    Stream<Uint8List> bytes;
+    try {
+      Response<ResponseBody> rs = await this._apiClient.get<ResponseBody>(
+            "/recording/$id",
+            options: Options(
+                responseType:
+                    ResponseType.stream),
+          );
+      bytes = rs.data.stream;
+    } on DioErrorType {
+      rethrow;
+    }
+    return bytes;
   }
 }
