@@ -109,8 +109,8 @@ class _EntryViewState extends State<EntryView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<EntryViewModel>(builder: (context, model, child) {
+    return Container(
+      child: Consumer<EntryViewModel>(builder: (context, model, child) {
         if (model.getStatus() == ViewStatus.LOADING) {
           return AirnoteLoadingScreen();
         }

@@ -41,37 +41,44 @@ class _EntriesListState extends State<EntriesList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SafeArea(
-        child: Container(child: Consumer<EntryViewModel>(
-          builder: (context, model, child) {
-            List<Entry> entries = model.entries;
-            if (model.getStatus() == ViewStatus.LOADING) {
-              return AirnoteLoadingScreen();
-            }
-            if (entries == null) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                alignment: Alignment.center,
-                child: Text("Ooops ! There was a problem getting the data..."),
-              );
-            }
-            if (entries.length < 1) return NoEntryFound();
-            return ListView.builder(
-                itemCount: entries.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final entry = entries[index];
-                  return GestureDetector(
-                      onTap: () async {
-                        await _openEntry(entry);
-                      },
-                      child: AirnoteEntryListItem(
-                        entry: entry,
-                      ));
-                });
-          },
-        )),
-      ),
+    return SafeArea(
+      child: Container(child: Consumer<EntryViewModel>(
+        builder: (context, model, child) {
+          List<Entry> entries = model.entries;
+          if (model.getStatus() == ViewStatus.LOADING) {
+            return AirnoteLoadingScreen();
+          }
+          if (entries == null) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 25.0),
+              alignment: Alignment.center,
+              child: Text("Ooops ! There was a problem getting the data..."),
+            );
+          }
+          if (entries.length < 1) return NoEntryFound();
+          return Column(
+            children: <Widget>[
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: ListView.builder(
+                      itemCount: entries.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final entry = entries[index];
+                        return GestureDetector(
+                            onTap: () async {
+                              await _openEntry(entry);
+                            },
+                            child: AirnoteEntryListItem(
+                              entry: entry,
+                            ));
+                      }),
+                ),
+              ),
+            ],
+          );
+        },
+      )),
     );
   }
 }
