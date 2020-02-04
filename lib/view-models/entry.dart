@@ -69,7 +69,6 @@ class EntryViewModel extends BaseViewModel {
   }
 
   Future<void> updateIsLocked(int id, bool newValue) async {
-    // setStatus(ViewStatus.LOADING);
     try {
       _message = "";
       _noteService.setupClient();
@@ -79,7 +78,6 @@ class EntryViewModel extends BaseViewModel {
       final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
       _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
     }
-    // setStatus(ViewStatus.READY);
   }
 
   Future<void> getRecording(int id) async {
@@ -90,7 +88,7 @@ class EntryViewModel extends BaseViewModel {
       _currentEntryRecording= path;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
+      final message = (data is String || data is ResponseBody) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
       _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
       _currentEntryRecording= "";
     }

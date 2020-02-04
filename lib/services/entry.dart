@@ -63,9 +63,7 @@ class EntryService {
   }
 
   Future<String> loadRecording(int id) async {
-    final bytes = await _streamRecordingBytes(id,
-        onError: (Exception exception) =>
-            print('audio_provider.load => exception $exception'));
+    final bytes = await _streamRecordingBytes(id);
 
     final dir = await getTemporaryDirectory();
     final file = new File('${dir.path}/audio.mp3');
@@ -78,10 +76,8 @@ class EntryService {
     return "";
   }
 
-  Future<Stream<Uint8List>> _streamRecordingBytes(int id,
-      {OnError onError}) async {
+  Future<Stream<Uint8List>> _streamRecordingBytes(int id) async {
     Stream<Uint8List> bytes;
-    try {
       Response<ResponseBody> rs = await this._apiClient.get<ResponseBody>(
             "/recording/$id",
             options: Options(
@@ -89,9 +85,6 @@ class EntryService {
                     ResponseType.stream),
           );
       bytes = rs.data.stream;
-    } on DioErrorType {
-      rethrow;
-    }
     return bytes;
   }
 }
