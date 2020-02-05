@@ -1,5 +1,6 @@
 
 
+import 'package:airnote/services/database.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/entry.dart';
 import 'package:airnote/services/local-auth.dart';
@@ -17,4 +18,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => SnackBarService());
   locator.registerLazySingleton(() => LocalAuthService());
   locator.registerLazySingleton(() => PassPhraseService());
+  locator.registerLazySingleton(() => DatabaseService());
 }

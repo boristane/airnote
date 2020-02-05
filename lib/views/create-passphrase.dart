@@ -45,8 +45,8 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
     if (!form.validate() || _formData['checked'] != "checked") return;
     form.save();
     await passphraseService.savePassPhrase(_formData["passphrase"]);
-    Navigator.of(context).pushNamedAndRemoveUntil(
-        Root.routeName, (Route<dynamic> route) => false);
+    // Navigator.of(context).pushNamedAndRemoveUntil(
+    //     Root.routeName, (Route<dynamic> route) => false);
   }
 
   @override
