@@ -6,9 +6,7 @@ import 'package:airnote/services/locator.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
-import 'package:airnote/view-models/base.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:airnote/services/passphrase.dart';
 
 class CreatePassPhrase extends StatefulWidget {
@@ -24,7 +22,7 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
 
   _setPassphrase(value) {
     setState(() {
-      _formData['passphrase'] = value;
+      _formData['passPhrase'] = value;
     });
   }
 
@@ -40,13 +38,14 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
   }
 
   _handleSavePassPhraseTap() async {
-    final passphraseService = locator<PassPhraseService>();
+    final email = ModalRoute.of(context).settings.arguments;
+    final passPhraseService = locator<PassPhraseService>();
     final form = _formKey.currentState;
     if (!form.validate() || _formData['checked'] != "checked") return;
     form.save();
-    await passphraseService.savePassPhrase(_formData["passphrase"]);
-    // Navigator.of(context).pushNamedAndRemoveUntil(
-    //     Root.routeName, (Route<dynamic> route) => false);
+    await passPhraseService.savePassPhrase(email, _formData["passPhrase"]);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        Root.routeName, (Route<dynamic> route) => false);
   }
 
   @override
@@ -81,7 +80,7 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
                       AirnoteTextInputField(
                         hint: "Your big secret",
                         label: "Pass Phrase",
-                        validator: InputValidator.passphrase,
+                        validator: InputValidator.passPhrase,
                         save: _setPassphrase,
                         obscure: true,
                         suffix: Icon(Icons.lock_outline),
