@@ -12,11 +12,4 @@ class PassPhraseService {
     final encrypted = encrypter.encrypt(passPhrase, iv: this._iv);
     this._dbService.savePassPhrase(email: email, passPhrase: encrypted.base64);
   }
-
-  Future<bool> verifyPassPhrase(String email, String passPhrase) async {
-    final encrypter = Encrypter(AES(this._key));
-    final encrypted = Encrypted.from64(await _dbService.getPassPhrase(email));
-    final decrypted = encrypter.decrypt(encrypted, iv: _iv);
-    return decrypted == passPhrase;
-  }
 }

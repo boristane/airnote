@@ -2,10 +2,13 @@ import 'package:airnote/components/app-bar.dart';
 import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/components/text-input-field.dart';
+import 'package:airnote/services/database.dart';
+import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
@@ -39,12 +42,19 @@ class _LoginState extends State<Login> {
 
   _handleLoginTap() async {
     final userModelView = Provider.of<UserViewModel>(context);
+    DatabaseService dbService = locator<DatabaseService>();
     final status = userModelView.getStatus();
     if (status == ViewStatus.LOADING) return;
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
     await userModelView.login(_formData);
+    final passPhrase = await dbService.getPassPhrase(_formData["email"]);
+    print(passPhrase);
+    if (passPhrase == null) {
+      Navigator.of(context).pushNamedAndRemoveUntil(RememberPassPhrase.routeName, (Route<dynamic> route) => false, arguments: _formData["email"]);
+      return;
+    }
     Navigator.of(context).pushNamedAndRemoveUntil(Root.routeName, (Route<dynamic> route) => false);
   }
 

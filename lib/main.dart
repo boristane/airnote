@@ -7,6 +7,7 @@ import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/login.dart';
 import 'package:airnote/views/entry.dart';
+import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,7 @@ class Airnote extends StatelessWidget {
         EntryView.routeName: (context) => EntryView(),
         Home.routeName: (context) => Home(),
         CreatePassPhrase.routeName: (context) => CreatePassPhrase(),
+        RememberPassPhrase.routeName: (context) => RememberPassPhrase(),
       },
       home: Root(),
     );
