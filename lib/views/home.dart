@@ -1,4 +1,5 @@
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/views/create-entry.dart';
 import 'package:airnote/views/entries-list.dart';
 import 'package:airnote/views/profile.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +42,7 @@ class _HomeState extends State<Home> {
           backgroundColor: AirnoteColors.primary,
           child: Icon(Icons.add),
           onPressed: () {
-            // Navigator.of(context).push(SlideUpRoute(widget: AddEntry())),
-            print("Clicked add");
+            Navigator.of(context).pushNamed(CreateEntry.routeName);
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(

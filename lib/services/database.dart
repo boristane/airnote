@@ -21,7 +21,7 @@ class DatabaseService {
   }
 
   Future<void> savePassPhrase({String email, String passPhrase}) async {
-      await this._passPhraseStore.record(email).put(_db, passPhrase);
+    await this._passPhraseStore.record(email).put(_db, passPhrase);
   }
 
   Future<String> getPassPhrase(String email) async {

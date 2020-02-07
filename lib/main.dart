@@ -3,6 +3,7 @@ import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/create-entry.dart';
 import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/login.dart';
@@ -77,6 +78,7 @@ class Airnote extends StatelessWidget {
         Home.routeName: (context) => Home(),
         CreatePassPhrase.routeName: (context) => CreatePassPhrase(),
         RememberPassPhrase.routeName: (context) => RememberPassPhrase(),
+        CreateEntry.routeName: (context) => CreateEntry(),
       },
       home: Root(),
     );
