@@ -19,6 +19,7 @@ class CreatePassPhrase extends StatefulWidget {
 class _CreatePassPhraseState extends State<CreatePassPhrase> {
   final _formKey = GlobalKey<FormState>();
   Map<String, String> _formData = {};
+  bool _checked = true;
 
   _setPassphrase(value) {
     setState(() {
@@ -38,10 +39,13 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
   }
 
   _handleSavePassPhraseTap() async {
+    setState(() {
+    _checked = _formData['checked'] == "checked";
+    });
     final email = ModalRoute.of(context).settings.arguments;
     final passPhraseService = locator<PassPhraseService>();
     final form = _formKey.currentState;
-    if (!form.validate() || _formData['checked'] != "checked") return;
+    if (!form.validate() || !_checked) return;
     form.save();
     await passPhraseService.savePassPhrase(email, _formData["passPhrase"]);
     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -87,27 +91,36 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Transform.scale(
-                              scale: 1.2,
-                              child: Checkbox(
-                                value: _formData["checked"] == "checked",
-                                onChanged: _setChecked,
-                                activeColor: AirnoteColors.primary,
-                                checkColor: AirnoteColors.lightGrey,
-                                focusColor: AirnoteColors.primary,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _formData['checked'] =
+                                  _formData['checked'] == "not-checked"
+                                      ? "checked"
+                                      : "not-checked";
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Transform.scale(
+                                scale: 1.2,
+                                child: Checkbox(
+                                  value: _formData["checked"] == "checked",
+                                  onChanged: _setChecked,
+                                  activeColor: AirnoteColors.primary,
+                                  checkColor: AirnoteColors.lightGrey,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "I have written my pass phrase down.",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: AirnoteColors.grey,
+                              Text(
+                                "I have written my pass phrase down.",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: _checked ? AirnoteColors.grey : AirnoteColors.danger,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       AirnoteSubmitButton(
