@@ -95,6 +95,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
         Recording current = await _recorder.current(channel: 0);
         _changeStatus(current);
       });
+      new Timer.periodic(Duration(milliseconds: 5000), (Timer t) async {
+        print(_currentRecording.metering.averagePower);
+      });
     } catch (e) {
       print(e);
     }
