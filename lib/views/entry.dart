@@ -155,7 +155,7 @@ class _EntryViewState extends State<EntryView>
                       : EdgeInsets.fromLTRB(20, 10, 20, 20),
                   color: AirnoteColors.backgroundColor,
                   child: Text(
-                    entry.content,
+                    entry.content ?? "There was a problem getting the content of the entry...",
                     style: TextStyle(
                         fontSize: 16,
                         height: 1.2,

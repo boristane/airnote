@@ -6,6 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:http_parser/http_parser.dart';
+
 typedef void OnError(Exception exception);
 
 class EntryService {
@@ -38,7 +40,7 @@ class EntryService {
       "title": data["title"],
       // "content": data["content"],
       "recording":
-          await MultipartFile.fromFile(data["recording"])
+          await MultipartFile.fromFile(data["recording"], contentType: MediaType("audio", "wav"))
     });
 
     final response = _apiClient.post(url, data: formData);
