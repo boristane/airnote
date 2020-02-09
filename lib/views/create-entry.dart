@@ -1,7 +1,14 @@
+import 'dart:async';
+import 'dart:io' as io;
+
 import 'package:airnote/components/circular-button.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:flutter/material.dart';
-import 'package:speech_recognition/speech_recognition.dart';
+import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class CreateEntry extends StatefulWidget {
   static const routeName = "create-entry";
@@ -10,27 +17,34 @@ class CreateEntry extends StatefulWidget {
 }
 
 class _CreateEntryState extends State<CreateEntry> {
-  SpeechRecognition _speechRecognition;
+  FlutterAudioRecorder _recorder;
+  Recording _current;
+  RecordingStatus _currentStatus = RecordingStatus.Unset;
 
-  bool _isAvailable = false;
-  bool _isListening = false;
-
-  String _text = '';
   @override
-  initState() {
+  void initState() {
     super.initState();
-    _activateSpeechRecognizer();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _activateRecording();
+    });
   }
 
-  void _activateSpeechRecognizer() {
-    _speechRecognition = new SpeechRecognition();
-    _speechRecognition.setAvailabilityHandler(onSpeechAvailability);
-    _speechRecognition.setRecognitionStartedHandler(onRecognitionStarted);
-    _speechRecognition.setRecognitionResultHandler(onRecognitionResult);
-    _speechRecognition.setRecognitionCompleteHandler(onRecognitionComplete);
-    _speechRecognition
-        .activate()
-        .then((res) => setState(() => _isAvailable = res));
+  Future<void> _activateRecording() async {
+    try {
+      String path = "entry_${DateTime.now().millisecondsSinceEpoch.toString()}.wav";
+      io.Directory dir = await getApplicationDocumentsDirectory();
+      await dir.create(recursive: true);
+      path = join(dir.path, path);
+      _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.WAV);
+      await _recorder.initialized;
+      var current = await _recorder.current(channel: 0);
+      setState(() {
+        _current = current;
+        _currentStatus = current.status;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -44,7 +58,7 @@ class _CreateEntryState extends State<CreateEntry> {
             padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
             color: AirnoteColors.backgroundColor,
             child: Text(
-              _text,
+              _current.duration.toString(),
               style: TextStyle(
                   fontSize: 16,
                   height: 1.2,
@@ -59,13 +73,38 @@ class _CreateEntryState extends State<CreateEntry> {
                 onTap: cancel,
               ),
               AirnoteCircularButton(
-                icon: Icon(Icons.mic),
+                icon: _buildIcon(_currentStatus),
                 isLarge: true,
-                onTap: start,
+                onTap: (){
+                  switch (_currentStatus) {
+                          case RecordingStatus.Initialized:
+                            {
+                              _start();
+                              break;
+                            }
+                          case RecordingStatus.Recording:
+                            {
+                              _pause();
+                              break;
+                            }
+                          case RecordingStatus.Paused:
+                            {
+                              _resume();
+                              break;
+                            }
+                          case RecordingStatus.Stopped:
+                            {
+                              _activateRecording();
+                              break;
+                            }
+                          default:
+                            break;
+                        }
+                },
               ),
               AirnoteCircularButton(
                 icon: Icon(Icons.stop),
-                onTap: stop,
+                onTap: _stop,
               ),
             ],
           ),
@@ -74,39 +113,83 @@ class _CreateEntryState extends State<CreateEntry> {
     ));
   }
 
-  void start() {
-    if (!(_isAvailable && !_isListening)) {
-      return;
+  void _start() async {
+    try {
+      await _recorder.start();
+      var recording = await _recorder.current(channel: 0);
+      setState(() {
+        _current = recording;
+      });
+
+      const tick = const Duration(milliseconds: 50);
+      new Timer.periodic(tick, (Timer t) async {
+        if (_currentStatus == RecordingStatus.Stopped) {
+          t.cancel();
+        }
+
+        var current = await _recorder.current(channel: 0);
+        print(current.duration);
+        setState(() {
+          _current = current;
+          _currentStatus = _current.status;
+        });
+      });
+    } catch (e) {
+      print(e);
     }
-    _speechRecognition
-        .listen(locale: "en_US")
-        .then((result) => print('_MyAppState.start => result $result'));
   }
 
-  void cancel() {
-    if (!_isListening) {
-      return;
-    }
-    _speechRecognition
-        .cancel()
-        .then((result) => setState(() => _isListening = result));
+  void cancel() async {}
+
+  _resume() async {
+    await _recorder.resume();
+    setState(() {});
   }
 
-  void stop() {
-    if (!_isListening) {
-      return;
-    }
-    _speechRecognition.stop().then((result) {
-      setState(() => _isListening = result);
+  _pause() async {
+    await _recorder.pause();
+    setState(() {});
+  }
+
+  void _stop() async {
+    Recording result = await _recorder.stop();
+    print("Stop recording: ${result.path}");
+    print("Stop recording: ${result.duration}");
+    var localFileSystem = LocalFileSystem();
+    File file = localFileSystem.file(result.path);
+    print("File length: ${await file.length()}");
+    setState(() {
+      _current = result;
+      _currentStatus = _current.status;
     });
   }
 
-  void onSpeechAvailability(bool result) =>
-      setState(() => _isAvailable = result);
-
-  void onRecognitionStarted() => setState(() => _isListening = true);
-
-  void onRecognitionResult(String text) => setState(() => _text = text);
-
-  void onRecognitionComplete() => setState(() => _isListening = false);
+  Icon _buildIcon(RecordingStatus status) {
+    Icon icon;
+    switch (_currentStatus) {
+      case RecordingStatus.Initialized:
+        {
+          icon = Icon(Icons.mic);
+          break;
+        }
+      case RecordingStatus.Recording:
+        {
+          icon = Icon(Icons.pause);
+          break;
+        }
+      case RecordingStatus.Paused:
+        {
+          icon = Icon(Icons.mic);
+          break;
+        }
+      case RecordingStatus.Stopped:
+        {
+          icon = Icon(Icons.mic_off);
+          break;
+        }
+      default:
+        break;
+    }
+    return icon;
+  }
 }
