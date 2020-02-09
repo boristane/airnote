@@ -1,12 +1,12 @@
 import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class AirnoteCircularButton extends StatelessWidget {
+class AirnoteOptionButton extends StatelessWidget {
   final Widget icon;
   final Function onTap;
   final bool isLarge;
 
-  AirnoteCircularButton({Key key, this.icon, this.onTap, this.isLarge = false})
+  AirnoteOptionButton({Key key, this.icon, this.onTap, this.isLarge = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

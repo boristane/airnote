@@ -1,14 +1,13 @@
-import 'dart:async';
-import 'dart:io' as io;
-
-import 'package:airnote/components/circular-button.dart';
+import 'package:airnote/components/audio-recorder.dart';
+import 'package:airnote/components/option-button.dart';
+import 'package:airnote/components/title-input-field.dart';
 import 'package:airnote/utils/colors.dart';
-import 'package:file/file.dart';
-import 'package:file/local.dart';
+import 'package:airnote/utils/input-validator.dart';
+import 'package:airnote/view-models/base.dart';
+import 'package:airnote/view-models/entry.dart';
+import 'package:airnote/views/home.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 class CreateEntry extends StatefulWidget {
   static const routeName = "create-entry";
@@ -17,179 +16,109 @@ class CreateEntry extends StatefulWidget {
 }
 
 class _CreateEntryState extends State<CreateEntry> {
-  FlutterAudioRecorder _recorder;
-  Recording _current;
-  RecordingStatus _currentStatus = RecordingStatus.Unset;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _activateRecording();
-    });
-  }
-
-  Future<void> _activateRecording() async {
-    try {
-      String path = "entry_${DateTime.now().millisecondsSinceEpoch.toString()}.wav";
-      io.Directory dir = await getApplicationDocumentsDirectory();
-      await dir.create(recursive: true);
-      path = join(dir.path, path);
-      _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.WAV);
-      await _recorder.initialized;
-      var current = await _recorder.current(channel: 0);
-      setState(() {
-        _current = current;
-        _currentStatus = current.status;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+  Map<String, String> _formData = {};
+  final _addEntryFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final _entryViewModel = Provider.of<EntryViewModel>(context);
     return Scaffold(
-        body: Container(
-      child: ListView(
-        children: <Widget>[
-          Container(child: Text("Title")),
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-            color: AirnoteColors.backgroundColor,
-            child: Text(
-              _current.duration.toString(),
-              style: TextStyle(
-                  fontSize: 16,
-                  height: 1.2,
-                  color: AirnoteColors.text.withOpacity(0.8)),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Stack(
             children: <Widget>[
-              AirnoteCircularButton(
-                icon: Icon(Icons.cancel),
-                onTap: cancel,
+              ListView(
+                children: <Widget>[
+                  Theme(
+                    data: ThemeData(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      inputDecorationTheme:
+                          InputDecorationTheme(border: InputBorder.none),
+                    ),
+                    child: Form(
+                      key: _addEntryFormKey,
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 45),
+                          TitleInputField(
+                            hint: "What\'s up?",
+                            validator: InputValidator.title,
+                            onSaved: _onTitleSaved,
+                          ),
+                          SizedBox(height: 100),
+                          AudioRecorder(
+                            onComplete: (recording) {
+                              print("Status completed");
+                              _formData["recording"] = recording.path;
+                            },
+                          ),
+                          // TextFormField(
+                          //   keyboardType: TextInputType.multiline,
+                          //   maxLines: null,
+                          //   cursorColor: Color(0xFF3C4858),
+                          //   decoration: InputDecoration.collapsed(
+                          //       hintText:
+                          //           'Tell me about it, I don\'t snitch 🤐..'),
+                          //   validator: InputValidator.content,
+                          //   onSaved: (value) => _formData['content'] = value,
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              AirnoteCircularButton(
-                icon: _buildIcon(_currentStatus),
-                isLarge: true,
-                onTap: (){
-                  switch (_currentStatus) {
-                          case RecordingStatus.Initialized:
-                            {
-                              _start();
-                              break;
-                            }
-                          case RecordingStatus.Recording:
-                            {
-                              _pause();
-                              break;
-                            }
-                          case RecordingStatus.Paused:
-                            {
-                              _resume();
-                              break;
-                            }
-                          case RecordingStatus.Stopped:
-                            {
-                              _activateRecording();
-                              break;
-                            }
-                          default:
-                            break;
-                        }
+              AirnoteOptionButton(
+                icon: Icon(Icons.arrow_downward),
+                onTap: () {
+                  Navigator.of(context).pop();
                 },
-              ),
-              AirnoteCircularButton(
-                icon: Icon(Icons.stop),
-                onTap: _stop,
               ),
             ],
           ),
-        ],
+        ),
       ),
-    ));
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AirnoteColors.primary,
+        child: _entryViewModel.getStatus() == ViewStatus.LOADING
+            ? SizedBox(
+                width: 20.0,
+                height: 20.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(AirnoteColors.white),
+                ),
+              )
+            : Icon(
+                Icons.check,
+              ),
+        onPressed: () {
+          if (_entryViewModel.getStatus() == ViewStatus.LOADING) return;
+          final form = _addEntryFormKey.currentState;
+          if (form.validate()) {
+            form.save();
+            _handleAddEntry();
+          }
+        },
+      ),
+    );
   }
 
-  void _start() async {
-    try {
-      await _recorder.start();
-      var recording = await _recorder.current(channel: 0);
-      setState(() {
-        _current = recording;
-      });
-
-      const tick = const Duration(milliseconds: 50);
-      new Timer.periodic(tick, (Timer t) async {
-        if (_currentStatus == RecordingStatus.Stopped) {
-          t.cancel();
-        }
-
-        var current = await _recorder.current(channel: 0);
-        print(current.duration);
-        setState(() {
-          _current = current;
-          _currentStatus = _current.status;
-        });
-      });
-    } catch (e) {
-      print(e);
+  _handleAddEntry() async {
+    final entryViewModel = Provider.of<EntryViewModel>(context);
+    if (entryViewModel.getStatus() == ViewStatus.LOADING) return;
+    final form = _addEntryFormKey.currentState;
+    if (!(form.validate())) return;
+    if (_formData["recording"] == null) return;
+    form.save();
+    final response = await entryViewModel.createEntry(_formData);
+    if (response) {
+      Navigator.of(context).pushNamed(Home.routeName);
     }
   }
 
-  void cancel() async {}
-
-  _resume() async {
-    await _recorder.resume();
-    setState(() {});
-  }
-
-  _pause() async {
-    await _recorder.pause();
-    setState(() {});
-  }
-
-  void _stop() async {
-    Recording result = await _recorder.stop();
-    print("Stop recording: ${result.path}");
-    print("Stop recording: ${result.duration}");
-    var localFileSystem = LocalFileSystem();
-    File file = localFileSystem.file(result.path);
-    print("File length: ${await file.length()}");
-    setState(() {
-      _current = result;
-      _currentStatus = _current.status;
-    });
-  }
-
-  Icon _buildIcon(RecordingStatus status) {
-    Icon icon;
-    switch (_currentStatus) {
-      case RecordingStatus.Initialized:
-        {
-          icon = Icon(Icons.mic);
-          break;
-        }
-      case RecordingStatus.Recording:
-        {
-          icon = Icon(Icons.pause);
-          break;
-        }
-      case RecordingStatus.Paused:
-        {
-          icon = Icon(Icons.mic);
-          break;
-        }
-      case RecordingStatus.Stopped:
-        {
-          icon = Icon(Icons.mic_off);
-          break;
-        }
-      default:
-        break;
-    }
-    return icon;
+  _onTitleSaved(String value) {
+    _formData['title'] = value;
   }
 }

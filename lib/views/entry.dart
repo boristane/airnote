@@ -1,5 +1,5 @@
 import 'package:airnote/components/audio-player.dart';
-import 'package:airnote/components/circular-button.dart';
+import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/sentiment.dart';
 import 'package:airnote/services/locator.dart';
@@ -173,7 +173,7 @@ class _EntryViewState extends State<EntryView>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      AirnoteCircularButton(
+                      AirnoteOptionButton(
                         icon: Icon(Icons.arrow_downward,
                             color: AirnoteColors.primary),
                         onTap: _onCloseEntryTap,
@@ -181,13 +181,13 @@ class _EntryViewState extends State<EntryView>
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          AirnoteCircularButton(
+                          AirnoteOptionButton(
                             icon: _getOptionButtonIcon(),
                             onTap: _onOptionsTap,
                           ),
                           Transform.translate(
                               offset: _lockButtonAnimation.value,
-                              child: AirnoteCircularButton(
+                              child: AirnoteOptionButton(
                                 icon: Icon(
                                   _isLocked
                                       ? Icons.lock_open
@@ -198,7 +198,7 @@ class _EntryViewState extends State<EntryView>
                               )),
                           Transform.translate(
                               offset: _deleteButtonAnimation.value,
-                              child: AirnoteCircularButton(
+                              child: AirnoteOptionButton(
                                 icon: Icon(
                                   Icons.delete_outline,
                                   color: AirnoteColors.danger,

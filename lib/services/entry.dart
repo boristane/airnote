@@ -36,9 +36,9 @@ class EntryService {
     final url = "/";
     final FormData formData = FormData.fromMap({
       "title": data["title"],
-      "content": data["content"],
-      "image":
-          await MultipartFile.fromFile(data["image"], filename: "upload.txt")
+      // "content": data["content"],
+      "recording":
+          await MultipartFile.fromFile(data["recording"])
     });
 
     final response = _apiClient.post(url, data: formData);

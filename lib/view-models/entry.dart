@@ -53,6 +53,22 @@ class EntryViewModel extends BaseViewModel {
     return success;
   }
 
+  Future<bool> createEntry(Map<String, String> formData) async {
+    setStatus(ViewStatus.LOADING);
+
+    Response response;
+    try {
+      response = await _noteService.postEntry(formData);
+    } on DioError catch(err) {
+      final data = err.response?.data ?? {};
+      final message = data["message"] ?? AirnoteMessage.UnknownError;
+      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => {});
+    }
+
+    setStatus(ViewStatus.READY);
+    return response?.statusCode == 200;
+  }
+
   Future<void> deleteEntry(int id) async {
     setStatus(ViewStatus.LOADING);
     try {

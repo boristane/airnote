@@ -40,4 +40,18 @@ class InputValidator {
     }
     return null;
   }
+
+  static String title(String value) {
+    if (value.isEmpty) {
+      return "Please enter a headline";
+    }
+    return null;
+  }
+
+  static String content(String value) {
+    if (value.isEmpty) {
+      return 'Hey! You haven\'t told me anything yet!';
+    }
+    return null;
+  }
 }

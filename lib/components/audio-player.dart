@@ -1,4 +1,4 @@
-import 'package:airnote/components/circular-button.dart';
+import 'package:airnote/components/option-button.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -195,7 +195,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
                         size: 30.0,
                       ),
                       Container(
-                          child: AirnoteCircularButton(
+                          child: AirnoteOptionButton(
                         icon: _getMainButtonIcon(),
                         onTap: _onMainButtonTapped,
                         isLarge: true,
