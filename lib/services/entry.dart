@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:http_parser/http_parser.dart';
 
 import 'package:http_parser/http_parser.dart';
 
@@ -40,7 +41,7 @@ class EntryService {
       "title": data["title"],
       // "content": data["content"],
       "recording":
-          await MultipartFile.fromFile(data["recording"], contentType: MediaType("audio", "wav"))
+          await MultipartFile.fromFile(data["recording"], contentType: MediaType("audio", "aac"))
     });
 
     final response = _apiClient.post(url, data: formData);
@@ -68,7 +69,7 @@ class EntryService {
     final bytes = await _streamRecordingBytes(id);
 
     final dir = await getTemporaryDirectory();
-    final file = new File('${dir.path}/audio.mp3');
+    final file = new File('${dir.path}/audio.aac');
     final sink = file.openWrite();
     bytes.listen((data) => sink.add(data), onDone: () => sink.close(), onError: (_) => sink.close());
 

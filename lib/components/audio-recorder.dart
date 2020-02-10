@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:airnote/components/option-button.dart';
+import 'package:airnote/services/locator.dart';
+import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
@@ -20,23 +22,34 @@ class _AudioRecorderState extends State<AudioRecorder> {
   FlutterAudioRecorder _recorder;
   Recording _currentRecording;
   RecordingStatus _currentRecorderStatus = RecordingStatus.Unset;
+  bool _hasPermission = false;
+  final _snackBarService = locator<SnackBarService>();
+  Timer _timer;
+  Timer _silenceTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _activateRecording();
+      await _initRecording();
     });
   }
 
-  Future<void> _activateRecording() async {
+  Future<void> _initRecording() async {
     try {
+      bool hasPermission = await FlutterAudioRecorder.hasPermissions;
+      setState(() {
+        _hasPermission = true;
+      });
+      if (!_hasPermission) {
+        _askForPermission();
+        return;
+      }
       String path =
-          "entry_${DateTime.now().millisecondsSinceEpoch.toString()}.wav";
-      io.Directory dir = await getApplicationDocumentsDirectory();
-      await dir.create(recursive: true);
+          "entry_${DateTime.now().millisecondsSinceEpoch.toString()}.aac";
+      io.Directory dir = await getTemporaryDirectory();
       path = pt.join(dir.path, path);
-      _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.WAV);
+      _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.AAC);
       await _recorder.initialized;
       Recording current = await _recorder.current(channel: 0);
       setState(() {
@@ -50,6 +63,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   Widget build(BuildContext context) {
+    Color color = _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
     return Container(
       child: Column(
         children: <Widget>[
@@ -57,16 +71,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               AirnoteOptionButton(
-                icon: Icon(Icons.cancel),
-                onTap: cancel,
-              ),
-              AirnoteOptionButton(
-                icon: _buildIcon(_currentRecorderStatus),
+                icon: _buildIcon(),
                 isLarge: true,
                 onTap: _handleMainButtonTap,
               ),
               AirnoteOptionButton(
-                icon: Icon(Icons.stop),
+                icon: Icon(Icons.stop, color: color),
                 onTap: _stop,
               ),
             ],
@@ -78,6 +88,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
     );
   }
 
+  @override
+  void deactivate() async {
+    await _recorder.stop();
+    _timer.cancel();
+    _silenceTimer.cancel();
+    super.deactivate();
+  }
+
   void _start() async {
     try {
       await _recorder.start();
@@ -87,7 +105,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       });
 
       const tick = const Duration(milliseconds: 50);
-      new Timer.periodic(tick, (Timer t) async {
+      _timer = new Timer.periodic(tick, (Timer t) async {
         if (_currentRecorderStatus == RecordingStatus.Stopped) {
           t.cancel();
         }
@@ -95,15 +113,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
         Recording current = await _recorder.current(channel: 0);
         _changeStatus(current);
       });
-      new Timer.periodic(Duration(milliseconds: 5000), (Timer t) async {
+      _silenceTimer = new Timer.periodic(Duration(milliseconds: 5000), (Timer t) async {
         print(_currentRecording.metering.averagePower);
       });
     } catch (e) {
       print(e);
     }
   }
-
-  void cancel() async {}
 
   void _resume() async {
     await _recorder.resume();
@@ -116,12 +132,20 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   void _stop() async {
+    if(!_hasPermission) {
+      _askForPermission();
+      return;
+    }
     Recording result = await _recorder.stop();
     _changeStatus(result);
     widget.onComplete(result);
   }
 
   _handleMainButtonTap() {
+    if(!_hasPermission) {
+      _askForPermission();
+      return;
+    }
     switch (_currentRecorderStatus) {
       case RecordingStatus.Initialized:
         {
@@ -140,7 +164,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
         }
       case RecordingStatus.Stopped:
         {
-          _activateRecording();
+          _initRecording();
           break;
         }
       default:
@@ -148,27 +172,28 @@ class _AudioRecorderState extends State<AudioRecorder> {
     }
   }
 
-  Icon _buildIcon(RecordingStatus status) {
+  Icon _buildIcon() {
     Icon icon;
+    Color color = _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
     switch (_currentRecorderStatus) {
       case RecordingStatus.Initialized:
         {
-          icon = Icon(Icons.mic);
+          icon = Icon(Icons.mic, color: color,);
           break;
         }
       case RecordingStatus.Recording:
         {
-          icon = Icon(Icons.pause);
+          icon = Icon(Icons.pause, color: color,);
           break;
         }
       case RecordingStatus.Paused:
         {
-          icon = Icon(Icons.mic);
+          icon = Icon(Icons.mic, color: color,);
           break;
         }
       case RecordingStatus.Stopped:
         {
-          icon = Icon(Icons.mic_off);
+          icon = Icon(Icons.mic_off, color: color,);
           break;
         }
       default:
@@ -182,6 +207,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
       _currentRecording = current;
       _currentRecorderStatus = _currentRecording.status;
     });
+  }
+
+  _askForPermission() {
+    _snackBarService.showSnackBar(text: "Please allow me to use your microphone", icon: Icon(Icons.mic_off));
   }
 }
 
