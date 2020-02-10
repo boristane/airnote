@@ -90,7 +90,7 @@ class _EntryViewState extends State<EntryView>
       }
     }
 
-    _dialogService.showQuestionDialog(
+    await _dialogService.showQuestionDialog(
         title: "Are you sure?",
         content: "Deleting an entry is irreversible",
         onYes: onYes,

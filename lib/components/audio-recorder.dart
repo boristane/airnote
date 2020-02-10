@@ -13,7 +13,8 @@ import 'package:path/path.dart' as pt;
 
 class AudioRecorder extends StatefulWidget {
   final void Function(Recording) onComplete;
-  AudioRecorder({Key key, this.onComplete}) : super(key: key);
+  final void Function(bool) onStatusChanged;
+  AudioRecorder({Key key, this.onComplete, this.onStatusChanged}) : super(key: key);
   @override
   _AudioRecorderState createState() => _AudioRecorderState();
 }
@@ -63,7 +64,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   Widget build(BuildContext context) {
-    Color color = _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
+    Color color =
+        _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
     return Container(
       child: Column(
         children: <Widget>[
@@ -82,7 +84,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
             ],
           ),
           SizedBox(height: 45),
-          _RecordingTime(recording: _currentRecording,),
+          _RecordingTime(
+            recording: _currentRecording,
+          ),
         ],
       ),
     );
@@ -90,7 +94,6 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   void deactivate() async {
-    await _recorder.stop();
     _timer.cancel();
     _silenceTimer.cancel();
     super.deactivate();
@@ -113,7 +116,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
         Recording current = await _recorder.current(channel: 0);
         _changeStatus(current);
       });
-      _silenceTimer = new Timer.periodic(Duration(milliseconds: 5000), (Timer t) async {
+      _silenceTimer =
+          new Timer.periodic(Duration(milliseconds: 5000), (Timer t) async {
         print(_currentRecording.metering.averagePower);
       });
     } catch (e) {
@@ -132,7 +136,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   void _stop() async {
-    if(!_hasPermission) {
+    if (!_hasPermission) {
       _askForPermission();
       return;
     }
@@ -142,7 +146,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   _handleMainButtonTap() {
-    if(!_hasPermission) {
+    if (!_hasPermission) {
       _askForPermission();
       return;
     }
@@ -174,26 +178,39 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   Icon _buildIcon() {
     Icon icon;
-    Color color = _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
+    Color color =
+        _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
     switch (_currentRecorderStatus) {
       case RecordingStatus.Initialized:
         {
-          icon = Icon(Icons.mic, color: color,);
+          icon = Icon(
+            Icons.mic,
+            color: color,
+          );
           break;
         }
       case RecordingStatus.Recording:
         {
-          icon = Icon(Icons.pause, color: color,);
+          icon = Icon(
+            Icons.pause,
+            color: color,
+          );
           break;
         }
       case RecordingStatus.Paused:
         {
-          icon = Icon(Icons.mic, color: color,);
+          icon = Icon(
+            Icons.mic,
+            color: color,
+          );
           break;
         }
       case RecordingStatus.Stopped:
         {
-          icon = Icon(Icons.mic_off, color: color,);
+          icon = Icon(
+            Icons.mic_off,
+            color: color,
+          );
           break;
         }
       default:
@@ -207,10 +224,17 @@ class _AudioRecorderState extends State<AudioRecorder> {
       _currentRecording = current;
       _currentRecorderStatus = _currentRecording.status;
     });
+    if(_currentRecorderStatus == RecordingStatus.Recording || _currentRecorderStatus == RecordingStatus.Paused) {
+      widget.onStatusChanged(true);
+    } else {
+      widget.onStatusChanged(false);
+    }
   }
 
   _askForPermission() {
-    _snackBarService.showSnackBar(text: "Please allow me to use your microphone", icon: Icon(Icons.mic_off));
+    _snackBarService.showSnackBar(
+        text: "Please allow me to use your microphone",
+        icon: Icon(Icons.mic_off));
   }
 }
 
@@ -226,7 +250,10 @@ class _RecordingTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(_getTimeString(),
-    style: TextStyle(fontFamily: "Raleway", fontSize: 60, color: AirnoteColors.grey),);
+    return Text(
+      _getTimeString(),
+      style: TextStyle(
+          fontFamily: "Raleway", fontSize: 60, color: AirnoteColors.grey),
+    );
   }
 }

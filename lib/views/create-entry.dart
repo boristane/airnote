@@ -1,6 +1,7 @@
 import 'package:airnote/components/audio-recorder.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
+import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
@@ -21,64 +22,73 @@ class _CreateEntryState extends State<CreateEntry> {
   Map<String, String> _formData = {};
   final _addEntryFormKey = GlobalKey<FormState>();
   final _snackBarService = locator<SnackBarService>();
+  final _dialogService = locator<DialogService>();
+  bool _isRecorded = false;
+  bool _isRecording = false;
 
   @override
   Widget build(BuildContext context) {
     final _entryViewModel = Provider.of<EntryViewModel>(context);
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(20),
-          child: Stack(
-            children: <Widget>[
-              ListView(
-                children: <Widget>[
-                  Theme(
-                    data: ThemeData(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      inputDecorationTheme:
-                          InputDecorationTheme(border: InputBorder.none),
-                    ),
-                    child: Form(
-                      key: _addEntryFormKey,
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: 45),
-                          TitleInputField(
-                            hint: "What\'s up?",
-                            validator: InputValidator.title,
-                            onSaved: _onTitleSaved,
-                          ),
-                          SizedBox(height: 100),
-                          AudioRecorder(
-                            onComplete: (recording) {
-                              _formData["recording"] = recording.path;
-                            },
-                          ),
-                          // TextFormField(
-                          //   keyboardType: TextInputType.multiline,
-                          //   maxLines: null,
-                          //   cursorColor: Color(0xFF3C4858),
-                          //   decoration: InputDecoration.collapsed(
-                          //       hintText:
-                          //           'Tell me about it, I don\'t snitch 🤐..'),
-                          //   validator: InputValidator.content,
-                          //   onSaved: (value) => _formData['content'] = value,
-                          // ),
-                        ],
+      body: WillPopScope(
+        onWillPop: _onWillPop,
+        child: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Stack(
+              children: <Widget>[
+                ListView(
+                  children: <Widget>[
+                    Theme(
+                      data: ThemeData(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        inputDecorationTheme:
+                            InputDecorationTheme(border: InputBorder.none),
+                      ),
+                      child: Form(
+                        key: _addEntryFormKey,
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 45),
+                            TitleInputField(
+                              hint: "What\'s up?",
+                              validator: InputValidator.title,
+                              onSaved: _onTitleSaved,
+                            ),
+                            SizedBox(height: 100),
+                            AudioRecorder(
+                              onComplete: (recording) {
+                                _formData["recording"] = recording.path;
+                                setState(() {
+                                  _isRecorded = true;
+                                });
+                              },
+                              onStatusChanged: (status) {
+                                setState(() {
+                                  _isRecording = status;
+                                });
+                              }
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              AirnoteOptionButton(
-                icon: Icon(Icons.arrow_downward),
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
+                  ],
+                ),
+                AirnoteOptionButton(
+                  icon: Icon(Icons.arrow_downward),
+                  onTap: () {
+                    _onWillPop().then((value) {
+                      if(value) {
+
+                      Navigator.of(context).pop();
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -111,10 +121,11 @@ class _CreateEntryState extends State<CreateEntry> {
     final entryViewModel = Provider.of<EntryViewModel>(context);
     final form = _addEntryFormKey.currentState;
     if (!(form.validate())) return;
-    if (_formData["recording"] == null) {
-      _snackBarService.showSnackBar(icon: Icon(Icons.mic_none), text: "Please finish recording.");
+    if (!_isRecorded) {
+      _snackBarService.showSnackBar(
+          icon: Icon(Icons.mic_none), text: "Please finish recording.");
       return;
-    };
+    }
     form.save();
     final response = await entryViewModel.createEntry(_formData);
     if (response) {
@@ -124,5 +135,18 @@ class _CreateEntryState extends State<CreateEntry> {
 
   _onTitleSaved(String value) {
     _formData['title'] = value;
+  }
+
+  Future<bool> _onWillPop() async {
+    bool result = true;
+    if (_isRecorded || _isRecording) {
+      await _dialogService.showQuestionDialog(
+        title: "Are you sure?",
+        content: "You will lose your recording.",
+        onYes: () => result = true,
+        onNo: () => result = false);
+      return result;
+    }
+    return result;
   }
 }
