@@ -1,6 +1,8 @@
 import 'package:airnote/components/audio-recorder.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
+import 'package:airnote/services/locator.dart';
+import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
@@ -18,6 +20,7 @@ class CreateEntry extends StatefulWidget {
 class _CreateEntryState extends State<CreateEntry> {
   Map<String, String> _formData = {};
   final _addEntryFormKey = GlobalKey<FormState>();
+  final _snackBarService = locator<SnackBarService>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,6 @@ class _CreateEntryState extends State<CreateEntry> {
                           SizedBox(height: 100),
                           AudioRecorder(
                             onComplete: (recording) {
-                              print("Status completed");
                               _formData["recording"] = recording.path;
                             },
                           ),
@@ -107,10 +109,12 @@ class _CreateEntryState extends State<CreateEntry> {
 
   _handleAddEntry() async {
     final entryViewModel = Provider.of<EntryViewModel>(context);
-    if (entryViewModel.getStatus() == ViewStatus.LOADING) return;
     final form = _addEntryFormKey.currentState;
     if (!(form.validate())) return;
-    if (_formData["recording"] == null) return;
+    if (_formData["recording"] == null) {
+      _snackBarService.showSnackBar(icon: Icon(Icons.mic_none), text: "Please finish recording.");
+      return;
+    };
     form.save();
     final response = await entryViewModel.createEntry(_formData);
     if (response) {
