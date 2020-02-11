@@ -39,7 +39,7 @@ class EntryService {
     final url = "/";
     final FormData formData = FormData.fromMap({
       "title": data["title"],
-      // "content": data["content"],
+      "duration": data["duration"],
       "recording":
           await MultipartFile.fromFile(data["recording"], contentType: MediaType("audio", "aac"))
     });

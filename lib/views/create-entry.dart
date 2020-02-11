@@ -57,19 +57,18 @@ class _CreateEntryState extends State<CreateEntry> {
                               onSaved: _onTitleSaved,
                             ),
                             SizedBox(height: 100),
-                            AudioRecorder(
-                              onComplete: (recording) {
-                                _formData["recording"] = recording.path;
-                                setState(() {
-                                  _isRecorded = true;
-                                });
-                              },
-                              onStatusChanged: (status) {
-                                setState(() {
-                                  _isRecording = status;
-                                });
-                              }
-                            ),
+                            AudioRecorder(onComplete: (recording) {
+                              _formData["recording"] = recording.path;
+                              _formData["duration"] =
+                                  recording.duration.inMilliseconds.toString();
+                              setState(() {
+                                _isRecorded = true;
+                              });
+                            }, onStatusChanged: (status) {
+                              setState(() {
+                                _isRecording = status;
+                              });
+                            }),
                           ],
                         ),
                       ),
@@ -80,9 +79,8 @@ class _CreateEntryState extends State<CreateEntry> {
                   icon: Icon(Icons.arrow_downward),
                   onTap: () {
                     _onWillPop().then((value) {
-                      if(value) {
-
-                      Navigator.of(context).pop();
+                      if (value) {
+                        Navigator.of(context).pop();
                       }
                     });
                   },
@@ -141,10 +139,10 @@ class _CreateEntryState extends State<CreateEntry> {
     bool result = true;
     if (_isRecorded || _isRecording) {
       await _dialogService.showQuestionDialog(
-        title: "Are you sure?",
-        content: "You will lose your recording.",
-        onYes: () => result = true,
-        onNo: () => result = false);
+          title: "Are you sure?",
+          content: "You will lose your recording.",
+          onYes: () => result = true,
+          onNo: () => result = false);
       return result;
     }
     return result;
