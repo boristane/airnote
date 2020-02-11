@@ -8,6 +8,7 @@ import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -117,6 +118,7 @@ class _CreateEntryState extends State<CreateEntry> {
 
   _handleAddEntry() async {
     final entryViewModel = Provider.of<EntryViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context);
     final form = _addEntryFormKey.currentState;
     if (!(form.validate())) return;
     if (!_isRecorded) {
@@ -125,7 +127,8 @@ class _CreateEntryState extends State<CreateEntry> {
       return;
     }
     form.save();
-    final response = await entryViewModel.createEntry(_formData);
+    final email = userViewModel.user.email;
+    final response = await entryViewModel.createEntry(_formData, email);
     if (response) {
       Navigator.of(context).pushNamed(Home.routeName);
     }

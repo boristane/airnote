@@ -53,12 +53,12 @@ class EntryViewModel extends BaseViewModel {
     return success;
   }
 
-  Future<bool> createEntry(Map<String, String> formData) async {
+  Future<bool> createEntry(Map<String, String> formData, String email) async {
     setStatus(ViewStatus.LOADING);
 
     Response response;
     try {
-      response = await _noteService.postEntry(formData);
+      response = await _noteService.postEntry(formData, email);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.UnknownError;

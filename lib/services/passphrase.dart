@@ -12,4 +12,8 @@ class PassPhraseService {
     final encrypted = encrypter.encrypt(passPhrase, iv: this._iv);
     this._dbService.savePassPhrase(email: email, passPhrase: encrypted.base64);
   }
+
+  Future<String> getPassPhrase(String email) async {
+    return await this._dbService.getPassPhrase(email);
+  }
 }
