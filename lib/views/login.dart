@@ -50,7 +50,6 @@ class _LoginState extends State<Login> {
     form.save();
     await userModelView.login(_formData);
     final passPhrase = await dbService.getPassPhrase(_formData["email"]);
-    print(passPhrase);
     if (passPhrase == null) {
       Navigator.of(context).pushNamedAndRemoveUntil(RememberPassPhrase.routeName, (Route<dynamic> route) => false, arguments: _formData["email"]);
       return;

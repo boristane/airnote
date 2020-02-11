@@ -8,10 +8,9 @@ class User {
   final String forename;
   final String surname;
   final String email;
-  final int id;
-  List<Entry> entries;
+  final String uuid;
 
-  User({this.email, this.id, this.surname, this.forename, this.entries});
+  User({this.email, this.uuid, this.surname, this.forename});
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }

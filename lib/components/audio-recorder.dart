@@ -5,11 +5,13 @@ import 'package:airnote/components/option-button.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:path/path.dart' as pt;
+import 'package:provider/provider.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(Recording) onComplete;
@@ -46,8 +48,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
         _askForPermission();
         return;
       }
+      final _userViewModel = Provider.of<UserViewModel>(context);
       String path =
-          "entry_${DateTime.now().millisecondsSinceEpoch.toString()}.aac";
+          "${_userViewModel.user.uuid}_entry_${DateTime.now().millisecondsSinceEpoch.toString()}.aac";
       io.Directory dir = await getTemporaryDirectory();
       path = pt.join(dir.path, path);
       _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.AAC);
