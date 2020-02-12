@@ -75,7 +75,7 @@ class EntryService {
     this._apiClient = _apiService.client;
   }
 
-  Future<String> loadRecording(int id) async {
+  Future<String> loadRecording(int id, bool isEncrypted, String email, String encryptionKey) async {
     final bytes = await _streamRecordingBytes(id);
 
     final dir = await getTemporaryDirectory();
@@ -85,6 +85,12 @@ class EntryService {
         onDone: () => sink.close(), onError: (_) => sink.close());
 
     if (await file.exists()) {
+      if (isEncrypted) {
+        final passPhraseService = locator<PassPhraseService>();
+        final encryptionService = locator<FileEncryptionService>();
+        final passPhrase = await passPhraseService.getPassPhrase(email);
+        await encryptionService.decryptFile(file.path, passPhrase, encryptionKey);
+      }
       return file.path;
     }
     return "";

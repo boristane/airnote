@@ -7,6 +7,7 @@ import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/home.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ class _EntryViewState extends State<EntryView>
 
   _getEntry() async {
     final entryViewModel = Provider.of<EntryViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context);
     if (this._entryViewModel == entryViewModel) {
       return;
     }
@@ -74,7 +76,9 @@ class _EntryViewState extends State<EntryView>
     setState(() {
       _isLocked = this._entryViewModel.currentEntry.isLocked;
     });
-    await this._entryViewModel.getRecording(id);
+    final email = userViewModel.user.email;
+    final encryptionKey = userViewModel.user.encryptionKey;
+    await this._entryViewModel.getRecording(id, true, email, encryptionKey);
     setState(() {
       _hasPlayer = _entryViewModel.currentEntryRecording == "" ? false : true;
     });
@@ -85,8 +89,7 @@ class _EntryViewState extends State<EntryView>
       final id = ModalRoute.of(context).settings.arguments;
       await this._entryViewModel.deleteEntry(id);
       if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pushNamed(Home.routeName);
+        Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (Route<dynamic> route) => false);
       }
     }
 

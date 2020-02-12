@@ -96,11 +96,11 @@ class EntryViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> getRecording(int id) async {
+  Future<void> getRecording(int id, bool isEncrypted, String email, String encryptionKey) async {
     try {
       _message = "";
       _noteService.setupClient();
-      final path = await _noteService.loadRecording(id);
+      final path = await _noteService.loadRecording(id, isEncrypted, email, encryptionKey);
       _currentEntryRecording= path;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};

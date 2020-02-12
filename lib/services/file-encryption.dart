@@ -17,7 +17,7 @@ class FileEncryptionService {
     return data;
   }
 
-  _writeFile(Uint8List data, String path) async {
+  _writeFile(List<int> data, String path) async {
     final File file = File(path);
     await file.writeAsBytes(data);
   }
@@ -30,12 +30,22 @@ class FileEncryptionService {
     final data = await _readFile(path);
 
     final encrypted = encrypter.encryptBytes(data, iv: iv);
-    final decrypted = encrypter.decryptBytes(encrypted, iv: iv);
-
-    print(decrypted);
-    print(data);
-    print(encrypted.bytes);
 
     await _writeFile(encrypted.bytes, path);
+    print(encrypted.bytes.length);
+  }
+
+  decryptFile(String path, String passPhrase, String encryptionKey) async {
+    final key = Key.fromUtf8(passPhrase);
+    final iv = IV.fromBase64(encryptionKey);
+
+    final encrypter = Encrypter(AES(key));
+    final data = await _readFile(path);
+    print(data.length);
+
+    final encrypted = Encrypted(data);
+    final decrypted = encrypter.decryptBytes(encrypted, iv: iv);
+
+    await _writeFile(decrypted, path);
   }
 }

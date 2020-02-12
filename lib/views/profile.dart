@@ -155,6 +155,17 @@ class DetailsCard extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(bottom: 20.0),
                     child: Text(profile.email, style: mainTextStyle),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Text(
+                      'Your encryption key',
+                      style: headerTextStyle,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    child: Text(profile.encryptionKey, style: mainTextStyle),
                   )
                 ],
               )),
