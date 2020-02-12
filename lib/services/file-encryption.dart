@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 
 class FileEncryptionService {
-  final _iv = IV.fromLength(16);
   
   Future<Uint8List> _readFile(String path) async {
     Uint8List data;
@@ -23,14 +22,15 @@ class FileEncryptionService {
     await file.writeAsBytes(data);
   }
 
-  encryptFile(String path, String passPhrase) async {
+  encryptFile(String path, String passPhrase, String encryptionKey) async {
     final key = Key.fromUtf8(passPhrase);
+    final iv = IV.fromBase64(encryptionKey);
 
     final encrypter = Encrypter(AES(key));
     final data = await _readFile(path);
 
-    final encrypted = encrypter.encryptBytes(data, iv: _iv);
-    final decrypted = encrypter.decryptBytes(encrypted, iv: _iv);
+    final encrypted = encrypter.encryptBytes(data, iv: iv);
+    final decrypted = encrypter.decryptBytes(encrypted, iv: iv);
 
     print(decrypted);
     print(data);

@@ -36,14 +36,14 @@ class EntryService {
     return response;
   }
 
-  Future<Response> postEntry(Map<String, String> data, String email) async {
+  Future<Response> postEntry(Map<String, String> data, String email, String encryptionKey) async {
     final url = "/";
     final fileEncryptionService = locator<FileEncryptionService>();
     final passPhraseService = locator<PassPhraseService>();
     final passPhrase = await passPhraseService.getPassPhrase(email);
     bool isEncrypted = false;
     if (passPhrase != null) {
-      await fileEncryptionService.encryptFile(data["recording"], passPhrase);
+      await fileEncryptionService.encryptFile(data["recording"], passPhrase, encryptionKey);
       isEncrypted = true;
     }
     final FormData formData = FormData.fromMap({
@@ -51,7 +51,7 @@ class EntryService {
       "duration": data["duration"],
       "recording": await MultipartFile.fromFile(data["recording"],
           contentType: MediaType("audio", "aac")),
-      "isEncrypted": isEncrypted
+      "isEncrypted": isEncrypted,
     });
 
     final response = _apiClient.post(url, data: formData);

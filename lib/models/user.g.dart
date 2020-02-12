@@ -12,6 +12,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     uuid: json['uuid'] as String,
     surname: json['surname'] as String,
     forename: json['forename'] as String,
+    encryptionKey: json['encryptionKey'] as String,
   );
 }
 
@@ -20,4 +21,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'surname': instance.surname,
       'email': instance.email,
       'uuid': instance.uuid,
+      'encryptionKey': instance.encryptionKey,
     };

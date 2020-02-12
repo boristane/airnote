@@ -128,7 +128,8 @@ class _CreateEntryState extends State<CreateEntry> {
     }
     form.save();
     final email = userViewModel.user.email;
-    final response = await entryViewModel.createEntry(_formData, email);
+    final encryptionKey = userViewModel.user.encryptionKey;
+    final response = await entryViewModel.createEntry(_formData, email, encryptionKey);
     if (response) {
       Navigator.of(context).pushNamed(Home.routeName);
     }
