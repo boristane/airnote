@@ -78,7 +78,7 @@ class _EntryViewState extends State<EntryView>
     });
     final email = userViewModel.user.email;
     final encryptionKey = userViewModel.user.encryptionKey;
-    await this._entryViewModel.getRecording(id, true, email, encryptionKey);
+    await this._entryViewModel.getRecording(id, this._entryViewModel.currentEntry.isEncrypted, email, encryptionKey);
     setState(() {
       _hasPlayer = _entryViewModel.currentEntryRecording == "" ? false : true;
     });

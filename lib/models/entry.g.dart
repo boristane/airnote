@@ -19,6 +19,7 @@ Entry _$EntryFromJson(Map<String, dynamic> json) {
             e == null ? null : Sentiment.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     isLocked: json['isLocked'] as bool,
+    isEncrypted: json['isEncrypted'] as bool,
   );
 }
 
@@ -30,5 +31,6 @@ Map<String, dynamic> _$EntryToJson(Entry instance) => <String, dynamic>{
       'audioUrl': instance.audioUrl,
       'createdAt': instance.createdAt,
       'isLocked': instance.isLocked,
+      'isEncrypted': instance.isEncrypted,
       'sentiments': instance.sentiments,
     };

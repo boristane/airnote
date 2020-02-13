@@ -14,13 +14,13 @@ import 'package:get_it/get_it.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  locator.registerSingleton(DatabaseService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => EntryService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => SnackBarService());
   locator.registerLazySingleton(() => LocalAuthService());
   locator.registerLazySingleton(() => PassPhraseService());
-  locator.registerLazySingleton(() => DatabaseService());
   locator.registerLazySingleton(() => FileEncryptionService());
   locator.registerLazySingleton(() => RoutineService());
 }
