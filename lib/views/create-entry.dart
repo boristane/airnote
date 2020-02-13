@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:airnote/components/audio-recorder.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
@@ -26,6 +28,17 @@ class _CreateEntryState extends State<CreateEntry> {
   final _dialogService = locator<DialogService>();
   bool _isRecorded = false;
   bool _isRecording = false;
+  bool _isShowingText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    new Timer.periodic(Duration(milliseconds: 1000), (Timer t) async {
+      setState(() {
+        _isShowingText = !_isShowingText;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +70,14 @@ class _CreateEntryState extends State<CreateEntry> {
                               validator: InputValidator.title,
                               onSaved: _onTitleSaved,
                             ),
-                            SizedBox(height: 100),
+                            AnimatedOpacity(
+                              opacity: _isShowingText ? 1.0 : 0.0,
+                              duration: Duration(milliseconds: 500),
+                              child: Container(
+                                height: 150,
+                                child: Text("What are you thankful for?"),
+                              ),
+                            ),
                             AudioRecorder(onComplete: (recording) {
                               _formData["recording"] = recording.path;
                               _formData["duration"] =
@@ -129,7 +149,8 @@ class _CreateEntryState extends State<CreateEntry> {
     form.save();
     final email = userViewModel.user.email;
     final encryptionKey = userViewModel.user.encryptionKey;
-    final response = await entryViewModel.createEntry(_formData, email, encryptionKey);
+    final response =
+        await entryViewModel.createEntry(_formData, email, encryptionKey);
     if (response) {
       Navigator.of(context).pushNamed(Home.routeName);
     }

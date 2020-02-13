@@ -89,7 +89,8 @@ class _EntryViewState extends State<EntryView>
       final id = ModalRoute.of(context).settings.arguments;
       await this._entryViewModel.deleteEntry(id);
       if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pushNamedAndRemoveUntil(Home.routeName, (Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Home.routeName, (Route<dynamic> route) => false);
       }
     }
 
@@ -158,7 +159,8 @@ class _EntryViewState extends State<EntryView>
                       : EdgeInsets.fromLTRB(20, 10, 20, 20),
                   color: AirnoteColors.backgroundColor,
                   child: Text(
-                    entry.content ?? "There was a problem getting the content of the entry...",
+                    entry.content ??
+                        "There was a problem getting the content of the entry...",
                     style: TextStyle(
                         fontSize: 16,
                         height: 1.2,
@@ -257,7 +259,8 @@ class _EntryViewState extends State<EntryView>
 
   void _onCloseEntryTap() {
     if (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Home.routeName, (Route<dynamic> route) => false);
     }
   }
 
