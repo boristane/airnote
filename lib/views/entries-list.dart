@@ -21,11 +21,11 @@ class _EntriesListState extends State<EntriesList> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final _noteModelView = Provider.of<EntryViewModel>(context);
-    if (this._entryViewModel == _noteModelView) {
+    final _entryModelView = Provider.of<EntryViewModel>(context);
+    if (this._entryViewModel == _entryModelView) {
       return;
     }
-    this._entryViewModel = _noteModelView;
+    this._entryViewModel = _entryModelView;
     Future.microtask(this._entryViewModel.getEntries);
   }
 

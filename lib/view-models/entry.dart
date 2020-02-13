@@ -18,14 +18,14 @@ class EntryViewModel extends BaseViewModel {
   Entry get currentEntry => _currentEntry;
   String get currentEntryRecording => _currentEntryRecording;
 
-  final _noteService = locator<EntryService>();
+  final _entryService = locator<EntryService>();
 
   Future<void> getEntries() async {
     setStatus(ViewStatus.LOADING);
     try {
       _message = "";
-      await _noteService.setupClient();
-      final response = await _noteService.getEntries();
+      await _entryService.setupClient();
+      final response = await _entryService.getEntries();
       final List<dynamic> data = response.data["entries"] ?? [];
       _entries = List<Entry>.from(data.map((n) => Entry.fromJson(n)));
     } on DioError catch(err) {
@@ -40,8 +40,8 @@ class EntryViewModel extends BaseViewModel {
     bool success = false;
     try {
       _message = "";
-      _noteService.setupClient();
-      final response = await _noteService.getSingleEntry(id);
+      _entryService.setupClient();
+      final response = await _entryService.getSingleEntry(id);
       _currentEntry = Entry.fromJson(response.data);
       success = true;
     } on DioError catch(err) {
@@ -58,7 +58,7 @@ class EntryViewModel extends BaseViewModel {
 
     Response response;
     try {
-      response = await _noteService.postEntry(formData, email, encryptionKey);
+      response = await _entryService.postEntry(formData, email, encryptionKey);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.UnknownError;
@@ -73,8 +73,8 @@ class EntryViewModel extends BaseViewModel {
     setStatus(ViewStatus.LOADING);
     try {
       _message = "";
-      _noteService.setupClient();
-      await _noteService.deleteEntry(id);
+      _entryService.setupClient();
+      await _entryService.deleteEntry(id);
       // _currentEntry = null;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
@@ -87,8 +87,8 @@ class EntryViewModel extends BaseViewModel {
   Future<void> updateIsLocked(int id, bool newValue) async {
     try {
       _message = "";
-      _noteService.setupClient();
-      await _noteService.updateIsLockedEntry(id, newValue);
+      _entryService.setupClient();
+      await _entryService.updateIsLockedEntry(id, newValue);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
@@ -99,8 +99,8 @@ class EntryViewModel extends BaseViewModel {
   Future<void> getRecording(int id, bool isEncrypted, String email, String encryptionKey) async {
     try {
       _message = "";
-      _noteService.setupClient();
-      final path = await _noteService.loadRecording(id, isEncrypted, email, encryptionKey);
+      _entryService.setupClient();
+      final path = await _entryService.loadRecording(id, isEncrypted, email, encryptionKey);
       _currentEntryRecording= path;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};

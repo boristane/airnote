@@ -2,6 +2,7 @@ import 'package:airnote/managers/app-manager.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/entry.dart';
+import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/create-entry.dart';
 import 'package:airnote/views/create-passphrase.dart';
@@ -26,6 +27,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => EntryViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => RoutineViewModel(),
         ),
       ],
       child: Airnote(),

@@ -8,8 +8,10 @@ import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
+import 'package:airnote/utils/recorder-state.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
+import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/home.dart';
 import 'package:flutter/material.dart';
@@ -23,21 +25,32 @@ class CreateEntry extends StatefulWidget {
 
 class _CreateEntryState extends State<CreateEntry> {
   Map<String, String> _formData = {};
+  RoutineViewModel _routineViewModel;
   final _addEntryFormKey = GlobalKey<FormState>();
   final _snackBarService = locator<SnackBarService>();
   final _dialogService = locator<DialogService>();
   bool _isRecorded = false;
   bool _isRecording = false;
   bool _isShowingText = false;
+  bool _timerStarted = false;
+  String _text = "";
+  List<Timer> _timers = [];
 
   @override
-  void initState() {
-    super.initState();
-    new Timer.periodic(Duration(milliseconds: 1000), (Timer t) async {
-      setState(() {
-        _isShowingText = !_isShowingText;
-      });
-    });
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    final _routineViewModel = Provider.of<RoutineViewModel>(context);
+    if (this._routineViewModel == _routineViewModel) {
+      return;
+    }
+    this._routineViewModel = _routineViewModel;
+    Future.microtask(this._routineViewModel.getRoutine);
+  }
+
+  @override
+  deactivate() async {
+    _timers.forEach((timer) => timer?.cancel());
+    super.deactivate();
   }
 
   @override
@@ -75,7 +88,7 @@ class _CreateEntryState extends State<CreateEntry> {
                               duration: Duration(milliseconds: 500),
                               child: Container(
                                 height: 150,
-                                child: Text("What are you thankful for?"),
+                                child: Text(_text),
                               ),
                             ),
                             AudioRecorder(onComplete: (recording) {
@@ -86,8 +99,18 @@ class _CreateEntryState extends State<CreateEntry> {
                                 _isRecorded = true;
                               });
                             }, onStatusChanged: (status) {
+                              if (status == RecorderState.recording &&
+                                  _timerStarted == false) {
+                                setState(() {
+                                  _timerStarted = true;
+                                });
+                                _displayRoutine();
+                              }
                               setState(() {
-                                _isRecording = status;
+                                _isRecording = status == RecorderState.paused ||
+                                        status == RecorderState.recording
+                                    ? true
+                                    : false;
                               });
                             }),
                           ],
@@ -171,5 +194,41 @@ class _CreateEntryState extends State<CreateEntry> {
       return result;
     }
     return result;
+  }
+
+  //TODO this is a heap of garbage
+  _displayRoutine() {
+    final routine = this._routineViewModel.routine;
+    int delay = routine[0].duration;
+    setState(() {
+      _text = routine[0].prompt;
+    });
+    final firstOpacityTimer = new Timer(Duration(milliseconds: 2000), () {
+        setState(() {
+          _isShowingText = true;
+        });
+      });
+      _timers.add(firstOpacityTimer);
+    for (var i = 1; i < routine.length; i++) {
+      final timer = new Timer(Duration(milliseconds: delay), () {
+        setState(() {
+          _text = routine[i].prompt;
+        });
+      });
+      final opacityTimerStart = new Timer(Duration(milliseconds: delay - 1000), () {
+        setState(() {
+          _isShowingText = false;
+        });
+      });
+      final opacityTimerEnd = new Timer(Duration(milliseconds: delay + 1000), () {
+        setState(() {
+          _isShowingText = true;
+        });
+      });
+      delay += routine[i].duration;
+      _timers.add(timer);
+      _timers.add(opacityTimerStart);
+      _timers.add(opacityTimerEnd);
+    }
   }
 }

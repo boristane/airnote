@@ -5,6 +5,7 @@ import 'package:airnote/components/option-button.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/utils/recorder-state.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
@@ -15,8 +16,9 @@ import 'package:provider/provider.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(Recording) onComplete;
-  final void Function(bool) onStatusChanged;
-  AudioRecorder({Key key, this.onComplete, this.onStatusChanged}) : super(key: key);
+  final void Function(RecorderState) onStatusChanged;
+  AudioRecorder({Key key, this.onComplete, this.onStatusChanged})
+      : super(key: key);
   @override
   _AudioRecorderState createState() => _AudioRecorderState();
 }
@@ -227,10 +229,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
       _currentRecording = current;
       _currentRecorderStatus = _currentRecording.status;
     });
-    if(_currentRecorderStatus == RecordingStatus.Recording || _currentRecorderStatus == RecordingStatus.Paused) {
-      widget.onStatusChanged(true);
+    if (_currentRecorderStatus == RecordingStatus.Paused) {
+      widget.onStatusChanged(RecorderState.paused);
+    } else if (_currentRecorderStatus == RecordingStatus.Recording) {
+      widget.onStatusChanged(RecorderState.recording);
+    } else if (_currentRecorderStatus == RecordingStatus.Stopped) {
+      widget.onStatusChanged(RecorderState.stopped);
     } else {
-      widget.onStatusChanged(false);
+      widget.onStatusChanged(RecorderState.none);
     }
   }
 
