@@ -110,9 +110,9 @@ class IntroSlideCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
-                  color: AirnoteColors.primary.withOpacity(.4),
-                  offset: Offset(6.0, 10.0),
-                  blurRadius: 20.0),
+                  color: AirnoteColors.grey.withOpacity(.4),
+                  offset: Offset(3, 5.0),
+                  blurRadius: 5.0),
             ],
             image: DecorationImage(
               image: AssetImage(

@@ -91,9 +91,9 @@ class NameBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black12,
-                  offset: Offset(0.0, 0.0),
-                  blurRadius: 10.0),
+                  color: AirnoteColors.grey.withOpacity(.4),
+                  offset: Offset(3.0, 5.0),
+                  blurRadius: 5.0),
             ]),
         child: Text(
           "${forename[0].toUpperCase()}",
@@ -110,7 +110,7 @@ class DetailsCard extends StatelessWidget {
     final mainTextStyle =
         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
     final headerTextStyle = TextStyle(
-        color: AirnoteColors.lightGrey,
+        color: AirnoteColors.lightBlue,
         fontSize: 14.0,
         fontWeight: FontWeight.bold);
     return Row(
@@ -124,9 +124,9 @@ class DetailsCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(0.0, 0.0),
-                        blurRadius: 10.0),
+                        color: AirnoteColors.grey.withOpacity(.4),
+                        offset: Offset(3.0, 5.0),
+                        blurRadius: 5.0),
                   ]),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

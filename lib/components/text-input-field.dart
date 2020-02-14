@@ -29,7 +29,7 @@ class AirnoteTextInputField extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hint,
                   hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold, color: AirnoteColors.lightGrey),
+                      fontWeight: FontWeight.bold, color: AirnoteColors.lightBlue),
                   suffixIcon: suffix,
                 ),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

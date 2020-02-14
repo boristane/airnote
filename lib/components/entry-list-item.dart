@@ -17,12 +17,6 @@ class AirnoteEntryListItem extends StatelessWidget {
         height: 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: AirnoteColors.primary.withOpacity(.5),
-                offset: Offset(1.0, 3.0),
-                blurRadius: 5.0),
-          ],
         ),
         child: Stack(children: <Widget>[
           _EntryHeader(

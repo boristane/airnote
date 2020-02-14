@@ -11,9 +11,9 @@ class AirnoteRaisedButton extends Container {
   _getShadow() {
     if (shadow) {
       return BoxShadow(
-          color: AirnoteColors.primary.withOpacity(.4),
-          offset: Offset(10.0, 10.0),
-          blurRadius: 10.0);
+          color: AirnoteColors.grey.withOpacity(.4),
+          offset: Offset(3.0, 5.0),
+          blurRadius: 5.0);
     }
     return BoxShadow();
   }

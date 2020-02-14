@@ -38,9 +38,9 @@ class AirnoteSubmitButton extends Container {
         borderRadius: BorderRadius.circular(30.0),
         boxShadow: [
           BoxShadow(
-              color: AirnoteColors.primary.withOpacity(.4),
-              offset: Offset(10.0, 10.0),
-              blurRadius: 10.0),
+              color: AirnoteColors.grey.withOpacity(.4),
+              offset: Offset(3, 5.0),
+              blurRadius: 5.0),
         ],
       ),
       child: RaisedButton(

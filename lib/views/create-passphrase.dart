@@ -109,7 +109,7 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
                                   value: _formData["checked"] == "checked",
                                   onChanged: _setChecked,
                                   activeColor: AirnoteColors.primary,
-                                  checkColor: AirnoteColors.lightGrey,
+                                  checkColor: AirnoteColors.lightBlue,
                                 ),
                               ),
                               Text(

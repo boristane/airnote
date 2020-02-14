@@ -11,14 +11,6 @@ class AirnoteDotIndicator extends StatelessWidget {
       width: 6,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        boxShadow: active
-            ? [
-                BoxShadow(
-                    color: AirnoteColors.primary.withOpacity(.4),
-                    offset: Offset(1, 1),
-                    blurRadius: 3)
-              ]
-            : null,
         color: active ? AirnoteColors.primary : AirnoteColors.inactive,
       ),
     );

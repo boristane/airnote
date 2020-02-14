@@ -17,7 +17,7 @@ class AirnoteOptionButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(isLarge ? 180 : 18),
         boxShadow: [
           BoxShadow(
-              color: AirnoteColors.primary.withOpacity(.5),
+              color: AirnoteColors.grey.withOpacity(.5),
               offset: Offset(1.0, 3.0),
               blurRadius: 5.0),
         ],
