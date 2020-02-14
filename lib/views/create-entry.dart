@@ -87,8 +87,8 @@ class _CreateEntryState extends State<CreateEntry> {
                               opacity: _isShowingText ? 1.0 : 0.0,
                               duration: Duration(milliseconds: 500),
                               child: Container(
-                                height: 150,
-                                child: Text(_text),
+                                height: 50,
+                                child: Text(_text, style: TextStyle(color: AirnoteColors.secondary),),
                               ),
                             ),
                             AudioRecorder(onComplete: (recording) {

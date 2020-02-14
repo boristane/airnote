@@ -1,7 +1,8 @@
-import 'package:airnote/components/option-button.dart';
+import 'package:airnote/components/player-button.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class AirnoteAudioPlayer extends StatefulWidget {
   final String audioFilePath;
@@ -69,17 +70,19 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   }
 
   String _getElapsedTime() {
-    Duration duration = Duration(milliseconds: (_position * _totalDuration).toInt());
-    int minutes =  duration.inMinutes.remainder(60);
+    Duration duration =
+        Duration(milliseconds: (_position * _totalDuration).toInt());
+    int minutes = duration.inMinutes.remainder(60);
     int seconds = duration.inSeconds.remainder(60);
-    return "${minutes.toString().padLeft(2,"0")}:${seconds.toString().padLeft(2, "0")}";
+    return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
   }
 
   String _getRemainingTime() {
-    Duration duration = Duration(milliseconds: ((1 - _position) * _totalDuration).toInt());
-    int minutes =  duration.inMinutes.remainder(60);
+    Duration duration =
+        Duration(milliseconds: ((1 - _position) * _totalDuration).toInt());
+    int minutes = duration.inMinutes.remainder(60);
     int seconds = duration.inSeconds.remainder(60);
-    return "${minutes.toString().padLeft(2,"0")}:${seconds.toString().padLeft(2, "0")}";
+    return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
   }
 
   void _initialisePlayer() async {
@@ -110,7 +113,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   void initState() {
     // AudioPlayer.logEnabled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    _initialisePlayer();
+      _initialisePlayer();
     });
     print(widget.audioFilePath);
     super.initState();
@@ -119,7 +122,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   @override
   void didChangeDependencies() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    _initialisePlayer();
+      _initialisePlayer();
     });
     print(widget.audioFilePath);
     super.didChangeDependencies();
@@ -133,80 +136,50 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     super.deactivate();
   }
 
+  void _display(int init, int end, int last) {
+    print("$init, $end, $last");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AirnoteColors.backgroundColor,
-        border: Border(top: BorderSide(color: Colors.black12)),
-      ),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: AirnoteColors.primary,
-                inactiveTrackColor: AirnoteColors.inactive,
-                trackHeight: 3.0,
-                thumbColor: AirnoteColors.primary,
-                thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6.0),
-                overlayColor: AirnoteColors.primary.withAlpha(32),
-                overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
-              ),
-              child: Slider(
-                onChanged: (double value) {
-                  setState(() {
-                    _position = value;
-                  });
-                  seek();
-                },
-                value: _position,
-              ),
-            ),
-          ),
           Stack(
+            alignment: Alignment.center,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      _getElapsedTime(),
-                      style: TextStyle(color: AirnoteColors.text.withOpacity(0.7)),
-                    ),
-                    Text( _getRemainingTime(),
-                        style: TextStyle(color: AirnoteColors.text.withOpacity(0.7)))
-                  ],
-                ),
+              SleekCircularSlider(
+              innerWidget: (_) => Container(),
+              initialValue: 0,
+              appearance: CircularSliderAppearance(
+                  customWidths: CustomSliderWidths(
+                      trackWidth: 1, progressBarWidth: 2, handlerSize: 3),
+                  customColors: CustomSliderColors(
+                      trackColor: AirnoteColors.lightBlue,
+                      progressBarColor: AirnoteColors.primary,
+                      dotColor: AirnoteColors.primary,
+                      hideShadow: true),
+                  startAngle: 65,
+                  angleRange: 320,
+                  size: 200.0,
+                  animationEnabled: false),
+              onChange: (double value) {
+                setState(() {
+                  _position = value;
+                });
+                seek();
+              }),
+              AirnotePlayerButton(
+                icon: _getMainButtonIcon(),
+                isLarge: true,
+                onTap: _onMainButtonTapped,
               ),
-              Align(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(
-                        Icons.fast_rewind,
-                        color: AirnoteColors.primary,
-                        size: 30.0,
-                      ),
-                      Container(
-                          child: AirnoteOptionButton(
-                        icon: _getMainButtonIcon(),
-                        onTap: _onMainButtonTapped,
-                        isLarge: true,
-                      )),
-                      Icon(
-                        Icons.fast_forward,
-                        color: AirnoteColors.primary,
-                        size: 30.0,
-                      )
-                    ],
-                  ),
+              Positioned(
+                bottom: 15,
+                right: 15,
+                child: AirnotePlayerButton(
+                  icon: Icon(Icons.stop, color: AirnoteColors.primary),
+                  onTap:  () {print("Just stopped");},
                 ),
               ),
             ],
@@ -214,5 +187,66 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
         ],
       ),
     );
+    // return Container(
+    //   child: Stack(
+    //     alignment: Alignment.center,
+    //     children: <Widget>[
+    //       Positioned(
+    //             bottom: 0,
+    //             right: 0,
+    //             child: AirnotePlayerButton(
+    //               icon: Icon(Icons.stop, color: AirnoteColors.primary),
+    //               onTap: () {print("Just stopped");},
+    //             ),
+    //           ),
+    //       Container(
+    //           child: AirnotePlayerButton(
+    //         icon: _getMainButtonIcon(),
+    //         onTap: _onMainButtonTapped,
+    //         isLarge: true,
+    //       )),
+          // SleekCircularSlider(
+          //     innerWidget: (_) => Container(),
+          //     appearance: CircularSliderAppearance(
+          //         customWidths: CustomSliderWidths(
+          //             trackWidth: 1, progressBarWidth: 2, handlerSize: 3),
+          //         customColors: CustomSliderColors(
+          //             trackColor: AirnoteColors.lightBlue,
+          //             progressBarColor: AirnoteColors.primary,
+          //             dotColor: AirnoteColors.primary,
+          //             hideShadow: true),
+          //         startAngle: 180,
+          //         angleRange: 270,
+          //         size: 200.0,
+          //         animationEnabled: false),
+          //     onChange: (double value) {
+          //       setState(() {
+          //         _position = value;
+          //       });
+          //       seek();
+          //     }),
+    //       Stack(
+    //         children: <Widget>[
+    //           Padding(
+    //             padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    //             child: Row(
+    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //               children: <Widget>[
+    //                 Text(
+    //                   _getElapsedTime(),
+    //                   style:
+    //                       TextStyle(color: AirnoteColors.text.withOpacity(0.7)),
+    //                 ),
+    //                 Text(_getRemainingTime(),
+    //                     style: TextStyle(
+    //                         color: AirnoteColors.text.withOpacity(0.7)))
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }

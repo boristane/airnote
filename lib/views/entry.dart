@@ -166,7 +166,14 @@ class _EntryViewState extends State<EntryView>
                         height: 1.2,
                         color: AirnoteColors.text.withOpacity(0.8)),
                   ),
-                )
+                ),
+                _hasPlayer
+                ? AirnoteAudioPlayer(
+                    audioFilePath: localRecordingFilePath,
+                  )
+                : Container(
+                    height: 0,
+                  )
               ],
             ),
             Align(
@@ -219,17 +226,6 @@ class _EntryViewState extends State<EntryView>
                 ),
               ),
             ),
-            Positioned(
-              bottom: 0,
-              width: MediaQuery.of(context).size.width,
-              child: _hasPlayer
-                  ? AirnoteAudioPlayer(
-                      audioFilePath: localRecordingFilePath,
-                    )
-                  : Container(
-                      height: 0,
-                    ),
-            )
           ],
         );
       }),

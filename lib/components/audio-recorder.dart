@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:airnote/components/option-button.dart';
+import 'package:airnote/components/player-button.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
@@ -13,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:path/path.dart' as pt;
 import 'package:provider/provider.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class AudioRecorder extends StatefulWidget {
   final void Function(Recording) onComplete;
@@ -29,6 +31,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   RecordingStatus _currentRecorderStatus = RecordingStatus.Unset;
   bool _hasPermission = false;
   final _snackBarService = locator<SnackBarService>();
+  double _position = 0;
   Timer _timer;
   Timer _silenceTimer;
 
@@ -74,17 +77,41 @@ class _AudioRecorderState extends State<AudioRecorder> {
     return Container(
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Stack(
+            alignment: Alignment.center,
             children: <Widget>[
-              AirnoteOptionButton(
+              SleekCircularSlider(
+                  innerWidget: (_) => Container(),
+                  initialValue: _position,
+                  min: 0,
+                  max: 1000.0 * 50,
+                  appearance: CircularSliderAppearance(
+                      customWidths: CustomSliderWidths(
+                          trackWidth: 1, progressBarWidth: 2, handlerSize: 3),
+                      customColors: CustomSliderColors(
+                          trackColor: AirnoteColors.lightBlue,
+                          progressBarColor: AirnoteColors.primary,
+                          dotColor: AirnoteColors.primary,
+                          hideShadow: true),
+                      startAngle: 65,
+                      angleRange: 320,
+                      size: 200.0,
+                      animationEnabled: false),
+                  onChange: (double value) {
+                    // print(value);
+                  }),
+              AirnotePlayerButton(
                 icon: _buildIcon(),
                 isLarge: true,
                 onTap: _handleMainButtonTap,
               ),
-              AirnoteOptionButton(
-                icon: Icon(Icons.stop, color: color),
-                onTap: _stop,
+              Positioned(
+                bottom: 15,
+                right: 15,
+                child: AirnotePlayerButton(
+                  icon: Icon(Icons.stop, color: AirnoteColors.primary),
+                  onTap: _stop,
+                ),
               ),
             ],
           ),
@@ -119,6 +146,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
         }
 
         Recording current = await _recorder.current(channel: 0);
+        setState(() {
+          _position += tick.inMilliseconds;
+        });
         _changeStatus(current);
       });
       _silenceTimer =
