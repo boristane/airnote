@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/player-button.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
@@ -34,6 +33,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   double _position = 0;
   Timer _timer;
   Timer _silenceTimer;
+  bool _isInitialised = false;
 
   @override
   void initState() {
@@ -64,6 +64,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       setState(() {
         _currentRecording = current;
         _currentRecorderStatus = current.status;
+        _isInitialised = true;
       });
     } catch (e) {
       print(e);
@@ -109,7 +110,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                 bottom: 15,
                 right: 15,
                 child: AirnotePlayerButton(
-                  icon: Icon(Icons.stop, color: AirnoteColors.primary),
+                  icon: Icon(Icons.stop, color: color),
                   onTap: _stop,
                 ),
               ),
@@ -175,7 +176,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
       _askForPermission();
       return;
     }
-    Recording result = await _recorder.stop();
+    if (!_isInitialised) {
+      return;
+    }
+    Recording result = await _recorder?.stop();
     _changeStatus(result);
     widget.onComplete(result);
   }
@@ -249,6 +253,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
           break;
         }
       default:
+        {
+          icon = Icon(
+            Icons.mic_off,
+            color: color,
+          );
+          break;
+        }
         break;
     }
     return icon;
