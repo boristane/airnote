@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:airnote/components/audio-recorder.dart';
+import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
+import 'package:airnote/models/routine.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/utils/recorder-state.dart';
+import 'package:airnote/utils/stopwatch.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/routine.dart';
@@ -32,9 +35,11 @@ class _CreateEntryState extends State<CreateEntry> {
   bool _isRecorded = false;
   bool _isRecording = false;
   bool _isShowingText = false;
-  bool _timerStarted = false;
+  int _currentRoutineItemIndex = -1;
   String _text = "";
+  int _duration = 0;
   List<Timer> _timers = [];
+  AirnoteStopwatch _stopWatch = AirnoteStopwatch();
 
   @override
   void didChangeDependencies() async {
@@ -55,7 +60,11 @@ class _CreateEntryState extends State<CreateEntry> {
 
   @override
   Widget build(BuildContext context) {
-    final _entryViewModel = Provider.of<EntryViewModel>(context);
+    final entryViewModel = Provider.of<EntryViewModel>(context);
+    final routineViewModel = Provider.of<RoutineViewModel>(context);
+    if (routineViewModel.routine == null) {
+      return AirnoteLoadingScreen();
+    }
     return Scaffold(
       body: WillPopScope(
         onWillPop: _onWillPop,
@@ -88,31 +97,55 @@ class _CreateEntryState extends State<CreateEntry> {
                               duration: Duration(milliseconds: 500),
                               child: Container(
                                 height: 50,
-                                child: Text(_text, style: TextStyle(color: AirnoteColors.secondary),),
+                                child: _currentRoutineItemIndex == -1 ? Container() : Text(
+                                  routineViewModel
+                                      .routine[_currentRoutineItemIndex].prompt,
+                                  style:
+                                      TextStyle(color: AirnoteColors.text, fontSize: 15),
+                                ),
                               ),
                             ),
-                            AudioRecorder(onComplete: (recording) {
-                              _formData["recording"] = recording.path;
-                              _formData["duration"] =
-                                  recording.duration.inMilliseconds.toString();
-                              setState(() {
-                                _isRecorded = true;
-                              });
-                            }, onStatusChanged: (status) {
-                              if (status == RecorderState.recording &&
-                                  _timerStarted == false) {
+                            SizedBox(height: 45),
+                            AudioRecorder(
+                              durations:
+                                  routineViewModel.routine.map<int>((item) {return item.duration;}).toList(),
+                              onComplete: (recording) {
+                                _formData["recording"] = recording.path;
+                                _formData["duration"] = recording
+                                    .duration.inMilliseconds
+                                    .toString();
                                 setState(() {
-                                  _timerStarted = true;
+                                  _isRecorded = true;
                                 });
-                                _displayRoutine();
-                              }
-                              setState(() {
-                                _isRecording = status == RecorderState.paused ||
-                                        status == RecorderState.recording
-                                    ? true
-                                    : false;
-                              });
-                            }),
+                                _currentRoutineItemIndex = -1;
+                              },
+                              onStatusChanged: (status) {
+                                if (status == RecorderState.recording) {
+                                  _stopWatch.start();
+                                }
+                                if (status == RecorderState.paused) {
+                                  _stopWatch.stop();
+                                }
+                                if (status == RecorderState.stopped) {
+                                  _stopWatch.reset();
+                                }
+                                setState(() {
+                                  _isRecording =
+                                      status == RecorderState.paused ||
+                                              status == RecorderState.recording
+                                          ? true
+                                          : false;
+                                });
+                              },
+                              onStart: () {
+                                _displayNextRoutineItem();
+                              },
+                              onLapComplete: () {
+                                if (_currentRoutineItemIndex >= routineViewModel.routine.length - 1) return;
+                                print("Going to next lap");
+                                _displayNextRoutineItem();
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -136,7 +169,7 @@ class _CreateEntryState extends State<CreateEntry> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AirnoteColors.primary,
-        child: _entryViewModel.getStatus() == ViewStatus.LOADING
+        child: entryViewModel.getStatus() == ViewStatus.LOADING
             ? SizedBox(
                 width: 20.0,
                 height: 20.0,
@@ -148,7 +181,7 @@ class _CreateEntryState extends State<CreateEntry> {
                 Icons.check,
               ),
         onPressed: () {
-          if (_entryViewModel.getStatus() == ViewStatus.LOADING) return;
+          if (entryViewModel.getStatus() == ViewStatus.LOADING) return;
           final form = _addEntryFormKey.currentState;
           if (form.validate()) {
             form.save();
@@ -196,39 +229,43 @@ class _CreateEntryState extends State<CreateEntry> {
     return result;
   }
 
-  //TODO this is a heap of garbage
-  _displayRoutine() {
-    final routine = this._routineViewModel.routine;
-    int delay = routine[0].duration;
-    setState(() {
-      _text = routine[0].prompt;
+  _displayNextRoutineItem() {
+      _isShowingText = false;
+    final timer = new Timer(Duration(milliseconds: 500), () {
+      _isShowingText = true;
+      _currentRoutineItemIndex += 1;
     });
-    final firstOpacityTimer = new Timer(Duration(milliseconds: 2000), () {
-        setState(() {
-          _isShowingText = true;
-        });
-      });
-      _timers.add(firstOpacityTimer);
-    for (var i = 1; i < routine.length; i++) {
-      final timer = new Timer(Duration(milliseconds: delay), () {
-        setState(() {
-          _text = routine[i].prompt;
-        });
-      });
-      final opacityTimerStart = new Timer(Duration(milliseconds: delay - 1000), () {
-        setState(() {
-          _isShowingText = false;
-        });
-      });
-      final opacityTimerEnd = new Timer(Duration(milliseconds: delay + 1000), () {
-        setState(() {
-          _isShowingText = true;
-        });
-      });
-      delay += routine[i].duration;
-      _timers.add(timer);
-      _timers.add(opacityTimerStart);
-      _timers.add(opacityTimerEnd);
-    }
+    _timers.add(timer);
+    // int delay = routine[0].duration;
+    // setState(() {
+    //   _text = routine[0].prompt;
+    // });
+    // final firstOpacityTimer = new Timer(Duration(milliseconds: 2000), () {
+    //     setState(() {
+    //       _isShowingText = true;
+    //     });
+    //   });
+    //   _timers.add(firstOpacityTimer);
+    // for (var i = 1; i < routine.length; i++) {
+    //   final timer = new Timer(Duration(milliseconds: delay), () {
+    //     setState(() {
+    //       _text = routine[i].prompt;
+    //     });
+    //   });
+    //   final opacityTimerStart = new Timer(Duration(milliseconds: delay - 1000), () {
+    //     setState(() {
+    //       _isShowingText = false;
+    //     });
+    //   });
+    //   final opacityTimerEnd = new Timer(Duration(milliseconds: delay + 1000), () {
+    //     setState(() {
+    //       _isShowingText = true;
+    //     });
+    //   });
+    //   delay += routine[i].duration;
+    //   _timers.add(timer);
+    //   _timers.add(opacityTimerStart);
+    //   _timers.add(opacityTimerEnd);
+    // }
   }
 }

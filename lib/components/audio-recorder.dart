@@ -19,7 +19,16 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 class AudioRecorder extends StatefulWidget {
   final void Function(Recording) onComplete;
   final void Function(RecorderState) onStatusChanged;
-  AudioRecorder({Key key, this.onComplete, this.onStatusChanged})
+  final void Function() onLapComplete;
+  final void Function() onStart;
+  final List<int> durations;
+  AudioRecorder(
+      {Key key,
+      this.onComplete,
+      this.onStatusChanged,
+      this.durations,
+      this.onLapComplete,
+      this.onStart})
       : super(key: key);
   @override
   _AudioRecorderState createState() => _AudioRecorderState();
@@ -34,6 +43,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Timer _timer;
   Stopwatch _stopwatch = new Stopwatch();
   bool _isInitialised = false;
+  int _currentLap = 0;
 
   @override
   void initState() {
@@ -45,12 +55,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   Future<void> _initRecording() async {
     try {
-      PermissionStatus hasPermission = await PermissionHandler().checkPermissionStatus(PermissionGroup.microphone);
+      PermissionStatus hasPermission = await PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.microphone);
       if (hasPermission != PermissionStatus.granted) {
         await _askForPermission();
       }
       setState(() {
-        _hasPermission = hasPermission == PermissionStatus.granted ? true : false;
+        _hasPermission =
+            hasPermission == PermissionStatus.granted ? true : false;
       });
       if (!_hasPermission) {
         return;
@@ -62,6 +74,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       path = pt.join(dir.path, path);
       _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.AAC);
       await _recorder.initialized;
+      _stopwatch.reset();
       Recording current = await _recorder.current(channel: 0);
       setState(() {
         _currentRecording = current;
@@ -77,6 +90,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
   Widget build(BuildContext context) {
     Color color =
         _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
+    final totalDuration = widget.durations.reduce((a, b) => a + b).toDouble();
     return Container(
       child: Column(
         children: <Widget>[
@@ -85,9 +99,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
             children: <Widget>[
               SleekCircularSlider(
                   innerWidget: (_) => Container(),
-                  initialValue: _stopwatch.elapsedMilliseconds * 1.0,
+                  initialValue: _stopwatch.elapsedMilliseconds
+                      .clamp(0, totalDuration)
+                      .toDouble(),
                   min: 0,
-                  max: 1000.0 * 50,
+                  max: totalDuration,
                   appearance: CircularSliderAppearance(
                       customWidths: CustomSliderWidths(
                           trackWidth: 1, progressBarWidth: 2, handlerSize: 3),
@@ -101,7 +117,15 @@ class _AudioRecorderState extends State<AudioRecorder> {
                       size: 200.0,
                       animationEnabled: false),
                   onChange: (double value) {
-                    // print(value);
+                    if (value >= totalDuration) {
+                      _stop();
+                      return;
+                    }
+                    if (value >= widget.durations[_currentLap]) {
+                      if (_currentLap >= widget.durations.length - 1) return;
+                      widget.onLapComplete();
+                      _currentLap += 1;
+                    }
                   }),
               AirnotePlayerButton(
                 icon: _buildIcon(),
@@ -152,6 +176,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       });
 
       _stopwatch.start();
+      widget.onStart();
     } catch (e) {
       print(e);
     }
@@ -179,6 +204,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
     }
     Recording result = await _recorder?.stop();
     _changeStatus(result);
+    _stopwatch.stop();
+    setState(() {
+      _currentLap = 0;
+    });
     widget.onComplete(result);
   }
 
@@ -283,7 +312,9 @@ class _AudioRecorderState extends State<AudioRecorder> {
     _snackBarService.showSnackBar(
         text: "Please allow me to use your microphone",
         icon: Icon(Icons.mic_off));
-    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.microphone]);
+    Map<PermissionGroup, PermissionStatus> permissions =
+        await PermissionHandler()
+            .requestPermissions([PermissionGroup.microphone]);
   }
 }
 

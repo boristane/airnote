@@ -98,7 +98,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     _audioPlayer.onDurationChanged.listen((Duration d) async {
       int totalDuration = await _audioPlayer?.getDuration();
       setState(() {
-        _totalDuration = totalDuration * 1.0;
+        _totalDuration = totalDuration.toDouble();
       });
     });
   }
