@@ -12,6 +12,7 @@ import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:path/path.dart' as pt;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
@@ -30,9 +31,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
   RecordingStatus _currentRecorderStatus = RecordingStatus.Unset;
   bool _hasPermission = false;
   final _snackBarService = locator<SnackBarService>();
-  double _position = 0;
   Timer _timer;
-  Timer _silenceTimer;
+  Stopwatch _stopwatch = new Stopwatch();
   bool _isInitialised = false;
 
   @override
@@ -45,12 +45,14 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   Future<void> _initRecording() async {
     try {
-      bool hasPermission = await FlutterAudioRecorder.hasPermissions;
+      PermissionStatus hasPermission = await PermissionHandler().checkPermissionStatus(PermissionGroup.microphone);
+      if (hasPermission != PermissionStatus.granted) {
+        await _askForPermission();
+      }
       setState(() {
-        _hasPermission = true;
+        _hasPermission = hasPermission == PermissionStatus.granted ? true : false;
       });
       if (!_hasPermission) {
-        _askForPermission();
         return;
       }
       final _userViewModel = Provider.of<UserViewModel>(context);
@@ -83,7 +85,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
             children: <Widget>[
               SleekCircularSlider(
                   innerWidget: (_) => Container(),
-                  initialValue: _position,
+                  initialValue: _stopwatch.elapsedMilliseconds * 1.0,
                   min: 0,
                   max: 1000.0 * 50,
                   appearance: CircularSliderAppearance(
@@ -127,8 +129,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   @override
   void deactivate() async {
-    _timer.cancel();
-    _silenceTimer.cancel();
+    _timer?.cancel();
     super.deactivate();
   }
 
@@ -147,15 +148,10 @@ class _AudioRecorderState extends State<AudioRecorder> {
         }
 
         Recording current = await _recorder.current(channel: 0);
-        setState(() {
-          _position += tick.inMilliseconds;
-        });
         _changeStatus(current);
       });
-      _silenceTimer =
-          new Timer.periodic(Duration(milliseconds: 5000), (Timer t) async {
-        print(_currentRecording.metering.averagePower);
-      });
+
+      _stopwatch.start();
     } catch (e) {
       print(e);
     }
@@ -163,11 +159,13 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   void _resume() async {
     await _recorder.resume();
+    _stopwatch.start();
     setState(() {});
   }
 
   void _pause() async {
     await _recorder.pause();
+    _stopwatch.stop();
     setState(() {});
   }
 
@@ -281,10 +279,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
     }
   }
 
-  _askForPermission() {
+  _askForPermission() async {
     _snackBarService.showSnackBar(
         text: "Please allow me to use your microphone",
         icon: Icon(Icons.mic_off));
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.microphone]);
   }
 }
 

@@ -126,7 +126,7 @@ class _EntryViewState extends State<EntryView>
         final heroTag = "entry-image-${entry.id}";
         return Stack(
           children: <Widget>[
-            ListView(
+            Column(
               children: <Widget>[
                 Container(
                   height: 300,
@@ -153,20 +153,7 @@ class _EntryViewState extends State<EntryView>
                     ],
                   ),
                 ),
-                Container(
-                  padding: _hasPlayer
-                      ? EdgeInsets.fromLTRB(20, 10, 20, 150)
-                      : EdgeInsets.fromLTRB(20, 10, 20, 20),
-                  color: AirnoteColors.backgroundColor,
-                  child: Text(
-                    entry.content ??
-                        "There was a problem getting the content of the entry...",
-                    style: TextStyle(
-                        fontSize: 16,
-                        height: 1.2,
-                        color: AirnoteColors.text.withOpacity(0.8)),
-                  ),
-                ),
+                SizedBox(height: 50,),
                 _hasPlayer
                 ? AirnoteAudioPlayer(
                     audioFilePath: localRecordingFilePath,
@@ -389,7 +376,7 @@ class _EntryHeaderImage extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            height: 300,
+            height: 299,
             decoration: BoxDecoration(
                 image:
                     DecorationImage(image: imageProvider, fit: BoxFit.cover)),
