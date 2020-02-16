@@ -5,6 +5,7 @@ import 'package:airnote/components/player-button.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/utils/messages.dart';
 import 'package:airnote/utils/recorder-state.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:flutter/material.dart';
@@ -310,11 +311,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   _askForPermission() async {
     _snackBarService.showSnackBar(
-        text: "Please allow me to use your microphone",
-        icon: Icon(Icons.mic_off));
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler()
-            .requestPermissions([PermissionGroup.microphone]);
+        text: AirnoteMessage.microphoneRequest, icon: Icon(Icons.mic_off));
+    await PermissionHandler().requestPermissions([PermissionGroup.microphone]);
   }
 }
 

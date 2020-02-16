@@ -29,8 +29,8 @@ class UserViewModel extends BaseViewModel {
       _userService.setupClient();
     } on DioError catch (e) {
       final data = e.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => {});
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
     }
     setStatus(ViewStatus.READY);
     return response?.statusCode == 200;
@@ -52,8 +52,8 @@ class UserViewModel extends BaseViewModel {
       _userService.setupClient();
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => {});
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
     }
 
     setStatus(ViewStatus.READY);
@@ -68,8 +68,8 @@ class UserViewModel extends BaseViewModel {
       _user = User.fromJson(data["user"]);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => {});
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
     }
     setStatus(ViewStatus.READY);
   }

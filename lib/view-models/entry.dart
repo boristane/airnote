@@ -30,7 +30,7 @@ class EntryViewModel extends BaseViewModel {
       _entries = List<Entry>.from(data.map((n) => Entry.fromJson(n)));
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      _message = data["message"] ?? AirnoteMessage.UnknownError;
+      _message = data["message"] ?? AirnoteMessage.unknownError;
     }
     setStatus(ViewStatus.READY);
   }
@@ -46,8 +46,8 @@ class EntryViewModel extends BaseViewModel {
       success = true;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => setStatus(ViewStatus.READY));
     }
     setStatus(ViewStatus.READY);
     return success;
@@ -61,8 +61,8 @@ class EntryViewModel extends BaseViewModel {
       response = await _entryService.postEntry(formData, email, encryptionKey);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => {});
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
     }
 
     setStatus(ViewStatus.READY);
@@ -75,11 +75,10 @@ class EntryViewModel extends BaseViewModel {
       _message = "";
       _entryService.setupClient();
       await _entryService.deleteEntry(id);
-      // _currentEntry = null;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () => setStatus(ViewStatus.READY));
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => setStatus(ViewStatus.READY));
     }
     setStatus(ViewStatus.READY);
   }
@@ -91,8 +90,8 @@ class EntryViewModel extends BaseViewModel {
       await _entryService.updateIsLockedEntry(id, newValue);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = (data is String) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
+      final message = (data is String) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
     }
   }
 
@@ -104,8 +103,8 @@ class EntryViewModel extends BaseViewModel {
       _currentEntryRecording= path;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = (data is String || data is ResponseBody) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
+      final message = (data is String || data is ResponseBody) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
       _currentEntryRecording= "";
     }
   }

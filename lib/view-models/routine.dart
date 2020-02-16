@@ -26,8 +26,8 @@ class RoutineViewModel extends BaseViewModel {
       _routine = List<RoutineItem>.from(data.map((n) => RoutineItem.fromJson(n)));
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
-      final message = (data is String || data is ResponseBody) ? AirnoteMessage.UnknownError : data["message"] ?? AirnoteMessage.UnknownError;
-      _dialogService.showInfoDialog(title: "Ooops!", content: message, onPressed: () {});
+      final message = (data is String || data is ResponseBody) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
     }
     setStatus(ViewStatus.READY);
   }

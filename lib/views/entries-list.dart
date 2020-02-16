@@ -60,7 +60,7 @@ class _EntriesListState extends State<EntriesList> {
             children: <Widget>[
               Flexible(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding: const EdgeInsets.only(top: 20.0, bottom: 5.0),
                   child: ListView.builder(
                       itemCount: entries.length,
                       itemBuilder: (BuildContext context, int index) {

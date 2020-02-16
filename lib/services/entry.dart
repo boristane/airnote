@@ -76,11 +76,6 @@ class EntryService {
   }
 
   Future<String> loadRecording(int id, bool isEncrypted, String email, String encryptionKey) async {
-    // final bytes = await _streamRecordingBytes(id);
-    // final sink = file.openWrite();
-    // bytes.listen((data) => sink.add(data),
-    //     onDone: () => sink.close(), onError: (_) => sink.close());
-    
     final dir = await getTemporaryDirectory();
     await this._apiClient.download("/recording/$id", "${dir.path}/audio.aac");
     final file = new File("${dir.path}/audio.aac");

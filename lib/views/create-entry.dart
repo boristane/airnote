@@ -4,12 +4,12 @@ import 'package:airnote/components/audio-recorder.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
-import 'package:airnote/models/routine.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
+import 'package:airnote/utils/messages.dart';
 import 'package:airnote/utils/recorder-state.dart';
 import 'package:airnote/utils/stopwatch.dart';
 import 'package:airnote/view-models/base.dart';
@@ -36,8 +36,6 @@ class _CreateEntryState extends State<CreateEntry> {
   bool _isRecording = false;
   bool _isShowingText = false;
   int _currentRoutineItemIndex = -1;
-  String _text = "";
-  int _duration = 0;
   List<Timer> _timers = [];
   AirnoteStopwatch _stopWatch = AirnoteStopwatch();
 
@@ -97,7 +95,7 @@ class _CreateEntryState extends State<CreateEntry> {
                               duration: Duration(milliseconds: 500),
                               child: Container(
                                 height: 50,
-                                child: _currentRoutineItemIndex == -1 ? Container() : Text(
+                                child: _currentRoutineItemIndex == -1 ? Text("") : Text(
                                   routineViewModel
                                       .routine[_currentRoutineItemIndex].prompt,
                                   style:
@@ -118,6 +116,7 @@ class _CreateEntryState extends State<CreateEntry> {
                                   _isRecorded = true;
                                 });
                                 _currentRoutineItemIndex = -1;
+                                _isShowingText = false;
                               },
                               onStatusChanged: (status) {
                                 if (status == RecorderState.recording) {
@@ -142,7 +141,6 @@ class _CreateEntryState extends State<CreateEntry> {
                               },
                               onLapComplete: () {
                                 if (_currentRoutineItemIndex >= routineViewModel.routine.length - 1) return;
-                                print("Going to next lap");
                                 _displayNextRoutineItem();
                               },
                             ),
@@ -220,8 +218,8 @@ class _CreateEntryState extends State<CreateEntry> {
     bool result = true;
     if (_isRecorded || _isRecording) {
       await _dialogService.showQuestionDialog(
-          title: "Are you sure?",
-          content: "You will lose your recording.",
+          title: AirnoteMessage.areYouSure,
+          content: AirnoteMessage.recordingExitDelete,
           onYes: () => result = true,
           onNo: () => result = false);
       return result;
@@ -236,36 +234,5 @@ class _CreateEntryState extends State<CreateEntry> {
       _currentRoutineItemIndex += 1;
     });
     _timers.add(timer);
-    // int delay = routine[0].duration;
-    // setState(() {
-    //   _text = routine[0].prompt;
-    // });
-    // final firstOpacityTimer = new Timer(Duration(milliseconds: 2000), () {
-    //     setState(() {
-    //       _isShowingText = true;
-    //     });
-    //   });
-    //   _timers.add(firstOpacityTimer);
-    // for (var i = 1; i < routine.length; i++) {
-    //   final timer = new Timer(Duration(milliseconds: delay), () {
-    //     setState(() {
-    //       _text = routine[i].prompt;
-    //     });
-    //   });
-    //   final opacityTimerStart = new Timer(Duration(milliseconds: delay - 1000), () {
-    //     setState(() {
-    //       _isShowingText = false;
-    //     });
-    //   });
-    //   final opacityTimerEnd = new Timer(Duration(milliseconds: delay + 1000), () {
-    //     setState(() {
-    //       _isShowingText = true;
-    //     });
-    //   });
-    //   delay += routine[i].duration;
-    //   _timers.add(timer);
-    //   _timers.add(opacityTimerStart);
-    //   _timers.add(opacityTimerEnd);
-    // }
   }
 }

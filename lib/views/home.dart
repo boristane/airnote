@@ -19,19 +19,24 @@ class _HomeState extends State<Home> {
     });
   }
 
+  _getColor(int index) {
+    return _currentIndex == index ? AirnoteColors.primary : AirnoteColors.inactive;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: _currentIndex == 0 ? AirnoteColors.primary : AirnoteColors.inactive,),
-            title: Text("Home", style: TextStyle(color: _currentIndex == 0 ? AirnoteColors.primary : AirnoteColors.inactive),),
+            icon: Icon(Icons.book, color:_getColor(0),),
+            title: Text("Entries", style: TextStyle(color: _getColor(0)),),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: _currentIndex == 1 ? AirnoteColors.primary : AirnoteColors.inactive,),
-            title: Text("Profile", style: TextStyle(color: _currentIndex == 1 ? AirnoteColors.primary : AirnoteColors.inactive),),
+            icon: Icon(Icons.face, color: _getColor(1),),
+            title: Text("Profile", style: TextStyle(color:_getColor(1)),),
           ),
         ],
         onTap: _onBottomNavTapped,

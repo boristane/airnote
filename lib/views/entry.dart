@@ -5,6 +5,7 @@ import 'package:airnote/models/sentiment.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/utils/messages.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/user.dart';
@@ -95,8 +96,8 @@ class _EntryViewState extends State<EntryView>
     }
 
     await _dialogService.showQuestionDialog(
-        title: "Are you sure?",
-        content: "Deleting an entry is irreversible",
+        title: AirnoteMessage.areYouSure,
+        content: AirnoteMessage.entryDeleteDialog,
         onYes: onYes,
         onNo: _closeOptions);
   }

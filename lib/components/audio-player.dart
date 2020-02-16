@@ -67,6 +67,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     _audioPlayer.stop();
     _stopwatch.stop();
     _stopwatch.reset();
+    _timer?.cancel();
   }
 
   String _getElapsedTime() {
@@ -77,14 +78,14 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
   }
 
-  String _getRemainingTime() {
-    Duration duration = Duration(
-        milliseconds:
-            (_totalDuration - _stopwatch.elapsedMilliseconds).toInt());
-    int minutes = duration.inMinutes.remainder(60);
-    int seconds = duration.inSeconds.remainder(60);
-    return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
-  }
+  // String _getRemainingTime() {
+  //   Duration duration = Duration(
+  //       milliseconds:
+  //           (_totalDuration - _stopwatch.elapsedMilliseconds).toInt());
+  //   int minutes = duration.inMinutes.remainder(60);
+  //   int seconds = duration.inSeconds.remainder(60);
+  //   return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
+  // }
 
   void _initialisePlayer() async {
     await _audioPlayer.setUrl(widget.audioFilePath, isLocal: true);
@@ -93,6 +94,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
         _audioPlayer.stop();
         _stopwatch.stop();
         _stopwatch.reset();
+        _timer?.cancel();
       }
     });
     _audioPlayer.onDurationChanged.listen((Duration d) async {
@@ -105,7 +107,6 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
 
   @override
   void initState() {
-    // AudioPlayer.logEnabled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initialisePlayer();
     });
@@ -173,6 +174,13 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
                 child: AirnotePlayerButton(
                   icon: Icon(Icons.stop, color: AirnoteColors.primary),
                   onTap: _onStopButtonTapped,
+                ),
+              ),
+              Positioned(
+                top: 40,
+                child: Text(
+                  _getElapsedTime(),
+                  style: TextStyle(color: AirnoteColors.text.withOpacity(0.7)),
                 ),
               ),
             ],
