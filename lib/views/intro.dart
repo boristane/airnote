@@ -100,20 +100,11 @@ class IntroSlideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: _height,
-      child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        Container(),
+      child: Stack(children: <Widget>[
         Container(
-          width: 270,
-          height: 380,
-          margin: EdgeInsets.only(top: 100.0),
+          height: this._height * 0.89,
+          width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            boxShadow: [
-              BoxShadow(
-                  color: AirnoteColors.grey.withOpacity(.4),
-                  offset: Offset(3, 5.0),
-                  blurRadius: 5.0),
-            ],
             image: DecorationImage(
               image: AssetImage(
                 _currentSlide.image,
@@ -121,26 +112,34 @@ class IntroSlideCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          child: Align(
-            alignment: Alignment(0.1, 1.0),
-            child: Container(
-              padding: EdgeInsets.all(15.0),
-              height: 100,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
-                color: AirnoteColors.primary.withOpacity(0.8),
-              ),
-              child: Text(
-                _currentSlide.title,
-                style: TextStyle(
-                    color: AirnoteColors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
+        ),
+        Container(
+            height: this._height * 0.9,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+                AirnoteColors.backgroundColor.withOpacity(0.0),
+                AirnoteColors.backgroundColor
+              ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+            ),
+          ),
+          Container(
+            child: Align(
+              alignment: Alignment(0.1, 1.0),
+              child: Container(
+                padding: EdgeInsets.all(15.0),
+                height: 100,
+                width: double.infinity,
+                child: Text(
+                  _currentSlide.title,
+                  style: TextStyle(
+                      color: AirnoteColors.primary,
+                      fontSize: 20.0,
+                      fontFamily: "Raleway",
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-        )
       ]),
     );
   }
