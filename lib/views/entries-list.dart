@@ -100,7 +100,7 @@ class NoEntryFound extends StatelessWidget {
         ),
         Container(
           alignment: Alignment.center,
-          child: Text("Add the + button to start recording"),
+          child: Text("Press the + button to start recording"),
         )
       ],
     );
