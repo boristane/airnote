@@ -51,7 +51,10 @@ class _SignupState extends State<Signup> {
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    await userModelView.signup(_formData);
+    final success = await userModelView.signup(_formData);
+    if(!success) {
+      return;
+    }
     Navigator.of(context).pushNamedAndRemoveUntil(CreatePassPhrase.routeName, (Route<dynamic> route) => false, arguments: _formData['email']);
   }
 

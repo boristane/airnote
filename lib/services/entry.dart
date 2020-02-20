@@ -16,7 +16,8 @@ class EntryService {
   Dio _apiClient;
   // static final String _baseUrl =
   //     "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com:8080/entries";
-  static final String _baseUrl = "http://10.0.2.2:8080/entries";
+  // static final String _baseUrl = "http://10.0.2.2:8080/entries";
+  static final String _baseUrl = "http://localhost:8080/entries"; 
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   EntryService() {
