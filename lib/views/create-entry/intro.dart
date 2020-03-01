@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
-import 'package:airnote/models/routine.dart';
+import 'package:airnote/models/prompt.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/views/create-entry/record.dart';
@@ -31,7 +31,7 @@ class _CreateEntryIntroState extends State<CreateEntryIntro> {
 
   @override
   Widget build(BuildContext context) {
-    final routine = _routineViewModel.routine;
+    final routine = _routineViewModel.prompts;
     if (routine == null) {
       return AirnoteLoadingScreen();
     }
@@ -59,7 +59,7 @@ class _CreateEntryIntroState extends State<CreateEntryIntro> {
                       itemCount: routine.length,
                       itemBuilder: (BuildContext context, int index) {
                         final routineItem = routine[index];
-                        return RoutineItemView(
+                        return PromptView(
                           item: routineItem,
                         );
                       }),
@@ -82,12 +82,12 @@ class _CreateEntryIntroState extends State<CreateEntryIntro> {
   }
 }
 
-class RoutineItemView extends StatelessWidget {
-  final RoutineItem item;
+class PromptView extends StatelessWidget {
+  final Prompt item;
 
-  RoutineItemView({Key key, this.item}) : super(key: key);
+  PromptView({Key key, this.item}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Text("${item.prompt} -> ${item.duration}");
+    return Text("${item.text} -> ${item.duration}");
   }
 }

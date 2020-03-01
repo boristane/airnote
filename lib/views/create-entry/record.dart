@@ -59,7 +59,7 @@ class _RecordEntryState extends State<RecordEntry> {
   @override
   Widget build(BuildContext context) {
     final entryViewModel = Provider.of<EntryViewModel>(context);
-    if (_routineViewModel.routine == null) {
+    if (_routineViewModel.prompts == null) {
       return AirnoteLoadingScreen();
     }
     return Scaffold(
@@ -96,7 +96,7 @@ class _RecordEntryState extends State<RecordEntry> {
                                 height: 50,
                                 child: _currentRoutineItemIndex == -1 ? Text("") : Text(
                                   _routineViewModel
-                                      .routine[_currentRoutineItemIndex].prompt,
+                                      .prompts[_currentRoutineItemIndex].text,
                                   style:
                                       TextStyle(color: AirnoteColors.text, fontSize: 15),
                                 ),
@@ -105,7 +105,7 @@ class _RecordEntryState extends State<RecordEntry> {
                             SizedBox(height: 45),
                             AudioRecorder(
                               durations:
-                                  _routineViewModel.routine.map<int>((item) {return item.duration;}).toList(),
+                                  _routineViewModel.prompts.map<int>((item) {return item.duration;}).toList(),
                               onComplete: (recording) {
                                 _formData["recording"] = recording.path;
                                 _formData["duration"] = recording
@@ -139,7 +139,7 @@ class _RecordEntryState extends State<RecordEntry> {
                                 _displayNextRoutineItem();
                               },
                               onLapComplete: () {
-                                if (_currentRoutineItemIndex >= _routineViewModel.routine.length - 1) return;
+                                if (_currentRoutineItemIndex >= _routineViewModel.prompts.length - 1) return;
                                 _displayNextRoutineItem();
                               },
                             ),

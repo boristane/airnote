@@ -4,8 +4,8 @@ import 'dart:async';
 
 class RoutineService {
   Dio _apiClient;
-  // static final String _baseUrl = "http://10.0.2.2:8080/routines";
-  static final String _baseUrl = "http://localhost:8080/routines";
+  static final String _baseUrl = "http://10.0.2.2:8080/routines";
+  // static final String _baseUrl = "http://localhost:8080/routines";
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   RoutineService() {
@@ -19,9 +19,8 @@ class RoutineService {
   }
 
   Future<Response> getRoutine() async {
-    const url = "/";
-    final now = new DateTime.now().toIso8601String();
-    final response = await _apiClient.get(url, queryParameters: {"now": now});
+    const url = "/1";
+    final response = await _apiClient.get(url);
     return response;
   }
 }

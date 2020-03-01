@@ -1,3 +1,4 @@
+import 'package:airnote/models/prompt.dart';
 import 'package:airnote/models/routine.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/dialog.dart';
@@ -7,12 +8,13 @@ import 'package:airnote/view-models/base.dart';
 import 'package:dio/dio.dart';
 
 class RoutineViewModel extends BaseViewModel {
-  List<RoutineItem> _routine;
+  List<Prompt> _prompts;
+  Routine _routine;
   String _message;
   final _dialogService = locator<DialogService>();
 
   String get message => _message;
-  List<RoutineItem> get routine => _routine;
+  List<Prompt> get prompts => _prompts;
 
   final _routineService = locator<RoutineService>();
 
@@ -23,7 +25,8 @@ class RoutineViewModel extends BaseViewModel {
       await _routineService.setupClient();
       final response = await _routineService.getRoutine();
       final dynamic data = response.data["routine"] ?? [];
-      _routine = List<RoutineItem>.from(data.map((n) => RoutineItem.fromJson(n)));
+      _routine = Routine.fromJson(data);
+      _prompts = _routine.prompts;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = (data is String || data is ResponseBody) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;

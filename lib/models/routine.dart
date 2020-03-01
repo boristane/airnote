@@ -1,13 +1,17 @@
+import 'package:airnote/models/prompt.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'routine.g.dart';
 
 @JsonSerializable()
-class RoutineItem {
-  final int duration;
-  final String prompt;
+class Routine {
+  final int id;
+  final String name;
+  final String imageUrl;
+  final int position;
+  final List<Prompt> prompts;
 
-  RoutineItem({this.prompt, this.duration});
-  factory RoutineItem.fromJson(Map<String, dynamic> json) => _$RoutineItemFromJson(json);
-  Map<String, dynamic> toJson() => _$RoutineItemToJson(this);
+  Routine({this.id, this.name, this.imageUrl, this.position, this.prompts});
+  factory Routine.fromJson(Map<String, dynamic> json) => _$RoutineFromJson(json);
+  Map<String, dynamic> toJson() => _$RoutineToJson(this);
 }

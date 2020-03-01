@@ -6,15 +6,23 @@ part of 'routine.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-RoutineItem _$RoutineItemFromJson(Map<String, dynamic> json) {
-  return RoutineItem(
-    prompt: json['prompt'] as String,
-    duration: json['duration'] as int,
+Routine _$RoutineFromJson(Map<String, dynamic> json) {
+  return Routine(
+    id: json['id'] as int,
+    name: json['name'] as String,
+    imageUrl: json['imageUrl'] as String,
+    position: json['position'] as int,
+    prompts: (json['prompts'] as List)
+        ?.map((e) =>
+            e == null ? null : Prompt.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
-Map<String, dynamic> _$RoutineItemToJson(RoutineItem instance) =>
-    <String, dynamic>{
-      'duration': instance.duration,
-      'prompt': instance.prompt,
+Map<String, dynamic> _$RoutineToJson(Routine instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'imageUrl': instance.imageUrl,
+      'position': instance.position,
+      'prompts': instance.prompts,
     };
