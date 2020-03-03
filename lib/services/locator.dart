@@ -6,6 +6,7 @@ import 'package:airnote/services/entry.dart';
 import 'package:airnote/services/file-encryption.dart';
 import 'package:airnote/services/local-auth.dart';
 import 'package:airnote/services/passphrase.dart';
+import 'package:airnote/services/quest.dart';
 import 'package:airnote/services/routine.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/services/user.dart';
@@ -15,6 +16,7 @@ GetIt locator = GetIt.instance;
 
 void setupLocator() {
   locator.registerSingleton(DatabaseService());
+  locator.registerLazySingleton(() => QuestService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => EntryService());
   locator.registerLazySingleton(() => DialogService());
