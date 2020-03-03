@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/models/prompt.dart';
@@ -50,7 +51,8 @@ class _CreateEntryIntroState extends State<CreateEntryIntro> {
               ),
               Container(
                 margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
-                child: Text("The routine"),
+                child:
+                    AirnoteHeaderText(text: "The points we will discuss today"),
               ),
               Flexible(
                 child: Padding(
@@ -88,6 +90,40 @@ class PromptView extends StatelessWidget {
   PromptView({Key key, this.item}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Text("${item.text} -> ${item.duration}");
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(width: 1.0, color: AirnoteColors.grey),
+                ),
+              ),
+              child: Text(
+                item.text,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.0,
+                    fontFamily: "Raleway"),
+              ),
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.fromLTRB(20, 20, 2, 20),
+              child: Text(millisecondsToTimeString(item.duration))),
+        ],
+      ),
+    );
   }
+}
+
+String millisecondsToTimeString(int ms) {
+  final duration = Duration(milliseconds: ms);
+  int minutes = duration.inMinutes.remainder(60);
+  int seconds = duration.inSeconds.remainder(60);
+  return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
 }
