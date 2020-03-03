@@ -122,7 +122,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
                       _stop();
                       return;
                     }
-                    if (value >= widget.durations[_currentLap]) {
+                    var totalTimeToEndOfLap = 0;
+                    for (var i = 0; i <= _currentLap; i+= 1) {
+                      totalTimeToEndOfLap += widget.durations[i];
+                    }
+                    if (value >= totalTimeToEndOfLap) {
                       if (_currentLap >= widget.durations.length - 1) return;
                       widget.onLapComplete();
                       _currentLap += 1;

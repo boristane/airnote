@@ -8,12 +8,12 @@ part of 'prompt.dart';
 
 Prompt _$PromptFromJson(Map<String, dynamic> json) {
   return Prompt(
-    text: json['prompt'] as String,
+    text: json['text'] as String,
     duration: json['duration'] as int,
   );
 }
 
 Map<String, dynamic> _$PromptToJson(Prompt instance) => <String, dynamic>{
       'duration': instance.duration,
-      'prompt': instance.text,
+      'text': instance.text,
     };
