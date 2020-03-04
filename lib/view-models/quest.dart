@@ -8,13 +8,17 @@ import 'package:dio/dio.dart';
 
 class QuestViewModel extends BaseViewModel {
   List<Quest> _quests;
+  List<Quest> _userQuests;
   String _message;
   Quest _currentQuest;
+  Quest _topPickQuest;
   final _dialogService = locator<DialogService>();
 
   String get message => _message;
   List<Quest> get quests => _quests;
+  List<Quest> get userQuests => _userQuests;
   Quest get currentQuest => _currentQuest;
+  Quest get topPickQuest => _topPickQuest;
 
   final _questService = locator<QuestService>();
 
@@ -24,8 +28,12 @@ class QuestViewModel extends BaseViewModel {
       _message = "";
       await _questService.setupClient();
       final response = await _questService.getQuests();
-      final List<dynamic> data = response.data["quests"] ?? [];
-      _quests = List<Quest>.from(data.map((n) => Quest.fromJson(n)));
+      final List<dynamic> quests = response.data["quests"] ?? [];
+      final List<dynamic> userQuests = response.data["userQuests"] ?? [];
+      final dynamic topPickQuest = response.data["topPickQuest"] ?? [];
+      _quests = List<Quest>.from(quests.map((n) => Quest.fromJson(n)));
+      _userQuests = List<Quest>.from(userQuests.map((n) => Quest.fromJson(n)));
+      _topPickQuest = Quest.fromJson(topPickQuest);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       _message = data["message"] ?? AirnoteMessage.unknownError;
@@ -40,7 +48,7 @@ class QuestViewModel extends BaseViewModel {
       _message = "";
       _questService.setupClient();
       final response = await _questService.getSingleQuest(id);
-      _currentQuest = Quest.fromJson(response.data);
+      _currentQuest = Quest.fromJson(response.data["quest"]);
       success = true;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};

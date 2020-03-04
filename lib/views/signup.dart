@@ -69,7 +69,7 @@ class _SignupState extends State<Signup> {
             child: Column(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
+                  margin: EdgeInsets.symmetric(vertical: 20.0),
                   child: AirnoteHeaderText(text: "Let's introduce ourselves!"),
                 ),
                 Form(

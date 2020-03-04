@@ -19,7 +19,7 @@ class AirnoteEntryListItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(children: <Widget>[
-          _EntryHeader(
+          ImageHeader(
             heroTag: heroTag,
             imageUrl: entry.imageUrl,
           ),
@@ -45,24 +45,24 @@ class AirnoteEntryListItem extends StatelessWidget {
   }
 }
 
-class _EntryHeader extends StatelessWidget {
+class ImageHeader extends StatelessWidget {
   final String heroTag;
   final String imageUrl;
 
-  _EntryHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  ImageHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => _EntryImage(
+      imageBuilder: (context, imageProvider) => _GradientImage(
         heroTag: heroTag,
         imageProvider: imageProvider,
       ),
-      placeholder: (context, url) => _EntryImage(
+      placeholder: (context, url) => _GradientImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
-      errorWidget: (context, url, error) => _EntryImage(
+      errorWidget: (context, url, error) => _GradientImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
@@ -70,11 +70,11 @@ class _EntryHeader extends StatelessWidget {
   }
 }
 
-class _EntryImage extends StatelessWidget {
+class _GradientImage extends StatelessWidget {
   final String heroTag;
   final ImageProvider imageProvider;
 
-  _EntryImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
+  _GradientImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
