@@ -1,8 +1,8 @@
+import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
 
 class AirnoteQuestListItem extends StatelessWidget {
   final Quest quest;
@@ -126,29 +126,3 @@ class _EntryBlur extends StatelessWidget {
   }
 }
 
-class BlurryEffect extends StatelessWidget {
-  final double opacity;
-  final double blurry;
-  final Color shade;
-
-  BlurryEffect({this.opacity, this.blurry, this.shade});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: blurry, sigmaY: blurry),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: shade.withOpacity(opacity),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
