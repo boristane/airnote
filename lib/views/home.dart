@@ -1,7 +1,7 @@
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/views/create-entry/intro.dart';
 import 'package:airnote/views/entries-list.dart';
-import 'package:airnote/views/quests.dart';
+import 'package:airnote/views/quests-list.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

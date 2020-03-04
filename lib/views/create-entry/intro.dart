@@ -32,8 +32,9 @@ class _CreateEntryIntroState extends State<CreateEntryIntro> {
 
   @override
   Widget build(BuildContext context) {
-    final routine = _routineViewModel.prompts;
-    if (routine == null) {
+    final prompts = _routineViewModel.prompts;
+    final routine = _routineViewModel.routine;
+    if (prompts == null) {
       return AirnoteLoadingScreen();
     }
     return Scaffold(
@@ -52,17 +53,17 @@ class _CreateEntryIntroState extends State<CreateEntryIntro> {
               Container(
                 margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
                 child:
-                    AirnoteHeaderText(text: "The points we will discuss today"),
+                    AirnoteHeaderText(text: routine.name),
               ),
               Flexible(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0, bottom: 5.0),
                   child: ListView.builder(
-                      itemCount: routine.length,
+                      itemCount: prompts.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final routineItem = routine[index];
+                        final prompt = prompts[index];
                         return PromptView(
-                          item: routineItem,
+                          item: prompt,
                         );
                       }),
                 ),

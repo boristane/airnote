@@ -15,6 +15,7 @@ class RoutineViewModel extends BaseViewModel {
 
   String get message => _message;
   List<Prompt> get prompts => _prompts;
+  Routine get routine => _routine;
 
   final _routineService = locator<RoutineService>();
 

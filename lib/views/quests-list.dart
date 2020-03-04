@@ -1,4 +1,5 @@
 import 'package:airnote/components/loading.dart';
+import 'package:airnote/components/quest-list-item.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
@@ -45,24 +46,22 @@ class _QuestsListState extends State<QuestsList> {
             );
           }
           if (quests.length < 1) return NoQuestFound();
-          return Column(
-            children: <Widget>[
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 5.0),
-                  child: ListView.builder(
-                      itemCount: quests.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final quest = quests[index];
-                        return GestureDetector(
-                            onTap: () async {
-                              await _openQuest(quest);
-                            },
-                            child: Text(quest.name));
-                      }),
-                ),
-              ),
-            ],
+          final size = MediaQuery.of(context).size;
+          final double itemHeight = 280;
+          final double itemWidth = size.width / 2;
+          return Container(
+            margin: EdgeInsets.all(15),
+            child: GridView.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
+              shrinkWrap: true,
+              childAspectRatio: (itemWidth / itemHeight),
+              children: List.generate(quests.length, (index) {
+                return AirnoteQuestListItem(quest: quests[index],);
+                
+              }),
+            ),
           );
         },
       )),
