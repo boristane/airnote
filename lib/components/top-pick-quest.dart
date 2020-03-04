@@ -12,32 +12,40 @@ class TopPickQuest extends StatelessWidget {
   Widget build(BuildContext context) {
     final heroTag = "quest-image-${quest.id}";
     return Container(
-      child: Container(
-          height: 400,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+      height: 400,
+      margin: EdgeInsets.symmetric(horizontal: 25),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: AirnoteColors.grey.withOpacity(.5),
+            offset: Offset(3.0, 3.0),
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
           ),
-          child: Stack(
-            children: <Widget>[
-              ImageHeader(
-                heroTag: heroTag,
-                imageUrl: quest.imageUrl,
+        ],
+      ),
+      child: Stack(
+        children: <Widget>[
+          ImageHeader(
+            heroTag: heroTag,
+            imageUrl: quest.imageUrl,
+          ),
+          Container(
+            padding: EdgeInsets.all(50),
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  _TopPickDate(),
+                  _QuestDescription(quest: quest),
+                ],
               ),
-              Container(
-                padding: EdgeInsets.all(50),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      _TopPickDate(),
-                      _QuestDescription(quest: quest),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -50,7 +58,7 @@ class _QuestDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 100,
+        height: 50,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -67,7 +75,7 @@ class _QuestDescription extends StatelessWidget {
                   fontFamily: "Raleway"),
             ),
             Text(
-              quest.name,
+              quest.shortDescription,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
@@ -101,7 +109,7 @@ class _TopPickDate extends StatelessWidget {
                 fontFamily: "Raleway"),
           ),
           Text(
-            "I selected this one just for you!",
+            "I picked this quest just for you!",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AirnoteColors.white,

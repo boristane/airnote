@@ -8,9 +8,11 @@ class Quest {
   final int id;
   final String name;
   final String imageUrl;
+  final String description;
+  final String shortDescription;
   final List<Routine> routines;
 
-  Quest({this.id, this.name, this.imageUrl, this.routines});
+  Quest({this.id, this.name, this.imageUrl, this.routines, this.description, this.shortDescription});
   factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);
   Map<String, dynamic> toJson() => _$QuestToJson(this);
 }

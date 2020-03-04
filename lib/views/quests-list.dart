@@ -53,31 +53,42 @@ class _QuestsListState extends State<QuestsList> {
           final double itemHeight = 280;
           final double itemWidth = size.width / 2;
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 25),
-                child: ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: TopPickQuest(quest: topPick,),
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await _openQuest(topPick);
+                    },
+                    child: TopPickQuest(
+                      quest: topPick,
                     ),
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
-                      childAspectRatio: (itemWidth / itemHeight),
-                      children: List.generate(quests.length, (index) {
-                        return GestureDetector(
-                          onTap: () async {
-                              await _openQuest(quests[index]);
-                            },
-                          child: AirnoteQuestListItem(quest: quests[index],),
-                        );
-                      }),
-                    ),
-                  ],
+                  ),
                 ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 25),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                    childAspectRatio: (itemWidth / itemHeight),
+                    children: List.generate(quests.length, (index) {
+                      return GestureDetector(
+                        onTap: () async {
+                          await _openQuest(quests[index]);
+                        },
+                        child: AirnoteQuestListItem(
+                          quest: quests[index],
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       )),
