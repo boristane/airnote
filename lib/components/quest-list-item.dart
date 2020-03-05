@@ -13,7 +13,6 @@ class AirnoteQuestListItem extends StatelessWidget {
     return GridTile(
       footer: _QuestDescription(quest: quest),
       child: Container(
-          height: 400,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),

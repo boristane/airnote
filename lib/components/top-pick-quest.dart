@@ -11,8 +11,9 @@ class TopPickQuest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heroTag = "quest-image-${quest.id}";
+    final height = MediaQuery.of(context).size.height * 3 / 7;
     return Container(
-      height: 400,
+      height: height,
       margin: EdgeInsets.symmetric(horizontal: 25),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
