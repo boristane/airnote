@@ -123,7 +123,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
                       return;
                     }
                     var totalTimeToEndOfLap = 0;
-                    for (var i = 0; i <= _currentLap; i+= 1) {
+                    for (var i = 0; i <= _currentLap; i += 1) {
                       totalTimeToEndOfLap += widget.durations[i];
                     }
                     if (value >= totalTimeToEndOfLap) {
@@ -248,53 +248,32 @@ class _AudioRecorderState extends State<AudioRecorder> {
   }
 
   Icon _buildIcon() {
-    Icon icon;
+    IconData icon;
     Color color =
         _hasPermission ? AirnoteColors.primary : AirnoteColors.inactive;
     switch (_currentRecorderStatus) {
       case RecordingStatus.Initialized:
-        {
-          icon = Icon(
-            Icons.mic,
-            color: color,
-          );
-          break;
-        }
+        icon = Icons.mic;
+        break;
       case RecordingStatus.Recording:
-        {
-          icon = Icon(
-            Icons.pause,
-            color: color,
-          );
+          icon = Icons.pause;
           break;
-        }
       case RecordingStatus.Paused:
-        {
-          icon = Icon(
-            Icons.mic,
-            color: color,
-          );
+          icon = Icons.mic;
           break;
-        }
       case RecordingStatus.Stopped:
-        {
-          icon = Icon(
-            Icons.mic_off,
-            color: color,
-          );
+          icon = Icons.mic_off;
           break;
-        }
       default:
-        {
-          icon = Icon(
-            Icons.mic_off,
-            color: color,
-          );
+          icon = Icons.mic_off;
           break;
-        }
         break;
     }
-    return icon;
+    return Icon(
+      icon,
+      color: color,
+      size: 55,
+    );
   }
 
   _changeStatus(Recording current) {

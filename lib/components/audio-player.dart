@@ -47,15 +47,16 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   }
 
   Icon _getMainButtonIcon() {
-    if (_stopwatch.isRunning) {
-      return Icon(
-        Icons.pause,
-        color: AirnoteColors.primary,
-      );
-    }
+    IconData icon;
+    if (_stopwatch.isRunning)
+      icon = Icons.pause;
+    else
+      icon = Icons.play_arrow;
+
     return Icon(
-      Icons.play_arrow,
+      icon,
       color: AirnoteColors.primary,
+      size: 55,
     );
   }
 
@@ -133,8 +134,9 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
             children: <Widget>[
               SleekCircularSlider(
                   innerWidget: (_) => Container(),
-                  initialValue:
-                      _stopwatch.elapsedMilliseconds.clamp(0, _totalDuration).toDouble(),
+                  initialValue: _stopwatch.elapsedMilliseconds
+                      .clamp(0, _totalDuration)
+                      .toDouble(),
                   min: 0,
                   max: _totalDuration,
                   appearance: CircularSliderAppearance(

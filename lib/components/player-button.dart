@@ -28,7 +28,7 @@ class AirnotePlayerButton extends StatelessWidget {
           customBorder:  CircleBorder(),
           onTap: this.onTap,
           child: Container(
-            padding: EdgeInsets.all(isLarge ? 75 : 10),
+            padding: EdgeInsets.all(isLarge ? 60 : 10),
             child: icon,
           ),
         ),
