@@ -30,7 +30,7 @@ class TopPickQuest extends StatelessWidget {
             imageUrl: quest.imageUrl,
           ),
           Container(
-            padding: EdgeInsets.all(50),
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
             child: Align(
               alignment: Alignment.center,
               child: Column(
@@ -56,9 +56,8 @@ class _QuestDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 50,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(
               quest.name,
@@ -72,14 +71,17 @@ class _QuestDescription extends StatelessWidget {
                   letterSpacing: 1.0,
                   fontFamily: "Raleway"),
             ),
-            Text(
-              quest.shortDescription,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: AirnoteColors.white,
-                fontSize: 13,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                quest.shortDescription,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AirnoteColors.white,
+                  fontSize: 13,
+                ),
               ),
             ),
           ],
