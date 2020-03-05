@@ -1,7 +1,7 @@
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/views/create-entry/intro.dart';
+import 'package:airnote/views/drawer.dart';
 import 'package:airnote/views/entries-list.dart';
-import 'package:airnote/views/profile.dart';
 import 'package:airnote/views/quests-list.dart';
 import 'package:flutter/material.dart';
 
@@ -50,10 +50,6 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.book, color:_getColor(1),),
             title: Text("Entries", style: TextStyle(color: _getColor(1)),),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_pin, color:_getColor(2),),
-            title: Text("Profile", style: TextStyle(color: _getColor(2)),),
-          ),
         ],
         onTap: _onBottomNavTapped,
         // showSelectedLabels: false,
@@ -70,10 +66,11 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           QuestsList(),
           EntriesList(),
-          Profile(),
         ],
         index: _currentIndex,
-      )
+      ),
+      drawer: Drawer(
+        child: AirnoteDrawer(),),
     );
   }
 }
