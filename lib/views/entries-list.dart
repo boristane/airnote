@@ -1,3 +1,4 @@
+import 'package:airnote/components/header.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/entry.dart';
@@ -56,12 +57,20 @@ class _EntriesListState extends State<EntriesList> {
             );
           }
           if (entries.length < 1) return NoEntryFound();
-          return Column(
-            children: <Widget>[
-              Flexible(
-                child: Padding(
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 15),
+            child: ListView(
+              children: <Widget>[
+                AirnoteHeader(
+                    text: "Your Space",
+                    subText:
+                        "Everything here remains between you and yourself...",
+                  ),
+                Padding(
                   padding: const EdgeInsets.only(top: 20.0, bottom: 5.0),
                   child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                       itemCount: entries.length,
                       itemBuilder: (BuildContext context, int index) {
                         final entry = entries[index];
@@ -74,8 +83,8 @@ class _EntriesListState extends State<EntriesList> {
                             ));
                       }),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       )),

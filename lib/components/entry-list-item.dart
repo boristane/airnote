@@ -13,7 +13,7 @@ class AirnoteEntryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final heroTag = "entry-image-${entry.id}";
     return Container(
-        margin: EdgeInsets.only(bottom: 10, left: 15, right: 15),
+        padding: EdgeInsets.only(bottom: 10),
         height: 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
