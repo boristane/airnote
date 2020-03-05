@@ -94,28 +94,13 @@ class _TopPickDate extends StatelessWidget {
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
     return Container(
-      height: 50,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            dateString,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AirnoteColors.white,
-                letterSpacing: 1.0,
-                fontFamily: "Raleway"),
-          ),
-          Text(
-            "I picked this quest just for you!",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AirnoteColors.white,
-                fontSize: 15,
-                letterSpacing: 1.0,
-                fontFamily: "Raleway"),
-          ),
-        ],
+      child: Text(
+        dateString,
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AirnoteColors.white,
+            letterSpacing: 1.0,
+            fontFamily: "Raleway"),
       ),
     );
   }

@@ -1,6 +1,7 @@
-import 'package:airnote/components/header-text.dart';
+import 'package:airnote/components/header.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/quest-list-item.dart';
+import 'package:airnote/components/smaller-header.dart';
 import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/view-models/base.dart';
@@ -31,12 +32,51 @@ class _QuestsListState extends State<QuestsList> {
     print("opening a quest");
   }
 
+  Widget _displayUserQuests(List<Quest> userQuests) {
+    if (userQuests.length <= 0) {
+      return Container();
+    }
+    final size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          AirnoteSmallerHeader(
+            text: "Jump back in!",
+          ),
+          Container(
+            height: 120,
+            child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: userQuests.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                      onTap: () async {
+                        await _openQuest(userQuests[index]);
+                      },
+                      child: Container(
+                        width: size.width * 4 / 5,
+                        padding: EdgeInsets.only(right: 8),
+                        child: AirnoteQuestListItem(
+                          quest: userQuests[index],
+                        ),
+                      ));
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(child: Consumer<QuestViewModel>(
         builder: (context, model, child) {
           List<Quest> quests = model.quests;
+          List<Quest> userQuests = model.userQuests;
           Quest topPick = model.topPickQuest;
           if (model.getStatus() == ViewStatus.LOADING) {
             return AirnoteLoadingScreen();
@@ -55,8 +95,13 @@ class _QuestsListState extends State<QuestsList> {
           return Container(
             child: ListView(
               children: <Widget>[
+                AirnoteHeader(
+                  text: "Your Top Pick!",
+                  subText:
+                      "Join a quest and we can start improving your wellbeing; I picked this quest just for you!",
+                ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: const EdgeInsets.only(top: 20.0),
                   child: GestureDetector(
                     onTap: () async {
                       await _openQuest(topPick);
@@ -66,25 +111,34 @@ class _QuestsListState extends State<QuestsList> {
                     ),
                   ),
                 ),
+                _displayUserQuests(userQuests),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 25),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                    childAspectRatio: (itemWidth / itemHeight),
-                    children: List.generate(quests.length, (index) {
-                      return GestureDetector(
-                        onTap: () async {
-                          await _openQuest(quests[index]);
-                        },
-                        child: AirnoteQuestListItem(
-                          quest: quests[index],
-                        ),
-                      );
-                    }),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      AirnoteSmallerHeader(
+                        text: "There are more quests!",
+                      ),
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10.0,
+                        crossAxisSpacing: 10.0,
+                        childAspectRatio: (itemWidth / itemHeight),
+                        children: List.generate(quests.length, (index) {
+                          return GestureDetector(
+                            onTap: () async {
+                              await _openQuest(quests[index]);
+                            },
+                            child: AirnoteQuestListItem(
+                              quest: quests[index],
+                            ),
+                          );
+                        }),
+                      ),
+                    ],
                   ),
                 ),
               ],
