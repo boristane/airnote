@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:airnote/services/api.dart';
 import 'package:airnote/services/file-encryption.dart';
 import 'package:airnote/services/locator.dart';
@@ -17,7 +15,7 @@ class EntryService {
   // static final String _baseUrl =
   //     "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com:8080/entries";
   static final String _baseUrl = "http://10.0.2.2:8080/entries";
-  // static final String _baseUrl = "http://localhost:8080/entries"; 
+  // static final String _baseUrl = "http://localhost:8080/entries";
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   EntryService() {
@@ -37,25 +35,28 @@ class EntryService {
     return response;
   }
 
-  Future<Response> postEntry(Map<String, String> data, String email, String encryptionKey) async {
+  Future<Response> postEntry(
+      Map<String, String> data, String email, String encryptionKey) async {
     final url = "/";
     final fileEncryptionService = locator<FileEncryptionService>();
     final passPhraseService = locator<PassPhraseService>();
     final passPhrase = await passPhraseService.getPassPhrase(email);
     bool isEncrypted = false;
     if (passPhrase != null) {
-      await fileEncryptionService.encryptFile(data["recording"], passPhrase, encryptionKey);
+      await fileEncryptionService.encryptFile(
+          data["recording"], passPhrase, encryptionKey);
       isEncrypted = true;
     }
-    final FormData formData = FormData.fromMap({
+    final fileName = data["recording"].split("cache/")[1];
+    await _saveRecordingToS3(data["recording"]);
+    final requestBody = {
       "title": data["title"],
       "duration": data["duration"],
-      "recording": await MultipartFile.fromFile(data["recording"],
-          contentType: MediaType("audio", "aac")),
+      "recording": fileName,
       "isEncrypted": isEncrypted,
-    });
+    };
 
-    final response = _apiClient.post(url, data: formData);
+    final response = _apiClient.post(url, data: requestBody);
     return response;
   }
 
@@ -76,30 +77,49 @@ class EntryService {
     this._apiClient = _apiService.client;
   }
 
-  Future<String> loadRecording(int id, bool isEncrypted, String email, String encryptionKey) async {
+  Future<String> loadRecording(
+      int id, bool isEncrypted, String email, String encryptionKey) async {
     final dir = await getTemporaryDirectory();
-    await this._apiClient.download("/recording/$id", "${dir.path}/audio.aac");
+    final url = await this._getReadS3Url(id);
+    await Dio().download(url, "${dir.path}/audio.aac");
     final file = new File("${dir.path}/audio.aac");
-
     if (await file.exists()) {
       if (isEncrypted) {
         final passPhraseService = locator<PassPhraseService>();
         final encryptionService = locator<FileEncryptionService>();
         final passPhrase = await passPhraseService.getPassPhrase(email);
-        await encryptionService.decryptFile(file.path, passPhrase, encryptionKey);
+        await encryptionService.decryptFile(
+            file.path, passPhrase, encryptionKey);
       }
       return file.path;
     }
     return "";
   }
 
-  Future<Stream<Uint8List>> _streamRecordingBytes(int id) async {
-    Stream<Uint8List> bytes;
-    Response<ResponseBody> rs = await this._apiClient.get<ResponseBody>(
-          "/recording/$id",
-          options: Options(responseType: ResponseType.stream),
-        );
-    bytes = rs.data.stream;
-    return bytes;
+  Future<String> _getReadS3Url(int id) async {
+    return (await this._apiClient.get("/recording/$id")).data["url"];
+  }
+
+  Future<String> _getWriteS3Url(String filename) async {
+    return (await this
+            ._apiClient
+            .get("/put-url/1", queryParameters: {"filePath": filename}))
+        .data["url"];
+  }
+
+  Future<void> _saveRecordingToS3(localFilePath) async{
+    final file = new File(localFilePath);
+    final fileName = localFilePath.split("cache/")[1];
+    final s3Url = await this._getWriteS3Url(fileName);
+    await Dio().put(
+      s3Url,
+      data: file.openRead(),
+      options: Options(
+        headers: {
+          Headers.contentLengthHeader: await file.length(),
+          Headers.contentTypeHeader: MediaType("audio", "aac"),
+        },
+      ),
+    );
   }
 }
