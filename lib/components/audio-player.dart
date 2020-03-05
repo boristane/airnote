@@ -19,7 +19,7 @@ class AirnoteAudioPlayer extends StatefulWidget {
 }
 
 class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
-  double _totalDuration = 5000;
+  double _totalDuration;
   AudioPlayer _audioPlayer = AudioPlayer();
   AirnoteStopwatch _stopwatch = new AirnoteStopwatch();
   Timer _timer;
@@ -68,6 +68,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     _stopwatch.stop();
     _stopwatch.reset();
     _timer?.cancel();
+    setState(() {});
   }
 
   String _getElapsedTime() {
@@ -78,15 +79,6 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
   }
 
-  // String _getRemainingTime() {
-  //   Duration duration = Duration(
-  //       milliseconds:
-  //           (_totalDuration - _stopwatch.elapsedMilliseconds).toInt());
-  //   int minutes = duration.inMinutes.remainder(60);
-  //   int seconds = duration.inSeconds.remainder(60);
-  //   return "${minutes.toString().padLeft(2, "0")}:${seconds.toString().padLeft(2, "0")}";
-  // }
-
   void _initialisePlayer() async {
     await _audioPlayer.setUrl(widget.audioFilePath, isLocal: true);
     _audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
@@ -95,6 +87,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
         _stopwatch.stop();
         _stopwatch.reset();
         _timer?.cancel();
+        setState(() {});
       }
     });
     _audioPlayer.onDurationChanged.listen((Duration d) async {
@@ -118,7 +111,6 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initialisePlayer();
     });
-    print(widget.audioFilePath);
     super.didChangeDependencies();
   }
 
@@ -142,8 +134,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
               SleekCircularSlider(
                   innerWidget: (_) => Container(),
                   initialValue:
-                      _stopwatch.elapsedMilliseconds.clamp(0, _totalDuration) *
-                          1.0,
+                      _stopwatch.elapsedMilliseconds.clamp(0, _totalDuration).toDouble(),
                   min: 0,
                   max: _totalDuration,
                   appearance: CircularSliderAppearance(
@@ -188,66 +179,5 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
         ],
       ),
     );
-    // return Container(
-    //   child: Stack(
-    //     alignment: Alignment.center,
-    //     children: <Widget>[
-    //       Positioned(
-    //             bottom: 0,
-    //             right: 0,
-    //             child: AirnotePlayerButton(
-    //               icon: Icon(Icons.stop, color: AirnoteColors.primary),
-    //               onTap: () {print("Just stopped");},
-    //             ),
-    //           ),
-    //       Container(
-    //           child: AirnotePlayerButton(
-    //         icon: _getMainButtonIcon(),
-    //         onTap: _onMainButtonTapped,
-    //         isLarge: true,
-    //       )),
-    // SleekCircularSlider(
-    //     innerWidget: (_) => Container(),
-    //     appearance: CircularSliderAppearance(
-    //         customWidths: CustomSliderWidths(
-    //             trackWidth: 1, progressBarWidth: 2, handlerSize: 3),
-    //         customColors: CustomSliderColors(
-    //             trackColor: AirnoteColors.lightBlue,
-    //             progressBarColor: AirnoteColors.primary,
-    //             dotColor: AirnoteColors.primary,
-    //             hideShadow: true),
-    //         startAngle: 180,
-    //         angleRange: 270,
-    //         size: 200.0,
-    //         animationEnabled: false),
-    //     onChange: (double value) {
-    //       setState(() {
-    //         _position = value;
-    //       });
-    //       seek();
-    //     }),
-    // Stack(
-    //   children: <Widget>[
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    //       child: Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: <Widget>[
-    //           Text(
-    //             _getElapsedTime(),
-    //             style:
-    //                 TextStyle(color: AirnoteColors.text.withOpacity(0.7)),
-    //           ),
-    //           Text(_getRemainingTime(),
-    //               style: TextStyle(
-    //                   color: AirnoteColors.text.withOpacity(0.7)))
-    //         ],
-    //       ),
-    //     ),
-    //   ],
-    // ),
-    //     ],
-    //   ),
-    // );
   }
 }
