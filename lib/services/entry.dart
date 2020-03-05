@@ -3,19 +3,18 @@ import 'package:airnote/services/file-encryption.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/passphrase.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:http_parser/http_parser.dart';
+import 'dart:io' show Platform;
 
 typedef void OnError(Exception exception);
 
 class EntryService {
   Dio _apiClient;
-  // static final String _baseUrl =
-  //     "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com:8080/entries";
-  static final String _baseUrl = "http://10.0.2.2:8080/entries";
-  // static final String _baseUrl = "http://localhost:8080/entries";
+  static final String _baseUrl = _getEndpoint();
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   EntryService() {
@@ -121,5 +120,17 @@ class EntryService {
         },
       ),
     );
+  }
+
+  static String _getEndpoint() {
+    if (kReleaseMode) {
+      return "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/entries";
+    } else {
+      if (Platform.isAndroid) {
+        return "http://10.0.2.2:8080/entries";
+      } else {
+        return "http://localhost:8080/entries";
+      }
+    }
   }
 }

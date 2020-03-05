@@ -1,11 +1,12 @@
 import 'package:airnote/services/api.dart';
 import 'package:dio/dio.dart';
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 
 class UserService {
   Dio _apiClient;
-  // static final String _baseUrl = "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/users";
-  static final String _baseUrl = "http://10.0.2.2:8081/users";
-  // static final String _baseUrl = "http://localhost:8081/users"; 
+  static final String _baseUrl = _getEndpoint();
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   UserService() {
@@ -42,5 +43,17 @@ class UserService {
     final url = "/me/all";
     final response = _apiClient.get(url);
     return response;
+  }
+
+  static String _getEndpoint() {
+    if (kReleaseMode) {
+      return "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/users";
+    } else {
+      if (Platform.isAndroid) {
+        return "http://10.0.2.2:8081/users";
+      } else {
+        return "http://localhost:8081/users";
+      }
+    }
   }
 }

@@ -1,13 +1,15 @@
 import 'package:airnote/services/api.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 
 typedef void OnError(Exception exception);
 
 class QuestService {
   Dio _apiClient;
-  // static final String _baseUrl =
-  static final String _baseUrl = "http://10.0.2.2:8080/quests";
+  static final String _baseUrl = _getEndpoint();
   static ApiService _apiService = ApiService(baseUrl: _baseUrl);
 
   QuestService() {
@@ -36,5 +38,17 @@ class QuestService {
   Future<void> setupClient() async {
     await _apiService.clientSetup();
     this._apiClient = _apiService.client;
+  }
+
+  static String _getEndpoint() {
+    if (kReleaseMode) {
+      return "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/quests";
+    } else {
+      if (Platform.isAndroid) {
+        return "http://10.0.2.2:8080/quests";
+      } else {
+        return "http://localhost:8080/quests";
+      }
+    }
   }
 }
