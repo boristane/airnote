@@ -223,25 +223,17 @@ class _AudioRecorderState extends State<AudioRecorder> {
     }
     switch (_currentRecorderStatus) {
       case RecordingStatus.Initialized:
-        {
           _start();
           break;
-        }
       case RecordingStatus.Recording:
-        {
           _pause();
           break;
-        }
       case RecordingStatus.Paused:
-        {
           _resume();
           break;
-        }
       case RecordingStatus.Stopped:
-        {
           _initRecording();
           break;
-        }
       default:
         break;
     }

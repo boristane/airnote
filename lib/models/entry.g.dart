@@ -21,6 +21,7 @@ Entry _$EntryFromJson(Map<String, dynamic> json) {
     isLocked: json['isLocked'] as bool,
     isEncrypted: json['isEncrypted'] as bool,
     backgroundMusic: json['backgroundMusic'] as String,
+    duration: json['duration'] as int,
   );
 }
 
@@ -31,6 +32,7 @@ Map<String, dynamic> _$EntryToJson(Entry instance) => <String, dynamic>{
       'imageUrl': instance.imageUrl,
       'audioUrl': instance.audioUrl,
       'createdAt': instance.createdAt,
+      'duration': instance.duration,
       'isLocked': instance.isLocked,
       'isEncrypted': instance.isEncrypted,
       'backgroundMusic': instance.backgroundMusic,

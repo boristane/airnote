@@ -9,17 +9,18 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class AirnoteAudioPlayer extends StatefulWidget {
   final String audioFilePath;
+  final int duration;
 
   AirnoteAudioPlayer({
     Key key,
     this.audioFilePath,
+    this.duration,
   }) : super(key: key);
   @override
   State<AirnoteAudioPlayer> createState() => _AirnoteAudioPlayerState();
 }
 
 class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
-  double _totalDuration;
   AudioPlayer _audioPlayer = AudioPlayer();
   AirnoteStopwatch _stopwatch = new AirnoteStopwatch();
   Timer _timer;
@@ -91,12 +92,6 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
         setState(() {});
       }
     });
-    _audioPlayer.onDurationChanged.listen((Duration d) async {
-      int totalDuration = await _audioPlayer?.getDuration();
-      setState(() {
-        _totalDuration = totalDuration.toDouble();
-      });
-    });
   }
 
   @override
@@ -135,10 +130,10 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
               SleekCircularSlider(
                   innerWidget: (_) => Container(),
                   initialValue: _stopwatch.elapsedMilliseconds
-                      .clamp(0, _totalDuration)
+                      .clamp(0, widget.duration)
                       .toDouble(),
                   min: 0,
-                  max: _totalDuration,
+                  max: widget.duration.toDouble(),
                   appearance: CircularSliderAppearance(
                       customWidths: CustomSliderWidths(
                           trackWidth: 1, progressBarWidth: 2, handlerSize: 3),

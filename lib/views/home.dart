@@ -24,6 +24,17 @@ class _HomeState extends State<Home> {
     return _currentIndex == index ? AirnoteColors.primary : AirnoteColors.inactive;
   }
 
+  @override
+  void didChangeDependencies() {
+    final id = ModalRoute.of(context).settings.arguments;
+    if(id != null){
+      setState(() {
+        _currentIndex = id;
+      });
+    }
+    super.didChangeDependencies();
+  }
+
 
   @override
   Widget build(BuildContext context) {

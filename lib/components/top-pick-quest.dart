@@ -18,11 +18,9 @@ class TopPickQuest extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: AirnoteColors.grey.withOpacity(.5),
-            offset: Offset(3.0, 3.0),
-            blurRadius: 10.0,
-            spreadRadius: 5.0,
-          ),
+              color: AirnoteColors.grey.withOpacity(.5),
+              offset: Offset(3.0, 3.0),
+              blurRadius: 5.0),
         ],
       ),
       child: Stack(

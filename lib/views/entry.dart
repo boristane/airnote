@@ -91,7 +91,7 @@ class _EntryViewState extends State<EntryView>
       await this._entryViewModel.deleteEntry(id);
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            Home.routeName, (Route<dynamic> route) => false);
+            Home.routeName, (Route<dynamic> route) => false, arguments: 1);
       }
     }
 
@@ -159,6 +159,7 @@ class _EntryViewState extends State<EntryView>
                 _hasPlayer
                 ? AirnoteAudioPlayer(
                     audioFilePath: localRecordingFilePath,
+                    duration: entry.duration,
                   )
                 : Container(
                     height: 0,
@@ -245,7 +246,7 @@ class _EntryViewState extends State<EntryView>
   void _onCloseEntryTap() {
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pushNamedAndRemoveUntil(
-          Home.routeName, (Route<dynamic> route) => false);
+          Home.routeName, (Route<dynamic> route) => false, arguments: 1);
     }
   }
 
