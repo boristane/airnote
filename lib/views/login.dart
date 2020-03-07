@@ -24,15 +24,15 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   Map<String, String> _formData = {};
 
-  setEmail(value) {
+  setEmail(String value) {
     setState(() {
-      _formData['email'] = value;
+      _formData['email'] = value.trim();
     });
   }
 
-  setPassword(value) {
+  _setPassword(String value) {
     setState(() {
-      _formData['password'] = value;
+      _formData['password'] = value.trim();
     });
   }
 
@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
                       validator: InputValidator.password,
                       suffix: Icon(Icons.lock_outline),
                       obscure: true,
-                      save: setPassword,
+                      save: _setPassword,
                     ),
                     AirnoteSubmitButton(
                       text: "Login",

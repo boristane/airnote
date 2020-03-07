@@ -22,21 +22,21 @@ class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   Map<String, String> _formData = {};
 
-  setForename(value) {
+  _setForename(String value) {
     setState(() {
-      _formData['forename'] = value;
+      _formData['forename'] = value.trim();
     });
   }
 
-  setEmail(value) {
+  _setEmail(String value) {
     setState(() {
-      _formData['email'] = value;
+      _formData['email'] = value.trim();
     });
   }
 
-  setPassword(value) {
+  _setPassword(String value) {
     setState(() {
-      _formData['password'] = value;
+      _formData['password'] = value.trim();
     });
   }
 
@@ -80,21 +80,21 @@ class _SignupState extends State<Signup> {
                         hint: "Nice to meet you!",
                         label: "Forename",
                         validator: InputValidator.name,
-                        save: setForename,
+                        save: _setForename,
                         suffix: Icon(Icons.face),
                       ),
                       AirnoteTextInputField(
                         hint: "How can we reach you?",
                         label: "Email",
                         validator: InputValidator.email,
-                        save: setEmail,
+                        save: _setEmail,
                         suffix: Icon(Icons.alternate_email),
                       ),
                       AirnoteTextInputField(
                         hint: "Our little secret",
                         label: "Password",
                         validator: InputValidator.password,
-                        save: setPassword,
+                        save: _setPassword,
                         obscure: true,
                         suffix: Icon(Icons.lock_outline),
                       ),
