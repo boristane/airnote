@@ -129,7 +129,6 @@ class _EntryViewState extends State<EntryView>
           children: <Widget>[
             Column(
               children: <Widget>[
-                Text(entry.backgroundMusic),
                 Container(
                   height: 300,
                   child: Stack(
@@ -159,6 +158,7 @@ class _EntryViewState extends State<EntryView>
                 _hasPlayer
                 ? AirnoteAudioPlayer(
                     audioFilePath: localRecordingFilePath,
+                    backgroundMusicPath: entry.backgroundMusic,
                     duration: entry.duration,
                   )
                 : Container(

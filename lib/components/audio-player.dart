@@ -9,12 +9,14 @@ import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class AirnoteAudioPlayer extends StatefulWidget {
   final String audioFilePath;
+  final String backgroundMusicPath;
   final int duration;
 
   AirnoteAudioPlayer({
     Key key,
     this.audioFilePath,
     this.duration,
+    this.backgroundMusicPath,
   }) : super(key: key);
   @override
   State<AirnoteAudioPlayer> createState() => _AirnoteAudioPlayerState();
@@ -22,12 +24,14 @@ class AirnoteAudioPlayer extends StatefulWidget {
 
 class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayer _backgroundMusicaudioPlayer = AudioPlayer();
   AirnoteStopwatch _stopwatch = new AirnoteStopwatch();
   Timer _timer;
 
   void _play() async {
     int result = await _audioPlayer.resume();
     if (result == 1) {
+      _backgroundMusicaudioPlayer.resume();
       _stopwatch.start();
       const tick = const Duration(milliseconds: 50);
       _timer = new Timer.periodic(tick, (Timer t) async {
@@ -39,12 +43,15 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   void _pause() async {
     int result = await _audioPlayer.pause();
     if (result == 1) {
+      _backgroundMusicaudioPlayer.pause();
       _stopwatch.stop();
     }
   }
 
   void seek(double value) async {
     await _audioPlayer.seek(Duration(milliseconds: value.toInt()));
+    await _backgroundMusicaudioPlayer
+        .seek(Duration(milliseconds: value.toInt()));
   }
 
   Icon _getMainButtonIcon() {
@@ -67,6 +74,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
 
   void _onStopButtonTapped() {
     _audioPlayer.stop();
+    _backgroundMusicaudioPlayer.stop();
     _stopwatch.stop();
     _stopwatch.reset();
     _timer?.cancel();
@@ -83,9 +91,12 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
 
   void _initialisePlayer() async {
     await _audioPlayer.setUrl(widget.audioFilePath, isLocal: true);
+    await _backgroundMusicaudioPlayer.setUrl(widget.backgroundMusicPath);
+    await _backgroundMusicaudioPlayer.setVolume(0.5);
     _audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
       if (s == AudioPlayerState.COMPLETED) {
         _audioPlayer.stop();
+        _backgroundMusicaudioPlayer.stop();
         _stopwatch.stop();
         _stopwatch.reset();
         _timer?.cancel();
@@ -116,6 +127,9 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
     await _audioPlayer.stop();
     await _audioPlayer.release();
     await _audioPlayer.dispose();
+    await _backgroundMusicaudioPlayer.stop();
+    await _backgroundMusicaudioPlayer.release();
+    await _backgroundMusicaudioPlayer.dispose();
     super.deactivate();
   }
 
