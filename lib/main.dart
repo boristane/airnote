@@ -5,7 +5,6 @@ import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/view-models/user.dart';
-import 'package:airnote/views/create-entry/intro.dart';
 import 'package:airnote/views/create-entry/record.dart';
 import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/home.dart';
@@ -13,6 +12,7 @@ import 'package:airnote/views/login.dart';
 import 'package:airnote/views/entry.dart';
 import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
+import 'package:airnote/views/routine.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +88,7 @@ class Airnote extends StatelessWidget {
         CreatePassPhrase.routeName: (context) => CreatePassPhrase(),
         RememberPassPhrase.routeName: (context) => RememberPassPhrase(),
         RecordEntry.routeName: (context) => RecordEntry(),
-        CreateEntryIntro.routeName: (context) => CreateEntryIntro(),
+        Routine.routeName: (context) => Routine(),
       },
       home: Root(),
     );

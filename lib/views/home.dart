@@ -1,8 +1,8 @@
 import 'package:airnote/utils/colors.dart';
-import 'package:airnote/views/create-entry/intro.dart';
 import 'package:airnote/views/drawer.dart';
 import 'package:airnote/views/entries-list.dart';
 import 'package:airnote/views/quests-list.dart';
+import 'package:airnote/views/routine.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
           backgroundColor: AirnoteColors.primary,
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator.of(context).pushNamed(CreateEntryIntro.routeName);
+            Navigator.of(context).pushNamed(Routine.routeName);
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(
