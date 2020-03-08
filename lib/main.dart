@@ -10,6 +10,7 @@ import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/login.dart';
 import 'package:airnote/views/entry.dart';
+import 'package:airnote/views/quest.dart';
 import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/routine.dart';
@@ -88,7 +89,8 @@ class Airnote extends StatelessWidget {
         CreatePassPhrase.routeName: (context) => CreatePassPhrase(),
         RememberPassPhrase.routeName: (context) => RememberPassPhrase(),
         RecordEntry.routeName: (context) => RecordEntry(),
-        Routine.routeName: (context) => Routine(),
+        RoutineView.routeName: (context) => RoutineView(),
+        QuestView.routeName: (context) => QuestView(),
       },
       home: Root(),
     );

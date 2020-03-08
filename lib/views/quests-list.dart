@@ -6,6 +6,7 @@ import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
+import 'package:airnote/views/quest.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class _QuestsListState extends State<QuestsList> {
   }
 
   _openQuest(Quest quest) async {
-    print("opening a quest");
+    Navigator.of(context).pushNamed(QuestView.routeName, arguments: quest.id);
   }
 
   Widget _displayUserQuests(List<Quest> userQuests) {

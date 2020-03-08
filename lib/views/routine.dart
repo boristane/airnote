@@ -10,13 +10,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Routine extends StatefulWidget {
+class RoutineView extends StatefulWidget {
   static const routeName = "create-entry-intro";
   @override
-  _RoutineState createState() => _RoutineState();
+  _RoutineViewState createState() => _RoutineViewState();
 }
 
-class _RoutineState extends State<Routine> {
+class _RoutineViewState extends State<RoutineView> {
   RoutineViewModel _routineViewModel;
 
   @override
@@ -59,7 +59,7 @@ class _RoutineState extends State<Routine> {
               ),
               Container(
                 margin: EdgeInsets.all(20),
-                height: 120,
+                height: 150,
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   routine.name,
@@ -166,12 +166,12 @@ class _RoutineHeaderImage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Container(
-          height: 149,
+          height: 199,
           decoration: BoxDecoration(
               image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
         ),
         Container(
-          height: 150,
+          height: 200,
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
               AirnoteColors.backgroundColor.withOpacity(0.0),

@@ -132,7 +132,7 @@ class _EntryViewState extends State<EntryView>
           children: <Widget>[
             Stack(
               children: <Widget>[
-                _EntryHeader(
+                EntryHeader(
                   heroTag: heroTag,
                   imageUrl: entry.imageUrl,
                 ),
@@ -354,11 +354,11 @@ class _EntryHeaderImage extends StatelessWidget {
   }
 }
 
-class _EntryHeader extends StatelessWidget {
+class EntryHeader extends StatelessWidget {
   final String heroTag;
   final String imageUrl;
 
-  _EntryHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  EntryHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(

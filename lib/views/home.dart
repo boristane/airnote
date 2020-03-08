@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
           backgroundColor: AirnoteColors.primary,
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator.of(context).pushNamed(Routine.routeName);
+            Navigator.of(context).pushNamed(RoutineView.routeName);
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(

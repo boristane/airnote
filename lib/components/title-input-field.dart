@@ -28,7 +28,7 @@ class TitleInputField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold, color: AirnoteColors.lightBlue),
+                      fontWeight: FontWeight.bold, color: AirnoteColors.inactive),
         ),
         inputFormatters: [
           LengthLimitingTextInputFormatter(100),
