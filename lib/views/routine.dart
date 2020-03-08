@@ -38,17 +38,17 @@ class _RoutineState extends State<Routine> {
       return AirnoteLoadingScreen();
     }
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                _RoutineHeader(
-                  heroTag: "heroTag",
-                  imageUrl: routine.imageUrl,
-                ),
-                Padding(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              _RoutineHeader(
+                heroTag: "heroTag",
+                imageUrl: routine.imageUrl,
+              ),
+              SafeArea(
+                child: Padding(
                   padding: EdgeInsets.all(15),
                   child: AirnoteOptionButton(
                     icon: Icon(Icons.arrow_downward),
@@ -57,52 +57,51 @@ class _RoutineState extends State<Routine> {
                     },
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.all(20),
-                  height: 120,
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    routine.name,
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: AirnoteColors.grey,
-                        letterSpacing: 1.0,
-                        fontFamily: "Raleway"),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(15),
-              child: Text(routine.description,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 5,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: AirnoteColors.grey,
-                      fontFamily: "Raleway",
-                      fontSize: 18)),
-            ),
-            Divider(),
-            Flexible(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20),
-                child: ListView.builder(
-                    itemCount: prompts.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final prompt = prompts[index];
-                      return PromptView(
-                        item: prompt,
-                      );
-                    }),
               ),
-            )
-          ],
-        ),
+              Container(
+                margin: EdgeInsets.all(20),
+                height: 120,
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  routine.name,
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: AirnoteColors.grey,
+                      letterSpacing: 1.0,
+                      fontFamily: "Raleway"),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(15),
+            child: Text(routine.description,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 5,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: AirnoteColors.grey,
+                    fontFamily: "Raleway",
+                    fontSize: 18)),
+          ),
+          Divider(),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ListView.builder(
+                  itemCount: prompts.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final prompt = prompts[index];
+                    return PromptView(
+                      item: prompt,
+                    );
+                  }),
+            ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AirnoteColors.primary,

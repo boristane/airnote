@@ -1,7 +1,7 @@
 import 'package:airnote/components/audio-player.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/loading.dart';
-import 'package:airnote/models/sentiment.dart';
+import 'package:airnote/models/entry.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
 import 'package:airnote/utils/colors.dart';
@@ -79,7 +79,8 @@ class _EntryViewState extends State<EntryView>
     });
     final email = userViewModel.user.email;
     final encryptionKey = userViewModel.user.encryptionKey;
-    await this._entryViewModel.getRecording(id, this._entryViewModel.currentEntry.isEncrypted, email, encryptionKey);
+    await this._entryViewModel.getRecording(id,
+        this._entryViewModel.currentEntry.isEncrypted, email, encryptionKey);
     setState(() {
       _hasPlayer = _entryViewModel.currentEntryRecording == "" ? false : true;
     });
@@ -91,7 +92,8 @@ class _EntryViewState extends State<EntryView>
       await this._entryViewModel.deleteEntry(id);
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            Home.routeName, (Route<dynamic> route) => false, arguments: 1);
+            Home.routeName, (Route<dynamic> route) => false,
+            arguments: 1);
       }
     }
 
@@ -125,100 +127,96 @@ class _EntryViewState extends State<EntryView>
         }
         final localRecordingFilePath = model.currentEntryRecording;
         final heroTag = "entry-image-${entry.id}";
-        return Stack(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Column(
+            Stack(
               children: <Widget>[
+                _EntryHeader(
+                  heroTag: heroTag,
+                  imageUrl: entry.imageUrl,
+                ),
                 Container(
-                  height: 300,
-                  child: Stack(
-                    children: <Widget>[
-                      _EntryHeader(
-                        heroTag: heroTag,
-                        imageUrl: entry.imageUrl,
-                      ),
-                      Positioned(
-                        top: 200,
-                        child: _EntryTitle(
-                          title: entry.title,
-                          date: entry.createdAt,
-                          isLocked: _isLocked,
-                        ),
-                      ),
-                      Positioned(
-                        top: 250,
-                        child: _Sentiments(
-                          sentiments: entry.sentiments,
-                        ),
-                      ),
-                    ],
+                  padding: EdgeInsets.only(top: 220),
+                  alignment: Alignment.bottomLeft,
+                  child: _EntryTitle(
+                    title: entry.title,
+                    date: entry.createdAt,
+                    isLocked: _isLocked,
                   ),
                 ),
-                SizedBox(height: 50,),
-                _hasPlayer
-                ? AirnoteAudioPlayer(
-                    audioFilePath: localRecordingFilePath,
-                    backgroundMusicPath: entry.backgroundMusic,
-                    duration: entry.duration,
-                  )
-                : Container(
-                    height: 0,
-                  )
+                _buildEntryOPtions(),
               ],
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      AirnoteOptionButton(
-                        icon: Icon(Icons.arrow_downward,
-                            color: AirnoteColors.primary),
-                        onTap: _onCloseEntryTap,
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          AirnoteOptionButton(
-                            icon: _getOptionButtonIcon(),
-                            onTap: _onOptionsTap,
-                          ),
-                          Transform.translate(
-                              offset: _lockButtonAnimation.value,
-                              child: AirnoteOptionButton(
-                                icon: Icon(
-                                  _isLocked
-                                      ? Icons.lock_open
-                                      : Icons.lock_outline,
-                                  color: AirnoteColors.primary,
-                                ),
-                                onTap: _lockEntry,
-                              )),
-                          Transform.translate(
-                              offset: _deleteButtonAnimation.value,
-                              child: AirnoteOptionButton(
-                                icon: Icon(
-                                  Icons.delete_outline,
-                                  color: AirnoteColors.danger,
-                                ),
-                                onTap: () async {
-                                  await _deleteEntry();
-                                },
-                              ))
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            _buildAudioPlayer(localRecordingFilePath, entry),
           ],
         );
       }),
+    );
+  }
+
+  Widget _buildAudioPlayer(String localRecordingFilePath, Entry entry) {
+    if (_hasPlayer) {
+      return Expanded(
+            child: AirnoteAudioPlayer(
+              audioFilePath: localRecordingFilePath,
+              backgroundMusicPath: entry.backgroundMusic,
+              duration: entry.duration,
+            ),
+          );
+    }
+      return Container(
+            height: 0,
+          );
+  }
+
+  Align _buildEntryOPtions() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              AirnoteOptionButton(
+                icon: Icon(Icons.arrow_downward, color: AirnoteColors.primary),
+                onTap: _onCloseEntryTap,
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  AirnoteOptionButton(
+                    icon: _getOptionButtonIcon(),
+                    onTap: _onOptionsTap,
+                  ),
+                  Transform.translate(
+                      offset: _lockButtonAnimation.value,
+                      child: AirnoteOptionButton(
+                        icon: Icon(
+                          _isLocked ? Icons.lock_open : Icons.lock_outline,
+                          color: AirnoteColors.primary,
+                        ),
+                        onTap: _lockEntry,
+                      )),
+                  Transform.translate(
+                      offset: _deleteButtonAnimation.value,
+                      child: AirnoteOptionButton(
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: AirnoteColors.danger,
+                        ),
+                        onTap: () async {
+                          await _deleteEntry();
+                        },
+                      ))
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -246,7 +244,8 @@ class _EntryViewState extends State<EntryView>
   void _onCloseEntryTap() {
     if (Navigator.of(context).canPop()) {
       Navigator.of(context).pushNamedAndRemoveUntil(
-          Home.routeName, (Route<dynamic> route) => false, arguments: 1);
+          Home.routeName, (Route<dynamic> route) => false,
+          arguments: 1);
     }
   }
 
@@ -262,44 +261,6 @@ class _EntryViewState extends State<EntryView>
   }
 }
 
-class _Sentiments extends StatelessWidget {
-  final List<Sentiment> sentiments;
-
-  _Sentiments({Key key, this.sentiments}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> w = sentiments
-        .map((sentiment) => _SentimentItem(
-              sentiment: sentiment,
-            ))
-        .toList();
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: w,
-      ),
-    );
-  }
-}
-
-class _SentimentItem extends StatelessWidget {
-  final Sentiment sentiment;
-  _SentimentItem({Key key, this.sentiment}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: Text(sentiment.emoji,
-            style: TextStyle(
-              fontSize: 30,
-            )));
-  }
-}
-
 class _EntryTitle extends StatelessWidget {
   final String title;
   final String date;
@@ -312,53 +273,46 @@ class _EntryTitle extends StatelessWidget {
     final dateTime = DateTime.parse(date);
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(dateTime);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      alignment: Alignment.bottomLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return ListTile(
+      title: Row(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: AirnoteColors.grey,
-                        letterSpacing: 1.0,
-                        fontFamily: "Raleway"),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: isLocked
-                    ? Icon(
-                        Icons.lock_outline,
-                        size: 24,
-                        color: AirnoteColors.primary.withOpacity(0.7),
-                      )
-                    : Container(),
-              ),
-            ],
+          Text(
+            title,
+            style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: AirnoteColors.grey,
+                letterSpacing: 1.0,
+                fontFamily: "Raleway"),
           ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.event_note,
-                size: 18,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: isLocked
+                ? Icon(
+                    Icons.lock_outline,
+                    size: 24,
+                    color: AirnoteColors.primary.withOpacity(0.7),
+                  )
+                : Container(),
+          ),
+        ],
+      ),
+      subtitle: Row(
+        children: <Widget>[
+          Icon(
+            Icons.event_note,
+            size: 18,
+            color: AirnoteColors.grey.withOpacity(0.7),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              dateString,
+              style: TextStyle(
                 color: AirnoteColors.grey.withOpacity(0.7),
+                fontSize: 14,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  dateString,
-                  style: TextStyle(
-                    color: AirnoteColors.grey.withOpacity(0.7),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
