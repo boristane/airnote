@@ -44,7 +44,6 @@ class _RoutineState extends State<Routine> {
           Stack(
             children: <Widget>[
               _RoutineHeader(
-                heroTag: "heroTag",
                 imageUrl: routine.imageUrl,
               ),
               SafeArea(
@@ -137,10 +136,9 @@ class PromptView extends StatelessWidget {
 }
 
 class _RoutineHeader extends StatelessWidget {
-  final String heroTag;
   final String imageUrl;
 
-  _RoutineHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  _RoutineHeader({Key key, this.imageUrl}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
