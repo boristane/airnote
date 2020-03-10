@@ -43,8 +43,11 @@ class _QuestsListState extends State<QuestsList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          AirnoteSmallerHeader(
-            text: "Jump back in!",
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: AirnoteSmallerHeader(
+              text: "Jump back in!",
+            ),
           ),
           Container(
             height: 120,
@@ -118,8 +121,11 @@ class _QuestsListState extends State<QuestsList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      AirnoteSmallerHeader(
-                        text: "There are more quests!",
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: AirnoteSmallerHeader(
+                          text: "There are more quests!",
+                        ),
                       ),
                       GridView.count(
                         shrinkWrap: true,

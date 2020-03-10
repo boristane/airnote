@@ -1,4 +1,6 @@
 import 'package:airnote/components/entry-list-item.dart';
+import 'package:airnote/components/flat-button.dart';
+import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ class TopPickQuest extends StatelessWidget {
           ImageHeader(
             heroTag: heroTag,
             imageUrl: quest.imageUrl,
+            topColor: AirnoteColors.white.withOpacity(0.5),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
@@ -68,12 +71,12 @@ class _QuestDescription extends StatelessWidget {
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: AirnoteColors.white,
-                  fontSize: 20,
+                  fontSize: 25,
                   letterSpacing: 1.0,
                   fontFamily: "Raleway"),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.only(top: 15.0),
               child: Text(
                 quest.shortDescription,
                 maxLines: 3,
@@ -81,7 +84,7 @@ class _QuestDescription extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AirnoteColors.white,
-                  fontSize: 13,
+                  fontSize: 15,
                 ),
               ),
             ),
@@ -96,15 +99,13 @@ class _TopPickDate extends StatelessWidget {
     final date = DateTime.now();
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
-    return Container(
-      child: Text(
-        dateString,
-        style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AirnoteColors.white,
+    return Text(
+      dateString,
+      style: TextStyle(
+          fontWeight: FontWeight.bold,
+            color: AirnoteColors.primary,
             letterSpacing: 1.0,
             fontFamily: "Raleway"),
-      ),
-    );
+      );
   }
 }

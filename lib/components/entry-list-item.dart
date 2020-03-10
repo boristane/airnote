@@ -48,8 +48,10 @@ class AirnoteEntryListItem extends StatelessWidget {
 class ImageHeader extends StatelessWidget {
   final String heroTag;
   final String imageUrl;
+  final Color topColor;
+  final Color bottomColor;
 
-  ImageHeader({Key key, this.imageUrl, this.heroTag}) : super(key: key);
+  ImageHeader({Key key, this.imageUrl, this.heroTag, this.topColor, this.bottomColor}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
@@ -57,14 +59,20 @@ class ImageHeader extends StatelessWidget {
       imageBuilder: (context, imageProvider) => _GradientImage(
         heroTag: heroTag,
         imageProvider: imageProvider,
+        topColor: topColor,
+        bottomColor: bottomColor,
       ),
       placeholder: (context, url) => _GradientImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
+        topColor: topColor,
+        bottomColor: bottomColor,
       ),
       errorWidget: (context, url, error) => _GradientImage(
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
+        topColor: topColor,
+        bottomColor: bottomColor,
       ),
     );
   }
@@ -73,8 +81,10 @@ class ImageHeader extends StatelessWidget {
 class _GradientImage extends StatelessWidget {
   final String heroTag;
   final ImageProvider imageProvider;
+  final Color topColor;
+  final Color bottomColor;
 
-  _GradientImage({Key key, this.heroTag, this.imageProvider}) : super(key: key);
+  _GradientImage({Key key, this.heroTag, this.imageProvider, this.bottomColor, this.topColor }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +103,8 @@ class _GradientImage extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              AirnoteColors.primary.withOpacity(0.0),
-              AirnoteColors.primary
+              topColor != null? topColor : AirnoteColors.primary.withOpacity(0.0),
+              bottomColor != null? bottomColor : AirnoteColors.primary
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(10),
           ),
