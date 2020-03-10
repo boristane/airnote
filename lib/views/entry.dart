@@ -130,25 +130,60 @@ class _EntryViewState extends State<EntryView>
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Stack(
-              children: <Widget>[
-                EntryHeader(
-                  heroTag: heroTag,
-                  imageUrl: entry.imageUrl,
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 220),
-                  alignment: Alignment.bottomLeft,
-                  child: _EntryTitle(
-                    title: entry.title,
-                    date: entry.createdAt,
-                    isLocked: _isLocked,
+            Expanded(
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      EntryHeader(
+                        heroTag: heroTag,
+                        imageUrl: entry.imageUrl,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 220),
+                        alignment: Alignment.bottomLeft,
+                        child: _EntryTitle(
+                          title: entry.title,
+                          date: entry.createdAt,
+                          isLocked: _isLocked,
+                        ),
+                      ),
+                      _buildEntryOPtions(),
+                    ],
                   ),
-                ),
-                _buildEntryOPtions(),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: _buildAudioPlayer(localRecordingFilePath, entry),
+                  ),
+                ],
+              ),
             ),
-            _buildAudioPlayer(localRecordingFilePath, entry),
+            GestureDetector(
+              onTap: () {print("Opening the transcript");},
+                          child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      margin: EdgeInsets.all(15),
+                   decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(550)),
+                            
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("Transcript", style: TextStyle(fontSize: 15.0, color: AirnoteColors.grey),),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 20.0,
+                        ),
+                      ),
+                    ],
+                  )),
+            )
           ],
         );
       }),
@@ -157,17 +192,15 @@ class _EntryViewState extends State<EntryView>
 
   Widget _buildAudioPlayer(String localRecordingFilePath, Entry entry) {
     if (_hasPlayer) {
-      return Expanded(
-            child: AirnoteAudioPlayer(
-              audioFilePath: localRecordingFilePath,
-              backgroundMusicPath: entry.backgroundMusic,
-              duration: entry.duration,
-            ),
-          );
+      return AirnoteAudioPlayer(
+        audioFilePath: localRecordingFilePath,
+        backgroundMusicPath: entry.backgroundMusic,
+        duration: entry.duration,
+      );
     }
-      return Container(
-            height: 0,
-          );
+    return Container(
+      height: 0,
+    );
   }
 
   Align _buildEntryOPtions() {

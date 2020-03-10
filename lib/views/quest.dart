@@ -1,8 +1,6 @@
-import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/submit-button.dart';
-import 'package:airnote/models/prompt.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/models/routine.dart';
 import 'package:airnote/utils/colors.dart';
@@ -60,70 +58,60 @@ class _QuestViewState extends State<QuestView> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              EntryHeader(
-                imageUrl: quest.imageUrl,
-                heroTag: heroTag,
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: AirnoteOptionButton(
-                    icon: Icon(Icons.arrow_downward),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
+          Expanded(
+                      child: Stack(
+              children: <Widget>[
+                EntryHeader(
+                  imageUrl: quest.imageUrl,
+                  heroTag: heroTag,
+                ),
+                SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: AirnoteOptionButton(
+                      icon: Icon(Icons.arrow_downward),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.only(top: 100),
-                height: 250,
-                alignment: Alignment.center,
-                child: Text(
-                  quest.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: AirnoteColors.grey,
-                      letterSpacing: 1.0,
-                      fontFamily: "Raleway"),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 360,
-                alignment: Alignment.bottomCenter,
-                padding: EdgeInsets.all(15),
-                child: Text(quest.description,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
+                Container(
+                  margin: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(top: 100),
+                  height: 250,
+                  alignment: Alignment.center,
+                  child: Text(
+                    quest.name,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
                         color: AirnoteColors.grey,
-                        fontFamily: "Raleway",
-                        fontSize: 18)),
-              ),
-            ],
-          ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ListView.builder(
-                  itemCount: routines.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final routine = routines[index];
-                    return _RoutineDescription(
-                      routine: routine,
-                    );
-                  }),
+                        letterSpacing: 1.0,
+                        fontFamily: "Raleway"),
+                  ),
+                ),
+                Positioned(
+                  top: 220,
+                                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.bottomCenter,
+                    padding: EdgeInsets.all(15),
+                    child: Text(quest.description,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 15,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: AirnoteColors.grey,
+                            fontFamily: "Raleway",
+                            fontSize: 18)),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
-              padding: EdgeInsets.only(bottom: 8),
               alignment: Alignment.center,
               child: AirnoteSubmitButton(
                 icon: Icon(Icons.credit_card),
@@ -168,7 +156,10 @@ class _RoutineDescription extends StatelessWidget {
               routine.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 18, color: AirnoteColors.white, fontFamily: "Raleway"),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: AirnoteColors.white,
+                  fontFamily: "Raleway"),
             ),
           ),
         ],
