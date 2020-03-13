@@ -1,12 +1,13 @@
+import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
-import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/models/routine.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/views/entry.dart';
+import 'package:airnote/views/home.dart';
 import 'package:airnote/views/routine.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -45,84 +46,100 @@ class _QuestViewState extends State<QuestView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Consumer<QuestViewModel>(builder: (context, model, child) {
-      if (model.getStatus() == ViewStatus.LOADING) {
-        return AirnoteLoadingScreen();
-      }
-      final quest = model.currentQuest;
-      if (quest == null) {
-        return AirnoteLoadingScreen();
-      }
-      final routines = quest.routines;
-      final heroTag = "quest-image-${quest.id}";
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-                      child: Stack(
+      child: Consumer<QuestViewModel>(builder: (context, model, child) {
+        if (model.getStatus() == ViewStatus.LOADING) {
+          return AirnoteLoadingScreen();
+        }
+        final quest = model.currentQuest;
+        if (quest == null) {
+          return AirnoteLoadingScreen();
+        }
+        final routines = quest.routines;
+        final heroTag = "quest-image-${quest.id}";
+        return Stack(
+          children: <Widget>[
+            ListView(
+              padding: EdgeInsets.zero,
               children: <Widget>[
-                EntryHeader(
-                  imageUrl: quest.imageUrl,
-                  heroTag: heroTag,
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: AirnoteOptionButton(
-                      icon: Icon(Icons.arrow_downward),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
+                Stack(
+                  children: <Widget>[
+                    EntryHeader(
+                      imageUrl: quest.imageUrl,
+                      heroTag: heroTag,
                     ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.only(top: 100),
-                  height: 250,
-                  alignment: Alignment.center,
-                  child: Text(
-                    quest.name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: AirnoteColors.grey,
-                        letterSpacing: 1.0,
-                        fontFamily: "Raleway"),
-                  ),
-                ),
-                Positioned(
-                  top: 220,
-                                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.all(15),
-                    child: Text(quest.description,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 15,
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      padding: EdgeInsets.only(top: 100),
+                      height: 250,
+                      alignment: Alignment.center,
+                      child: Text(
+                        quest.name,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: AirnoteColors.grey,
-                            fontFamily: "Raleway",
-                            fontSize: 18)),
-                  ),
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: AirnoteColors.primary,
+                            letterSpacing: 1.0,
+                            fontFamily: "Raleway"),
+                      ),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(15),
+                          margin: EdgeInsets.only(top: 220),
+                          child: Text(quest.description,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1500,
+                              style: TextStyle(
+                                  color: AirnoteColors.grey,
+                                  fontFamily: "Raleway",
+                                  fontSize: 15)),
+                        ),
+                        ListTile(
+                            contentPadding: EdgeInsets.fromLTRB(50, 10, 50, 50),
+                            leading: Icon(Icons.show_chart),
+                            title: Text("${routines.length} routines")),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-          Container(
-              alignment: Alignment.center,
-              child: AirnoteSubmitButton(
-                icon: Icon(Icons.credit_card),
-                text: "Join",
-                onPressed: () async {
-                  await _joinQuest(quest);
-                },
-              ))
-        ],
-      );
-    }));
+            Align(
+              alignment: Alignment.topLeft,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: AirnoteOptionButton(
+                    icon: Icon(Icons.arrow_downward),
+                    onTap: () {
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            Home.routeName, (Route<dynamic> route) => false,
+                            arguments: 0);
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                margin: EdgeInsets.all(15),
+                child: AirnoteForwardButton(
+                    text: "Join",
+                    onTap: () async {
+                      _joinQuest(quest);
+                    }),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
   }
 
   _joinQuest(Quest quest) async {

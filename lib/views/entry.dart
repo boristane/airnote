@@ -1,4 +1,5 @@
 import 'package:airnote/components/audio-player.dart';
+import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/entry.dart';
@@ -128,7 +129,6 @@ class _EntryViewState extends State<EntryView>
         final localRecordingFilePath = model.currentEntryRecording;
         final heroTag = "entry-image-${entry.id}";
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Expanded(
               child: Column(
@@ -148,7 +148,7 @@ class _EntryViewState extends State<EntryView>
                           isLocked: _isLocked,
                         ),
                       ),
-                      _buildEntryOPtions(),
+                      _buildEntryOptions(),
                     ],
                   ),
                   Padding(
@@ -158,32 +158,15 @@ class _EntryViewState extends State<EntryView>
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: () {print("Opening the transcript");},
-                          child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      margin: EdgeInsets.all(15),
-                   decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(550)),
-                            
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Transcript", style: TextStyle(fontSize: 15.0, color: AirnoteColors.grey),),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: 20.0,
-                        ),
-                      ),
-                    ],
-                  )),
-            )
+            Container(
+              margin: EdgeInsets.all(15),
+              child: AirnoteForwardButton(
+                text: "Transcipt",
+                onTap: () {
+                  print("Opening the transcript");
+                },
+              ),
+            ),
           ],
         );
       }),
@@ -203,7 +186,7 @@ class _EntryViewState extends State<EntryView>
     );
   }
 
-  Align _buildEntryOPtions() {
+  Align _buildEntryOptions() {
     return Align(
       alignment: Alignment.topLeft,
       child: SafeArea(
