@@ -18,13 +18,13 @@ class _AirnoteDialogInfoState extends State<AirnoteDialogInfo> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       title: Text(widget.title),
       content: Text(widget.content),
       actions: <Widget>[
         Container(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             child: AirnotePrimaryFlatButton(
               text: "OK",
               onPressed: widget.onPressed,
@@ -54,13 +54,13 @@ class _AirnoteDialogQuestion extends State<AirnoteDialogQuestion> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       title: Container(alignment: Alignment.center, child: Text(widget.title)),
       content: Text(widget.content),
       actions: <Widget>[
         Container(
           child: Padding(
-            padding: EdgeInsets.only(left: 30, right: 30),
+            padding: EdgeInsets.symmetric(horizontal: 30),
             child: AirnotePrimaryFlatButton(
               text: "Yes",
               onPressed: widget.onYes,
@@ -69,7 +69,7 @@ class _AirnoteDialogQuestion extends State<AirnoteDialogQuestion> {
         ),
         Container(
           child: Padding(
-            padding: EdgeInsets.only(bottom: 20, left: 30, right: 30),
+            padding: EdgeInsets.only(bottom: 10, left: 30, right: 30),
             child: AirnoteSecondaryFlatButton(
               text: "No",
               onPressed: widget.onNo,

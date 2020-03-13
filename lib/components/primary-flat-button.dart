@@ -11,7 +11,6 @@ class AirnotePrimaryFlatButton extends Container {
     return Container(
       width: 300,
       height: 47,
-      margin: EdgeInsets.only(top: 20.0),
       child: FlatButton(
         onPressed: () {
           onPressed();
@@ -22,8 +21,7 @@ class AirnotePrimaryFlatButton extends Container {
         ),
         color: AirnoteColors.primary,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            side: BorderSide(color: AirnoteColors.inactive, width: 1.2)),
+            borderRadius: BorderRadius.circular(30.0)),
       ),
     );
   }

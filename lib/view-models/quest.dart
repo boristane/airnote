@@ -59,15 +59,18 @@ class QuestViewModel extends BaseViewModel {
     return success;
   }
 
-  Future<void> joinQuest(int id) async {
+  Future<bool> joinQuest(int id) async {
+    bool success = false;
     try {
       _message = "";
       _questService.setupClient();
       await _questService.joinQuest(id);
+      success = true;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = (data is String) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
       _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
     }
+    return success;
   }
 }
