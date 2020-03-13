@@ -13,7 +13,7 @@ class TopPickQuest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heroTag = "quest-image-${quest.id}";
-    final height = MediaQuery.of(context).size.height * 3 / 7;
+    final height = MediaQuery.of(context).size.height * 4 / 7;
     return Container(
       height: height,
       margin: EdgeInsets.symmetric(horizontal: 25),
@@ -61,35 +61,37 @@ class _QuestDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              quest.name,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AirnoteColors.white,
-                  fontSize: 25,
-                  letterSpacing: 1.0,
-                  fontFamily: "Raleway"),
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          quest.name,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AirnoteColors.white,
+              fontSize: 25,
+              letterSpacing: 1.0,
+              fontFamily: "Raleway"),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Text(
+            quest.shortDescription,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AirnoteColors.white,
+              fontFamily: "Raleway",
+              letterSpacing: 1.0,
+              fontSize: 15,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Text(
-                quest.shortDescription,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AirnoteColors.white,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-          ],
-        ));
+          ),
+        ),
+      ],
+    ));
   }
 }
 
@@ -99,13 +101,27 @@ class _TopPickDate extends StatelessWidget {
     final date = DateTime.now();
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
-    return Text(
-      dateString,
-      style: TextStyle(
-          fontWeight: FontWeight.bold,
-            color: AirnoteColors.primary,
-            letterSpacing: 1.0,
-            fontFamily: "Raleway"),
-      );
+    return Column(
+      children: <Widget>[
+        Text(
+          "YOUR PICK",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AirnoteColors.primary,
+              letterSpacing: 1.0,
+              fontSize: 15,
+              fontFamily: "Raleway"),
+        ),
+        SizedBox(height: 5),
+        Text(
+          dateString,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AirnoteColors.primary,
+              letterSpacing: 1.0,
+              fontFamily: "Raleway"),
+        ),
+      ],
+    );
   }
 }

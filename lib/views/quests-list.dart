@@ -4,6 +4,7 @@ import 'package:airnote/components/quest-list-item.dart';
 import 'package:airnote/components/smaller-header.dart';
 import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
+import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/user.dart';
@@ -55,7 +56,8 @@ class _QuestsListState extends State<QuestsList> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: AirnoteSmallerHeader(
-              text: "Jump back in!",
+              text: "Your Quests",
+              subText: "Jump back in!",
             ),
           ),
           Container(
@@ -108,11 +110,6 @@ class _QuestsListState extends State<QuestsList> {
           return Container(
             child: ListView(
               children: <Widget>[
-                AirnoteHeader(
-                  text: "Your Top Pick!",
-                  subText:
-                      "Join a quest and we can start improving your wellbeing; I picked this quest just for you!",
-                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: GestureDetector(
@@ -133,7 +130,7 @@ class _QuestsListState extends State<QuestsList> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: AirnoteSmallerHeader(
-                          text: "There are more quests!",
+                          text: "More Quests",
                         ),
                       ),
                       GridView.count(
