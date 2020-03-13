@@ -6,6 +6,7 @@ import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/quest.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class QuestsList extends StatefulWidget {
 
 class _QuestsListState extends State<QuestsList> {
   QuestViewModel _questViewModel;
+  UserViewModel _userViewModel;
 
   @override
   void didChangeDependencies() {
@@ -27,6 +29,13 @@ class _QuestsListState extends State<QuestsList> {
     }
     this._questViewModel = _questViewModel;
     Future.microtask(this._questViewModel.getQuests);
+    final userViewModel = Provider.of<UserViewModel>(context);
+    super.didChangeDependencies();
+    if (this._userViewModel == userViewModel) {
+      return;
+    }
+    this._userViewModel = userViewModel;
+    Future.microtask(this._userViewModel.getUser);
   }
 
   _openQuest(Quest quest) async {
