@@ -298,8 +298,7 @@ class _EntryTitle extends StatelessWidget {
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: AirnoteColors.grey,
-                letterSpacing: 1.0,
-                fontFamily: "Raleway"),
+                letterSpacing: 1.0,),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),

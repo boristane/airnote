@@ -79,8 +79,7 @@ class _QuestViewState extends State<QuestView> {
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: AirnoteColors.primary,
-                            letterSpacing: 1.0,
-                            fontFamily: "Raleway"),
+                            letterSpacing: 1.0,),
                       ),
                     ),
                     Column(
@@ -94,7 +93,6 @@ class _QuestViewState extends State<QuestView> {
                               maxLines: 1500,
                               style: TextStyle(
                                   color: AirnoteColors.grey,
-                                  fontFamily: "Raleway",
                                   fontSize: 15)),
                         ),
                         ListTile(
@@ -175,8 +173,7 @@ class _RoutineDescription extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   fontSize: 18,
-                  color: AirnoteColors.white,
-                  fontFamily: "Raleway"),
+                  color: AirnoteColors.white,),
             ),
           ),
         ],

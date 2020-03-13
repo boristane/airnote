@@ -137,7 +137,6 @@ class _EntryDescription extends StatelessWidget {
             style: TextStyle(
                 color: AirnoteColors.white,
                 fontSize: 20.0,
-                fontFamily: "Raleway",
                 fontWeight: FontWeight.w700),
           ),
           Row(

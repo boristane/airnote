@@ -41,8 +41,7 @@ class _QuestDescription extends StatelessWidget {
         style: TextStyle(
             fontWeight: FontWeight.bold,
             color: AirnoteColors.white,
-            letterSpacing: 1.0,
-            fontFamily: "Raleway"),
+            letterSpacing: 1.0,),
       ),
     ));
   }

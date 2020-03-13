@@ -72,8 +72,7 @@ class _QuestDescription extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: AirnoteColors.white,
               fontSize: 25,
-              letterSpacing: 1.0,
-              fontFamily: "Raleway"),
+              letterSpacing: 1.0,),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15.0),
@@ -84,7 +83,6 @@ class _QuestDescription extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AirnoteColors.white,
-              fontFamily: "Raleway",
               letterSpacing: 1.0,
               fontSize: 15,
             ),
@@ -109,8 +107,7 @@ class _TopPickDate extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: AirnoteColors.primary,
               letterSpacing: 1.0,
-              fontSize: 15,
-              fontFamily: "Raleway"),
+              fontSize: 15,),
         ),
         SizedBox(height: 5),
         Text(
@@ -118,8 +115,7 @@ class _TopPickDate extends StatelessWidget {
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: AirnoteColors.primary,
-              letterSpacing: 1.0,
-              fontFamily: "Raleway"),
+              letterSpacing: 1.0,),
         ),
       ],
     );

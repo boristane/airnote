@@ -67,8 +67,7 @@ class _RoutineViewState extends State<RoutineView> {
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: AirnoteColors.grey,
-                      letterSpacing: 1.0,
-                      fontFamily: "Raleway"),
+                      letterSpacing: 1.0),
                 ),
               ),
             ],
@@ -83,7 +82,6 @@ class _RoutineViewState extends State<RoutineView> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: AirnoteColors.grey,
-                    fontFamily: "Raleway",
                     fontSize: 18)),
           ),
           Divider(),
@@ -125,7 +123,7 @@ class PromptView extends StatelessWidget {
       title: Text(
         item.text,
         style: TextStyle(
-            color: AirnoteColors.grey, fontFamily: "Raleway", fontSize: 18),
+            color: AirnoteColors.grey, fontSize: 18),
       ),
       subtitle: Text(
         "Duration: ${millisecondsToTimeString(item.duration)}",

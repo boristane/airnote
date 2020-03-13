@@ -12,7 +12,15 @@ class AirnoteForwardButton extends StatelessWidget {
       child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           decoration: BoxDecoration(
-              color: AirnoteColors.primary, borderRadius: BorderRadius.circular(550)),
+            color: AirnoteColors.primary,
+            borderRadius: BorderRadius.circular(550),
+            boxShadow: [
+              BoxShadow(
+                  color: AirnoteColors.grey.withOpacity(.5),
+                  offset: Offset(1.0, 3.0),
+                  blurRadius: 5.0),
+            ],
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

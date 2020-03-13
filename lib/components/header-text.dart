@@ -14,8 +14,7 @@ class AirnoteHeaderText extends StatelessWidget {
           fontSize: 30,
           fontWeight: FontWeight.bold,
           color: AirnoteColors.grey,
-          letterSpacing: 1.0,
-          fontFamily: "Raleway"),
+          letterSpacing: 1.0,),
     );
   }
 }

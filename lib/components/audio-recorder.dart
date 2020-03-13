@@ -306,7 +306,7 @@ class _RecordingTime extends StatelessWidget {
     return Text(
       _getTimeString(),
       style: TextStyle(
-          fontFamily: "Raleway", fontSize: 60, color: AirnoteColors.grey),
+           fontSize: 60, color: AirnoteColors.grey),
     );
   }
 }

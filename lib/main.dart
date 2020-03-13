@@ -64,6 +64,7 @@ class Airnote extends StatelessWidget {
       primaryColor: AirnoteColors.primary,
       primaryIconTheme: IconThemeData(color: AirnoteColors.primary),
       primarySwatch: AirnoteColors.swatch,
+      fontFamily: "Raleway",
       textTheme: _textTheme,
     );
 

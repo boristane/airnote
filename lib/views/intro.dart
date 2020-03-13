@@ -134,7 +134,6 @@ class IntroSlideCard extends StatelessWidget {
                   style: TextStyle(
                       color: AirnoteColors.primary,
                       fontSize: 20.0,
-                      fontFamily: "Raleway",
                       fontWeight: FontWeight.bold),
                 ),
               ),
