@@ -5,6 +5,7 @@ import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/view-models/user.dart';
+import 'package:airnote/views/create-entry/entry-type.dart';
 import 'package:airnote/views/create-entry/record.dart';
 import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/home.dart';
@@ -93,6 +94,7 @@ class Airnote extends StatelessWidget {
         RecordEntry.routeName: (context) => RecordEntry(),
         RoutineView.routeName: (context) => RoutineView(),
         QuestView.routeName: (context) => QuestView(),
+        SelectEntryType.routeName: (context) => SelectEntryType(),
       },
       home: Root(),
     );

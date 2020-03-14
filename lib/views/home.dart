@@ -1,4 +1,5 @@
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/views/create-entry/entry-type.dart';
 import 'package:airnote/views/drawer.dart';
 import 'package:airnote/views/entries-list.dart';
 import 'package:airnote/views/quests-list.dart';
@@ -59,7 +60,7 @@ class _HomeState extends State<Home> {
           backgroundColor: AirnoteColors.primary,
           child: Icon(Icons.add),
           onPressed: () {
-            Navigator.of(context).pushNamed(RoutineView.routeName);
+            Navigator.of(context).pushNamed(SelectEntryType.routeName);
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: IndexedStack(

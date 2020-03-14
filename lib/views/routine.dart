@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RoutineView extends StatefulWidget {
-  static const routeName = "create-entry-intro";
+  static const routeName = "routine";
   @override
   _RoutineViewState createState() => _RoutineViewState();
 }
