@@ -34,7 +34,7 @@ class TopPickQuest extends StatelessWidget {
             topColor: AirnoteColors.white.withOpacity(0.5),
           ),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
             child: Align(
               alignment: Alignment.center,
               child: Column(

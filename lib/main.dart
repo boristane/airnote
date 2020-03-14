@@ -55,8 +55,9 @@ class Airnote extends StatelessWidget {
             borderSide: BorderSide(color: Colors.black45, width: 2.0)));
 
     final _textTheme = TextTheme(
-      title: TextStyle(color: AirnoteColors.text),
-      subhead: TextStyle(color: AirnoteColors.grey),
+      title: TextStyle(color: AirnoteColors.grey),
+      subhead: TextStyle(color: AirnoteColors.inactive),
+      body1: TextStyle(color: AirnoteColors.grey),
     );
 
     final _theme = ThemeData(
