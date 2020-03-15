@@ -21,8 +21,8 @@ class RoutineService {
     this._apiClient = _apiService.client;
   }
 
-  Future<Response> getRoutine() async {
-    const url = "/1";
+  Future<Response> getRoutine(int id) async {
+    final url = "/$id";
     final response = await _apiClient.get(url);
     return response;
   }

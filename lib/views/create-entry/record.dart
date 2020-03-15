@@ -4,6 +4,7 @@ import 'package:airnote/components/audio-recorder.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
+import 'package:airnote/models/routine.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
@@ -28,7 +29,6 @@ class RecordEntry extends StatefulWidget {
 
 class _RecordEntryState extends State<RecordEntry> {
   Map<String, String> _formData = {};
-  RoutineViewModel _routineViewModel;
   final _addEntryFormKey = GlobalKey<FormState>();
   final _snackBarService = locator<SnackBarService>();
   final _dialogService = locator<DialogService>();
@@ -40,17 +40,6 @@ class _RecordEntryState extends State<RecordEntry> {
   AirnoteStopwatch _stopWatch = AirnoteStopwatch();
 
   @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final _routineViewModel = Provider.of<RoutineViewModel>(context);
-    if (this._routineViewModel == _routineViewModel) {
-      return;
-    }
-    this._routineViewModel = _routineViewModel;
-    Future.microtask(this._routineViewModel.getRoutine);
-  }
-
-  @override
   deactivate() async {
     _timers.forEach((timer) => timer?.cancel());
     super.deactivate();
@@ -59,7 +48,8 @@ class _RecordEntryState extends State<RecordEntry> {
   @override
   Widget build(BuildContext context) {
     final entryViewModel = Provider.of<EntryViewModel>(context);
-    if (_routineViewModel.prompts == null) {
+    final routineViewModel = Provider.of<RoutineViewModel>(context);
+    if (routineViewModel.prompts == null) {
       return AirnoteLoadingScreen();
     }
     return Scaffold(
@@ -95,7 +85,7 @@ class _RecordEntryState extends State<RecordEntry> {
                               child: Container(
                                 height: 50,
                                 child: _currentRoutineItemIndex == -1 ? Text("") : Text(
-                                  _routineViewModel
+                                  routineViewModel
                                       .prompts[_currentRoutineItemIndex].text,
                                   style:
                                       TextStyle(color: AirnoteColors.text, fontSize: 15),
@@ -105,7 +95,7 @@ class _RecordEntryState extends State<RecordEntry> {
                             SizedBox(height: 45),
                             AudioRecorder(
                               durations:
-                                  _routineViewModel.prompts.map<int>((item) {return item.duration;}).toList(),
+                                  routineViewModel.prompts.map<int>((item) {return item.duration;}).toList(),
                               onComplete: (recording) {
                                 _formData["recording"] = recording.path;
                                 _formData["duration"] = recording
@@ -139,7 +129,7 @@ class _RecordEntryState extends State<RecordEntry> {
                                 _displayNextRoutineItem();
                               },
                               onLapComplete: () {
-                                if (_currentRoutineItemIndex >= _routineViewModel.prompts.length - 1) return;
+                                if (_currentRoutineItemIndex >= routineViewModel.prompts.length - 1) return;
                                 _displayNextRoutineItem();
                               },
                             ),

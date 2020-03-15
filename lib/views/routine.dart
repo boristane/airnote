@@ -20,112 +20,133 @@ class _RoutineViewState extends State<RoutineView> {
   RoutineViewModel _routineViewModel;
 
   @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    final _routineViewModel = Provider.of<RoutineViewModel>(context);
-    if (this._routineViewModel == _routineViewModel) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _getRoutine();
+    });
+  }
+
+  _getRoutine() async {
+    final routineViewModel = Provider.of<RoutineViewModel>(context);
+    if (this._routineViewModel == routineViewModel) {
       return;
     }
-    this._routineViewModel = _routineViewModel;
-    Future.microtask(this._routineViewModel.getRoutine);
+    this._routineViewModel = routineViewModel;
+    final id = ModalRoute.of(context).settings.arguments;
+    final success = await this._routineViewModel.getRoutine(id);
+    if (!success && Navigator.of(context).canPop()) {
+      return Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final prompts = _routineViewModel.prompts;
-    final routine = _routineViewModel.routine;
-    if (prompts == null) {
-      return AirnoteLoadingScreen();
-    }
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      child: Consumer<RoutineViewModel>(builder: (context, model, child) {
+        final prompts = model.prompts;
+        final routine = model.routine;
+        if (prompts == null) {
+          return AirnoteLoadingScreen();
+        }
+        return Scaffold(
+          body: Stack(
             children: <Widget>[
-              Stack(
+              ListView(
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _RoutineHeader(
-                    imageUrl: routine.imageUrl,
+                  Stack(
+                    children: <Widget>[
+                      _RoutineHeader(
+                        imageUrl: routine.imageUrl,
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(20),
+                        height: 170,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              routine.name,
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: AirnoteColors.grey,
+                                  letterSpacing: 1.0),
+                            ),
+                            Text(
+                              "Day ${routine.position}",
+                              style: TextStyle(
+                                color: AirnoteColors.inactive,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
-                    margin: EdgeInsets.all(20),
-                    height: 170,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          routine.name,
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: AirnoteColors.grey,
-                              letterSpacing: 1.0),
-                        ),
-                        Text(
-                          "Day ${routine.position}",
-                          style: TextStyle(
-                            color: AirnoteColors.inactive,
-                          ),
-                        ),
-                      ],
-                    ),
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(15),
+                    child: Text(routine.description,
+                        style:
+                            TextStyle(color: AirnoteColors.grey, fontSize: 15)),
                   ),
+                  Divider(),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: prompts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final prompt = prompts[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: PromptView(
+                            item: prompt,
+                          ),
+                        );
+                      }),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15.0, vertical: 40),
+                    child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Please take your time, think about these before we start.",
+                          textAlign: TextAlign.center,
+                        )),
+                  )
                 ],
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(15),
-                child: Text(routine.description,
-                    style: TextStyle(color: AirnoteColors.grey, fontSize: 15)),
-              ),
-              Divider(),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                  itemCount: prompts.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final prompt = prompts[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: PromptView(
-                        item: prompt,
-                      ),
-                    );
-                  }),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 40),
-                child: Align(alignment: Alignment.center, child: Text("Please take your time, think about these before we start.", textAlign: TextAlign.center,)),
-              )
-            ],
-          ),
-          Align(
-              alignment: Alignment.topLeft,
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: AirnoteOptionButton(
-                    icon: Icon(Icons.arrow_downward),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
+              Align(
+                alignment: Alignment.topLeft,
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: AirnoteOptionButton(
+                      icon: Icon(Icons.arrow_downward),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                 ),
               ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AirnoteColors.primary,
+            child: Icon(
+              Icons.arrow_forward,
             ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AirnoteColors.primary,
-        child: Icon(
-          Icons.arrow_forward,
-        ),
-        onPressed: () {
-          Navigator.of(context).pushNamed(RecordEntry.routeName);
-        },
-      ),
+            onPressed: () {
+              Navigator.of(context).pushNamed(RecordEntry.routeName);
+            },
+          ),
+        );
+      }),
     );
   }
 }

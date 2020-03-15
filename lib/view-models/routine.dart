@@ -19,20 +19,23 @@ class RoutineViewModel extends BaseViewModel {
 
   final _routineService = locator<RoutineService>();
 
-  Future<void> getRoutine() async {
+  Future<bool> getRoutine(int id) async {
     setStatus(ViewStatus.LOADING);
+    bool success = false;
     try {
       _message = "";
       await _routineService.setupClient();
-      final response = await _routineService.getRoutine();
+      final response = await _routineService.getRoutine(id);
       final dynamic data = response.data["routine"] ?? [];
       _routine = Routine.fromJson(data);
       _prompts = _routine.prompts;
+      success = true;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = (data is String || data is ResponseBody) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
       _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
     }
     setStatus(ViewStatus.READY);
+    return success;
   }
 }
