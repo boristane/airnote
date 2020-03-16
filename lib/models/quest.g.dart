@@ -17,6 +17,8 @@ Quest _$QuestFromJson(Map<String, dynamic> json) {
         ?.toList(),
     description: json['description'] as String,
     shortDescription: json['shortDescription'] as String,
+    userHasJoined: json['userHasJoined'] as bool,
+    stage: json['stage'] as int,
   );
 }
 
@@ -26,5 +28,7 @@ Map<String, dynamic> _$QuestToJson(Quest instance) => <String, dynamic>{
       'imageUrl': instance.imageUrl,
       'description': instance.description,
       'shortDescription': instance.shortDescription,
+      'userHasJoined': instance.userHasJoined,
+      'stage': instance.stage,
       'routines': instance.routines,
     };

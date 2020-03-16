@@ -124,13 +124,7 @@ class _QuestViewState extends State<QuestView> {
             Align(
               alignment: Alignment.bottomRight,
               child: Container(
-                margin: EdgeInsets.all(15),
-                child: AirnoteForwardButton(
-                    text: "Join",
-                    onTap: () async {
-                      _joinQuest(quest);
-                    }),
-              ),
+                  margin: EdgeInsets.all(15), child: _getActionButton(quest)),
             ),
           ],
         );
@@ -138,10 +132,29 @@ class _QuestViewState extends State<QuestView> {
     );
   }
 
+  Widget _getActionButton(Quest quest) {
+    final label = quest.userHasJoined ? "Continue" : "Join";
+    return AirnoteForwardButton(
+        text: label,
+        onTap: () async {
+          if (quest.userHasJoined) {
+            return _continueQuest(quest);
+          }
+          await _joinQuest(quest);
+        });
+  }
+
   _joinQuest(Quest quest) async {
     final success = await _questViewModel.joinQuest(quest.id);
     if (success) {
       Navigator.of(context).pushNamed(RoutineView.routeName);
     }
+  }
+
+  _continueQuest(Quest quest) {
+    final stage = quest.stage;
+    if (stage > quest.routines.length || stage < 0) return;
+    final routine = quest.routines.elementAt(stage - 1);
+    Navigator.of(context).pushNamed(RoutineView.routeName, arguments: routine.id);
   }
 }
