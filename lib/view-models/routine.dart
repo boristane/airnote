@@ -19,6 +19,11 @@ class RoutineViewModel extends BaseViewModel {
 
   final _routineService = locator<RoutineService>();
 
+  void reset() {
+    this._prompts = null;
+    this._routine = null;
+  }
+
   Future<bool> getRoutine(int id) async {
     setStatus(ViewStatus.LOADING);
     bool success = false;

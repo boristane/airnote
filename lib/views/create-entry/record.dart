@@ -4,7 +4,6 @@ import 'package:airnote/components/audio-recorder.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
-import 'package:airnote/models/routine.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/snackbar.dart';
@@ -23,6 +22,7 @@ import 'package:provider/provider.dart';
 
 class RecordEntry extends StatefulWidget {
   static const routeName = "record-entry";
+  final maxDuration = 5 * 60 * 1000;
   @override
   _RecordEntryState createState() => _RecordEntryState();
 }
@@ -32,6 +32,7 @@ class _RecordEntryState extends State<RecordEntry> {
   final _addEntryFormKey = GlobalKey<FormState>();
   final _snackBarService = locator<SnackBarService>();
   final _dialogService = locator<DialogService>();
+  bool _hasRoutine = true;
   bool _isRecorded = false;
   bool _isRecording = false;
   bool _isShowingText = false;
@@ -49,9 +50,28 @@ class _RecordEntryState extends State<RecordEntry> {
   Widget build(BuildContext context) {
     final entryViewModel = Provider.of<EntryViewModel>(context);
     final routineViewModel = Provider.of<RoutineViewModel>(context);
-    if (routineViewModel.prompts == null) {
-      return AirnoteLoadingScreen();
+    if (_hasRoutine && routineViewModel.prompts == null) {
+      setState(() {
+        _hasRoutine = false;
+      });
     }
+    final prompt = _hasRoutine
+        ? AnimatedOpacity(
+            opacity: _isShowingText ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 500),
+            child: Container(
+              height: 50,
+              child: _currentRoutineItemIndex == -1
+                  ? Text("")
+                  : Text(
+                      routineViewModel.prompts[_currentRoutineItemIndex].text,
+                      style: TextStyle(color: AirnoteColors.text, fontSize: 15),
+                    ),
+            ),
+          )
+        : Container(
+            height: 50,
+          );
     return Scaffold(
       body: WillPopScope(
         onWillPop: _onWillPop,
@@ -79,23 +99,14 @@ class _RecordEntryState extends State<RecordEntry> {
                               validator: InputValidator.title,
                               onSaved: _onTitleSaved,
                             ),
-                            AnimatedOpacity(
-                              opacity: _isShowingText ? 1.0 : 0.0,
-                              duration: Duration(milliseconds: 500),
-                              child: Container(
-                                height: 50,
-                                child: _currentRoutineItemIndex == -1 ? Text("") : Text(
-                                  routineViewModel
-                                      .prompts[_currentRoutineItemIndex].text,
-                                  style:
-                                      TextStyle(color: AirnoteColors.text, fontSize: 15),
-                                ),
-                              ),
-                            ),
+                            prompt,
                             SizedBox(height: 45),
                             AudioRecorder(
-                              durations:
-                                  routineViewModel.prompts.map<int>((item) {return item.duration;}).toList(),
+                              durations: _hasRoutine
+                                  ? routineViewModel.prompts.map<int>((item) {
+                                      return item.duration;
+                                    }).toList()
+                                  : [widget.maxDuration],
                               onComplete: (recording) {
                                 _formData["recording"] = recording.path;
                                 _formData["duration"] = recording
@@ -129,7 +140,8 @@ class _RecordEntryState extends State<RecordEntry> {
                                 _displayNextRoutineItem();
                               },
                               onLapComplete: () {
-                                if (_currentRoutineItemIndex >= routineViewModel.prompts.length - 1) return;
+                                if (_currentRoutineItemIndex >=
+                                    routineViewModel.prompts.length - 1) return;
                                 _displayNextRoutineItem();
                               },
                             ),
@@ -217,7 +229,7 @@ class _RecordEntryState extends State<RecordEntry> {
   }
 
   _displayNextRoutineItem() {
-      _isShowingText = false;
+    _isShowingText = false;
     final timer = new Timer(Duration(milliseconds: 500), () {
       _isShowingText = true;
       _currentRoutineItemIndex += 1;
