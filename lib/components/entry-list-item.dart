@@ -1,3 +1,4 @@
+import 'package:airnote/components/badge.dart';
 import 'package:airnote/models/entry.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -205,22 +206,7 @@ class _QuestIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return hasQuest
-        ? Container(
-            decoration: BoxDecoration(
-              color: AirnoteColors.white,
-              borderRadius: BorderRadius.circular(550),
-              boxShadow: [
-                BoxShadow(
-                    color: AirnoteColors.grey.withOpacity(.5),
-                    offset: Offset(1.0, 3.0),
-                    blurRadius: 5.0),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Quest"),
-            ),
-          )
+        ? AirnoteBadge(text: "Quest", isDark: false,)
         : Container();
   }
 }

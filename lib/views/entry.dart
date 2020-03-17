@@ -1,4 +1,5 @@
 import 'package:airnote/components/audio-player.dart';
+import 'package:airnote/components/badge.dart';
 import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/loading.dart';
@@ -140,14 +141,28 @@ class _EntryViewState extends State<EntryView>
                         imageUrl: entry.imageUrl,
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 220),
-                        alignment: Alignment.bottomLeft,
-                        child: _EntryTitle(
-                          title: entry.title,
-                          date: entry.createdAt,
-                          isLocked: _isLocked,
-                        ),
+                        padding: EdgeInsets.only(top: 80),
+                        alignment: Alignment.center,
+                        child: _EntryDate(
+                              date: entry.createdAt,
+                            ),
                       ),
+                      Container(
+                        padding: EdgeInsets.only(top: 180),
+                        alignment: Alignment.center,
+                        child: _EntryTitle(
+                              title: entry.title,
+                              isLocked: _isLocked,
+                            ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: entry.quest != null ? Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: AirnoteBadge(text: "Quest", isDark: true,),
+                        ) : Container(),
+                        ),
                       _buildEntryOptions(),
                     ],
                   ),
@@ -277,28 +292,42 @@ class _EntryViewState extends State<EntryView>
   }
 }
 
-class _EntryTitle extends StatelessWidget {
-  final String title;
+class _EntryDate extends StatelessWidget {
   final String date;
-  final bool isLocked;
-
-  _EntryTitle({Key key, this.title, this.date, this.isLocked})
-      : super(key: key);
+  _EntryDate({Key key, this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final dateTime = DateTime.parse(date);
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(dateTime);
-    return ListTile(
-      title: Row(
+    return Text(
+      dateString,
+      style: TextStyle(
+        color: AirnoteColors.primary,
+        fontSize: 14,
+      ),
+    );
+  }
+}
+
+class _EntryTitle extends StatelessWidget {
+  final String title;
+  final bool isLocked;
+
+  _EntryTitle({Key key, this.title, this.isLocked}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
             title,
             style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: AirnoteColors.grey,
-                letterSpacing: 1.0,),
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: AirnoteColors.grey,
+              letterSpacing: 1.0,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -311,27 +340,7 @@ class _EntryTitle extends StatelessWidget {
                 : Container(),
           ),
         ],
-      ),
-      subtitle: Row(
-        children: <Widget>[
-          Icon(
-            Icons.event_note,
-            size: 18,
-            color: AirnoteColors.grey.withOpacity(0.7),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              dateString,
-              style: TextStyle(
-                color: AirnoteColors.grey.withOpacity(0.7),
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+      );
   }
 }
 
