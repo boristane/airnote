@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/models/prompt.dart';
@@ -136,15 +135,9 @@ class _RoutineViewState extends State<RoutineView> {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: AirnoteColors.primary,
-            child: Icon(
-              Icons.arrow_forward,
-            ),
-            onPressed: () {
+          floatingActionButton: AirnoteForwardButton(text: "Start", onTap: () {
               Navigator.of(context).pushNamed(RecordEntry.routeName);
-            },
-          ),
+            },)
         );
       }),
     );

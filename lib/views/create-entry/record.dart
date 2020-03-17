@@ -112,6 +112,7 @@ class _RecordEntryState extends State<RecordEntry> {
                                 _formData["duration"] = recording
                                     .duration.inMilliseconds
                                     .toString();
+                                _formData["routine"] = (routineViewModel.routine?.id).toString();
                                 setState(() {
                                   _isRecorded = true;
                                 });
@@ -207,7 +208,9 @@ class _RecordEntryState extends State<RecordEntry> {
     final response =
         await entryViewModel.createEntry(_formData, email, encryptionKey);
     if (response) {
-      Navigator.of(context).pushNamed(Home.routeName);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Home.routeName, (Route<dynamic> route) => false,
+          arguments: 1);
     }
   }
 

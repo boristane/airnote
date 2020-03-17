@@ -51,6 +51,7 @@ class EntryService {
     final requestBody = {
       "title": data["title"],
       "duration": data["duration"],
+      "routine": data["routine"],
       "recording": fileName,
       "isEncrypted": isEncrypted,
     };
