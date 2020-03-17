@@ -16,7 +16,7 @@ class _SelectEntryTypeState extends State<SelectEntryType> {
   @override
   Widget build(BuildContext context) {
     final AirnoteRaisedButton _assistedButton = AirnoteRaisedButton(
-        text: "Start a routine",
+        text: "Guided entry",
         onPressed: () =>
             Navigator.of(context).pushNamed(RoutineView.routeName, arguments: 1));
     final AirnoteFlatButton _soloButton = AirnoteFlatButton(

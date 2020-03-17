@@ -29,10 +29,10 @@ class AirnoteTextInputField extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hint,
                   hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold, color: AirnoteColors.lightBlue),
+                      fontWeight: FontWeight.bold, color: AirnoteColors.inactive),
                   suffixIcon: suffix,
                 ),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AirnoteColors.grey,),
                 validator: validator,
                 obscureText: obscure,
                 onSaved: (value) => save(value),

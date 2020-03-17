@@ -9,7 +9,7 @@ class AirnoteBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
             decoration: BoxDecoration(
-              color: isDark ? AirnoteColors.primary : AirnoteColors.white,
+              color: isDark ? AirnoteColors.primary.withOpacity(0.9) : AirnoteColors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(550),
             ),
             child: Padding(

@@ -96,7 +96,7 @@ class _QuestViewState extends State<QuestView> {
                         ListTile(
                             contentPadding: EdgeInsets.fromLTRB(50, 10, 50, 50),
                             leading: Icon(Icons.show_chart),
-                            title: Text("${routines.length} routines")),
+                            title: Text("${routines.length} days")),
                       ],
                     ),
                   ],
