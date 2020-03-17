@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
+
 class AirnoteEntryListItem extends StatelessWidget {
   final Entry entry;
   AirnoteEntryListItem({Key key, this.entry}) : super(key: key);
@@ -27,6 +28,12 @@ class AirnoteEntryListItem extends StatelessWidget {
             top: 75.0,
             child: _EntryDescription(entry: entry),
           ),
+          Positioned(
+              bottom: 10,
+              right: 10,
+              child: _QuestIndicator(
+                hasQuest: entry.quest != null,
+              )),
           _EntryBlur(
             isLocked: entry.isLocked,
           ),
@@ -51,7 +58,9 @@ class ImageHeader extends StatelessWidget {
   final Color topColor;
   final Color bottomColor;
 
-  ImageHeader({Key key, this.imageUrl, this.heroTag, this.topColor, this.bottomColor}) : super(key: key);
+  ImageHeader(
+      {Key key, this.imageUrl, this.heroTag, this.topColor, this.bottomColor})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
@@ -84,7 +93,13 @@ class _GradientImage extends StatelessWidget {
   final Color topColor;
   final Color bottomColor;
 
-  _GradientImage({Key key, this.heroTag, this.imageProvider, this.bottomColor, this.topColor }) : super(key: key);
+  _GradientImage(
+      {Key key,
+      this.heroTag,
+      this.imageProvider,
+      this.bottomColor,
+      this.topColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +118,10 @@ class _GradientImage extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              topColor != null? topColor : AirnoteColors.primary.withOpacity(0.0),
-              bottomColor != null? bottomColor : AirnoteColors.primary
+              topColor != null
+                  ? topColor
+                  : AirnoteColors.primary.withOpacity(0.0),
+              bottomColor != null ? bottomColor : AirnoteColors.primary
             ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             borderRadius: BorderRadius.circular(10),
           ),
@@ -164,7 +181,7 @@ class _EntryDescription extends StatelessWidget {
 }
 
 class _EntryBlur extends StatelessWidget {
-  final isLocked;
+  final bool isLocked;
 
   _EntryBlur({Key key, this.isLocked}) : super(key: key);
 
@@ -175,6 +192,34 @@ class _EntryBlur extends StatelessWidget {
             opacity: 0,
             blurry: 3,
             shade: Colors.transparent,
+          )
+        : Container();
+  }
+}
+
+class _QuestIndicator extends StatelessWidget {
+  final bool hasQuest;
+
+  _QuestIndicator({Key key, this.hasQuest}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return hasQuest
+        ? Container(
+            decoration: BoxDecoration(
+              color: AirnoteColors.white,
+              borderRadius: BorderRadius.circular(550),
+              boxShadow: [
+                BoxShadow(
+                    color: AirnoteColors.grey.withOpacity(.5),
+                    offset: Offset(1.0, 3.0),
+                    blurRadius: 5.0),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Quest"),
+            ),
           )
         : Container();
   }
