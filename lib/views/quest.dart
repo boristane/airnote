@@ -147,7 +147,7 @@ class _QuestViewState extends State<QuestView> {
   _joinQuest(Quest quest) async {
     final success = await _questViewModel.joinQuest(quest.id);
     if (success) {
-      Navigator.of(context).pushNamed(RoutineView.routeName, arguments: quest.routines[0]?.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(RoutineView.routeName, (Route<dynamic> route) => route.isFirst, arguments: quest.routines[0]?.id);
     }
   }
 

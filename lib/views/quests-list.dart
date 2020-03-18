@@ -85,6 +85,48 @@ class _QuestsListState extends State<QuestsList> {
     );
   }
 
+  Widget _displayMoreQuests(List<Quest> quests) {
+    if (quests.length <= 0) {
+      return Container();
+    }
+    final size = MediaQuery.of(context).size;
+    final double itemHeight = 280;
+    final double itemWidth = size.width / 2;
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: AirnoteSmallerHeader(
+              text: "More Quests",
+            ),
+          ),
+          GridView.count(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            mainAxisSpacing: 10.0,
+            crossAxisSpacing: 10.0,
+            padding: EdgeInsets.only(bottom: 5.0),
+            childAspectRatio: (itemWidth / itemHeight),
+            children: List.generate(quests.length, (index) {
+              return GestureDetector(
+                onTap: () async {
+                  await _openQuest(quests[index]);
+                },
+                child: AirnoteQuestListItem(
+                  quest: quests[index],
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -103,10 +145,7 @@ class _QuestsListState extends State<QuestsList> {
               child: Text("Ooops ! There was a problem getting the data..."),
             );
           }
-          if (quests.length < 1) return NoQuestFound();
-          final size = MediaQuery.of(context).size;
-          final double itemHeight = 280;
-          final double itemWidth = size.width / 2;
+          if (quests.length < 1 && userQuests.length < 1) return NoQuestFound();
           return Container(
             child: ListView(
               children: <Widget>[
@@ -122,39 +161,7 @@ class _QuestsListState extends State<QuestsList> {
                   ),
                 ),
                 _displayUserQuests(userQuests),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 25),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: AirnoteSmallerHeader(
-                          text: "More Quests",
-                        ),
-                      ),
-                      GridView.count(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10.0,
-                        crossAxisSpacing: 10.0,
-                        padding: EdgeInsets.only(bottom: 5.0),
-                        childAspectRatio: (itemWidth / itemHeight),
-                        children: List.generate(quests.length, (index) {
-                          return GestureDetector(
-                            onTap: () async {
-                              await _openQuest(quests[index]);
-                            },
-                            child: AirnoteQuestListItem(
-                              quest: quests[index],
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
+                _displayMoreQuests(quests),
               ],
             ),
           );

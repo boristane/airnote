@@ -3,7 +3,6 @@ import 'package:airnote/views/create-entry/entry-type.dart';
 import 'package:airnote/views/drawer.dart';
 import 'package:airnote/views/entries-list.dart';
 import 'package:airnote/views/quests-list.dart';
-import 'package:airnote/views/routine.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
