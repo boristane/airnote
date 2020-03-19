@@ -94,9 +94,26 @@ class _QuestViewState extends State<QuestView> {
                                   color: AirnoteColors.grey, fontSize: 15)),
                         ),
                         ListTile(
-                            contentPadding: EdgeInsets.fromLTRB(50, 10, 50, 50),
+                            contentPadding: EdgeInsets.fromLTRB(50, 10, 50, 10),
                             leading: Icon(Icons.show_chart),
-                            title: Text("${routines.length} days")),
+                            title: Text(
+                              "${routines.length} days",
+                              style: TextStyle(color: AirnoteColors.grey),
+                            )),
+                        ListTile(
+                            contentPadding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+                            leading: Icon(Icons.input),
+                            title: Text(
+                              "${routines.map((routine) => routine.prompts.length).fold(0, (t, e) => t + e)} prompts",
+                              style: TextStyle(color: AirnoteColors.grey),
+                            )),
+                        ListTile(
+                            contentPadding: EdgeInsets.fromLTRB(50, 0, 50, 50),
+                            leading: Icon(Icons.timer),
+                            title: Text(
+                              "${(routines.map((routine) => routine.prompts.fold(0, (t, e) => t + e.duration)).fold(0, (t, e) => t + e) / 60000).round()} minutes",
+                              style: TextStyle(color: AirnoteColors.grey),
+                            )),
                       ],
                     ),
                   ],
@@ -147,7 +164,9 @@ class _QuestViewState extends State<QuestView> {
   _joinQuest(Quest quest) async {
     final success = await _questViewModel.joinQuest(quest.id);
     if (success) {
-      Navigator.of(context).pushNamedAndRemoveUntil(RoutineView.routeName, (Route<dynamic> route) => route.isFirst, arguments: quest.routines[0]?.id);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          RoutineView.routeName, (Route<dynamic> route) => route.isFirst,
+          arguments: quest.routines[0]?.id);
     }
   }
 
@@ -155,6 +174,7 @@ class _QuestViewState extends State<QuestView> {
     final stage = quest.stage;
     if (stage > quest.routines.length || stage < 0) return;
     final routine = quest.routines.elementAt(stage - 1);
-    Navigator.of(context).pushNamed(RoutineView.routeName, arguments: routine.id);
+    Navigator.of(context)
+        .pushNamed(RoutineView.routeName, arguments: routine.id);
   }
 }

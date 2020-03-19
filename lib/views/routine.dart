@@ -48,96 +48,103 @@ class _RoutineViewState extends State<RoutineView> {
         if (prompts == null) {
           return AirnoteLoadingScreen();
         }
-        return Scaffold(
-          body: Stack(
-            children: <Widget>[
-              ListView(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      _RoutineHeader(
-                        imageUrl: routine.imageUrl,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(20),
-                        height: 170,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              routine.name,
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: AirnoteColors.grey,
-                                  letterSpacing: 1.0),
-                            ),
-                            Text(
-                              "Day ${routine.position}",
-                              style: TextStyle(
-                                color: AirnoteColors.inactive,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(15),
-                    child: Text(routine.description,
-                        style:
-                            TextStyle(color: AirnoteColors.grey, fontSize: 15)),
-                  ),
-                  Divider(),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: prompts.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final prompt = prompts[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: PromptView(
-                            item: prompt,
-                          ),
-                        );
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 40),
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "Please take your time, think about these before we start.",
-                          textAlign: TextAlign.center,
-                        )),
-                  )
-                ],
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: AirnoteOptionButton(
-                      icon: Icon(Icons.arrow_downward),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
+        return Stack(
+          children: <Widget>[
+            ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    _RoutineHeader(
+                      imageUrl: routine.imageUrl,
                     ),
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      height: 260,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            routine.name,
+                            style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: AirnoteColors.grey,
+                                letterSpacing: 1.0),
+                          ),
+                          Text(
+                            "Day ${routine.position}",
+                            style: TextStyle(
+                              color: AirnoteColors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(15),
+                  child: Text(routine.description,
+                      style:
+                          TextStyle(color: AirnoteColors.grey, fontSize: 15)),
+                ),
+                Divider(),
+                ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: prompts.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final prompt = prompts[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: PromptView(
+                          item: prompt,
+                        ),
+                      );
+                    }),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 40),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Please take your time, think about these before we start.",
+                        textAlign: TextAlign.center,
+                      )),
+                )
+              ],
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: AirnoteOptionButton(
+                    icon: Icon(Icons.arrow_downward),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
               ),
-            ],
-          ),
-          floatingActionButton: AirnoteForwardButton(text: "Start", onTap: () {
-              Navigator.of(context).pushNamed(RecordEntry.routeName);
-            },)
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: AirnoteForwardButton(
+                  text: "Start",
+                  onTap: () {
+                    Navigator.of(context).pushNamed(RecordEntry.routeName);
+                  },
+                ),
+              ),
+            )
+          ],
         );
       }),
     );
@@ -153,7 +160,7 @@ class PromptView extends StatelessWidget {
     return ListTile(
       title: Text(
         item.text,
-        style: TextStyle(color: AirnoteColors.grey, fontSize: 18),
+        style: TextStyle(color: AirnoteColors.grey, fontSize: 18,),
       ),
       subtitle: Text(
         "Duration: ${millisecondsToTimeString(item.duration)}",
@@ -194,12 +201,12 @@ class _RoutineHeaderImage extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Container(
-          height: 199,
+          height: 299,
           decoration: BoxDecoration(
               image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
         ),
         Container(
-          height: 200,
+          height: 300,
           decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
               AirnoteColors.backgroundColor.withOpacity(0.0),

@@ -141,28 +141,33 @@ class _EntryViewState extends State<EntryView>
                         imageUrl: entry.imageUrl,
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 80),
+                        padding: EdgeInsets.only(top: 230),
                         alignment: Alignment.center,
                         child: _EntryDate(
-                              date: entry.createdAt,
-                            ),
+                          date: entry.createdAt,
+                        ),
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 180),
+                        padding: EdgeInsets.only(top: 250, left: 15, right: 15),
                         alignment: Alignment.center,
                         child: _EntryTitle(
-                              title: entry.title,
-                              isLocked: _isLocked,
-                            ),
+                          title: entry.title,
+                          isLocked: _isLocked,
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
-                        child: entry.quest != null ? Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: AirnoteBadge(text: "Quest", isDark: true,),
-                        ) : Container(),
-                        ),
+                        child: entry.quest != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: AirnoteBadge(
+                                  text: "Quest",
+                                  isDark: true,
+                                ),
+                              )
+                            : Container(),
+                      ),
                       _buildEntryOptions(),
                     ],
                   ),
@@ -303,7 +308,7 @@ class _EntryDate extends StatelessWidget {
     return Text(
       dateString,
       style: TextStyle(
-        color: AirnoteColors.primary,
+        color: AirnoteColors.grey,
         fontSize: 14,
       ),
     );
@@ -319,9 +324,13 @@ class _EntryTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
+      children: <Widget>[
+        Expanded(
+          child: Text(
             title,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
@@ -329,18 +338,19 @@ class _EntryTitle extends StatelessWidget {
               letterSpacing: 1.0,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: isLocked
-                ? Icon(
-                    Icons.lock_outline,
-                    size: 24,
-                    color: AirnoteColors.primary.withOpacity(0.7),
-                  )
-                : Container(),
-          ),
-        ],
-      );
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: isLocked
+              ? Icon(
+                  Icons.lock_outline,
+                  size: 24,
+                  color: AirnoteColors.primary.withOpacity(0.7),
+                )
+              : Container(),
+        ),
+      ],
+    );
   }
 }
 
