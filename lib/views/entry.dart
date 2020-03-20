@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:airnote/services/dialog.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class EntryView extends StatefulWidget {
   static const routeName = 'view-entry';
@@ -116,84 +117,89 @@ class _EntryViewState extends State<EntryView>
     _closeOptions();
   }
 
+  BorderRadiusGeometry radius = BorderRadius.only(
+    topLeft: Radius.circular(16.0),
+    topRight: Radius.circular(16.0),
+  );
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Consumer<EntryViewModel>(builder: (context, model, child) {
-        if (model.getStatus() == ViewStatus.LOADING) {
-          return AirnoteLoadingScreen();
-        }
-        final entry = model.currentEntry;
-        if (entry == null) {
-          return AirnoteLoadingScreen();
-        }
-        final localRecordingFilePath = model.currentEntryRecording;
-        final heroTag = "entry-image-${entry.id}";
-        return Column(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Stack(
+    double panelHeightOpen = MediaQuery.of(context).size.height * .80;
+    double panelHeightClosed = 35.0;
+    return Scaffold(
+      body: SlidingUpPanel(
+        maxHeight: panelHeightOpen,
+            minHeight: panelHeightClosed,
+            parallaxEnabled: true,
+            parallaxOffset: .35,
+        panelBuilder: (sc) => _AirnoteEntryPanel(entry: _entryViewModel.currentEntry,),
+        color: AirnoteColors.backgroundColor,
+        borderRadius: radius,
+        body: Container(
+          child: Consumer<EntryViewModel>(builder: (context, model, child) {
+            if (model.getStatus() == ViewStatus.LOADING) {
+              return AirnoteLoadingScreen();
+            }
+            final entry = model.currentEntry;
+            if (entry == null) {
+              return AirnoteLoadingScreen();
+            }
+            final localRecordingFilePath = model.currentEntryRecording;
+            final heroTag = "entry-image-${entry.id}";
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
                     children: <Widget>[
-                      EntryHeader(
-                        heroTag: heroTag,
-                        imageUrl: entry.imageUrl,
+                      Stack(
+                        children: <Widget>[
+                          EntryHeader(
+                            heroTag: heroTag,
+                            imageUrl: entry.imageUrl,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: 230),
+                            alignment: Alignment.center,
+                            child: _EntryDate(
+                              date: entry.createdAt,
+                            ),
+                          ),
+                          Container(
+                            padding:
+                                EdgeInsets.only(top: 250, left: 15, right: 15),
+                            alignment: Alignment.center,
+                            child: _EntryTitle(
+                              title: entry.title,
+                              isLocked: _isLocked,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: entry.quest != null
+                                ? Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: AirnoteBadge(
+                                      text: "Quest",
+                                      isDark: true,
+                                    ),
+                                  )
+                                : Container(),
+                          ),
+                          _buildEntryOptions(),
+                        ],
                       ),
-                      Container(
-                        padding: EdgeInsets.only(top: 230),
-                        alignment: Alignment.center,
-                        child: _EntryDate(
-                          date: entry.createdAt,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 250, left: 15, right: 15),
-                        alignment: Alignment.center,
-                        child: _EntryTitle(
-                          title: entry.title,
-                          isLocked: _isLocked,
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: entry.quest != null
-                            ? Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: AirnoteBadge(
-                                  text: "Quest",
-                                  isDark: true,
-                                ),
-                              )
-                            : Container(),
-                      ),
-                      _buildEntryOptions(),
                     ],
                   ),
-                  
-                ],
-              ),
-            ),
-            Expanded(
-                    // alignment: Alignment.center,
-                                      child: Padding(
-                      padding: EdgeInsets.only(top: 0),
-                      child: _buildAudioPlayer(localRecordingFilePath, entry),
-                    ),
-                  ),
-            Container(
-              margin: EdgeInsets.all(15),
-              child: AirnoteForwardButton(
-                text: "Transcipt",
-                onTap: () {
-                  print("Opening the transcript");
-                },
-              ),
-            ),
-          ],
-        );
-      }),
+                ),
+                Expanded(
+                  child: _buildAudioPlayer(localRecordingFilePath, entry),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
     );
   }
 
@@ -343,7 +349,9 @@ class _EntryTitle extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: isLocked ? EdgeInsets.symmetric(horizontal: 8.0) : EdgeInsets.zero,
+          padding: isLocked
+              ? EdgeInsets.symmetric(horizontal: 8.0)
+              : EdgeInsets.zero,
           child: isLocked
               ? Icon(
                   Icons.lock_outline,
@@ -412,6 +420,72 @@ class EntryHeader extends StatelessWidget {
         heroTag: heroTag,
         imageProvider: AssetImage("assets/placeholder.jpg"),
       ),
+    );
+  }
+}
+
+class _AirnoteEntryPanel extends StatelessWidget {
+  final Entry entry;
+  final ScrollController scrollController;
+  _AirnoteEntryPanel({Key key, this.entry, this.scrollController}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (entry == null) {
+      return AirnoteLoadingScreen();
+    }
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: ListView(
+        controller: scrollController,
+        children: <Widget>[
+          SizedBox(height: 12.0,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 30,
+                height: 5,
+                decoration: BoxDecoration(
+                color: AirnoteColors.primary,
+                  borderRadius: BorderRadius.all(Radius.circular(12.0))
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 18.0,),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "Transcript",
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 18.0,
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: 12.0,),
+
+          Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  entry.imageUrl,
+                  softWrap: true,
+                ),
+              ],
+            ),
+          ),
+        ],
+      )
     );
   }
 }

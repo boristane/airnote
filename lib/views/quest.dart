@@ -89,8 +89,7 @@ class _QuestViewState extends State<QuestView> {
                           padding: EdgeInsets.all(15),
                           margin: EdgeInsets.only(top: 220),
                           child: Text(quest.description,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1500,
+                              softWrap: true,
                               style: TextStyle(
                                   color: AirnoteColors.grey, fontSize: 15)),
                         ),
@@ -152,7 +151,7 @@ class _QuestViewState extends State<QuestView> {
   }
 
   Widget _getActionButton(Quest quest) {
-    if(quest.completed) return Container();
+    if (quest.completed) return Container();
     final label = quest.userHasJoined ? "Continue" : "Join";
     return AirnoteForwardButton(
         text: label,
@@ -178,7 +177,8 @@ class _QuestViewState extends State<QuestView> {
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       children: <Widget>[
-                        AirnoteCirclarCheckBox(value: completed, interactive: false),
+                        AirnoteCirclarCheckBox(
+                            value: completed, interactive: false),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text("Day ${index + 1}"),
