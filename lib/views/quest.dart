@@ -152,6 +152,7 @@ class _QuestViewState extends State<QuestView> {
   }
 
   Widget _getActionButton(Quest quest) {
+    if(quest.completed) return Container();
     final label = quest.userHasJoined ? "Continue" : "Join";
     return AirnoteForwardButton(
         text: label,

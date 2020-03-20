@@ -200,7 +200,7 @@ class _RecordEntryState extends State<RecordEntry> {
     if (!(form.validate())) return;
     if (!_isRecorded) {
       _snackBarService.showSnackBar(
-          icon: Icon(Icons.mic_none), text: "Please finish recording.");
+          icon: Icon(Icons.mic_none), text: "Please finish recording by pressing  ⬜");
       return;
     }
     form.save();

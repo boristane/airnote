@@ -57,7 +57,7 @@ class EntryService {
       "isEncrypted": isEncrypted,
     };
 
-    final response = _apiClient.post(url, data: requestBody);
+    final response = await _apiClient.post(url, data: requestBody);
     return response;
   }
 

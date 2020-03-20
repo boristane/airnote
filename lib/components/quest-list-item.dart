@@ -1,3 +1,4 @@
+import 'package:airnote/components/badge.dart';
 import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/utils/colors.dart';
@@ -12,6 +13,7 @@ class AirnoteQuestListItem extends StatelessWidget {
     final heroTag = "quest-image-${quest.id}";
     return GridTile(
       footer: _QuestDescription(quest: quest),
+      header: _QuestHeader(quest: quest),
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -39,11 +41,34 @@ class _QuestDescription extends StatelessWidget {
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: AirnoteColors.white,
-            letterSpacing: 1.0,),
+          fontWeight: FontWeight.bold,
+          color: AirnoteColors.white,
+          letterSpacing: 1.0,
+        ),
       ),
     ));
   }
 }
 
+class _QuestHeader extends StatelessWidget {
+  final Quest quest;
+
+  _QuestHeader({Key key, this.quest}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (quest.completed == null) return Container();
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          quest.completed ? AirnoteBadge(
+            text: "✔",
+            isDark: true,
+          ) : Container()
+        ],
+      ),
+    );
+  }
+}

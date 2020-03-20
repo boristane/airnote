@@ -107,8 +107,7 @@ class _RoutineViewState extends State<RoutineView> {
                       );
                     }),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 40),
+                  padding: const EdgeInsets.fromLTRB(15.0, 40, 15, 80),
                   child: Align(
                       alignment: Alignment.center,
                       child: Text(
@@ -160,7 +159,10 @@ class PromptView extends StatelessWidget {
     return ListTile(
       title: Text(
         item.text,
-        style: TextStyle(color: AirnoteColors.grey, fontSize: 18,),
+        style: TextStyle(
+          color: AirnoteColors.grey,
+          fontSize: 18,
+        ),
       ),
       subtitle: Text(
         "Duration: ${millisecondsToTimeString(item.duration)}",

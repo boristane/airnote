@@ -11,6 +11,7 @@ class Quest {
   final String description;
   final String shortDescription;
   final bool userHasJoined;
+  final bool completed;
   final int stage;
   final List<Routine> routines;
 
@@ -22,6 +23,7 @@ class Quest {
       this.description,
       this.shortDescription,
       this.userHasJoined,
+      this.completed,
       this.stage});
   factory Quest.fromJson(Map<String, dynamic> json) => _$QuestFromJson(json);
   Map<String, dynamic> toJson() => _$QuestToJson(this);

@@ -171,13 +171,17 @@ class _EntryViewState extends State<EntryView>
                       _buildEntryOptions(),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 50),
-                    child: _buildAudioPlayer(localRecordingFilePath, entry),
-                  ),
+                  
                 ],
               ),
             ),
+            Expanded(
+                    // alignment: Alignment.center,
+                                      child: Padding(
+                      padding: EdgeInsets.only(top: 0),
+                      child: _buildAudioPlayer(localRecordingFilePath, entry),
+                    ),
+                  ),
             Container(
               margin: EdgeInsets.all(15),
               child: AirnoteForwardButton(
@@ -195,15 +199,16 @@ class _EntryViewState extends State<EntryView>
 
   Widget _buildAudioPlayer(String localRecordingFilePath, Entry entry) {
     if (_hasPlayer) {
-      return AirnoteAudioPlayer(
-        audioFilePath: localRecordingFilePath,
-        backgroundMusicPath: entry.backgroundMusic,
-        duration: entry.duration,
+      return Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: AirnoteAudioPlayer(
+          audioFilePath: localRecordingFilePath,
+          backgroundMusicPath: entry.backgroundMusic,
+          duration: entry.duration,
+        ),
       );
     }
-    return Container(
-      height: 0,
-    );
+    return AirnoteLoadingScreen();
   }
 
   Align _buildEntryOptions() {
@@ -325,27 +330,25 @@ class _EntryTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Expanded(
-          child: Text(
-            title,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: AirnoteColors.grey,
-              letterSpacing: 1.0,
-            ),
+        Text(
+          title,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: AirnoteColors.grey,
+            letterSpacing: 1.0,
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0.0),
+          padding: isLocked ? EdgeInsets.symmetric(horizontal: 8.0) : EdgeInsets.zero,
           child: isLocked
               ? Icon(
                   Icons.lock_outline,
                   size: 24,
-                  color: AirnoteColors.primary.withOpacity(0.7),
+                  color: AirnoteColors.grey.withOpacity(0.7),
                 )
               : Container(),
         ),
