@@ -66,6 +66,7 @@ class _RecordEntryState extends State<RecordEntry> {
                   : Text(
                       routineViewModel.prompts[_currentRoutineItemIndex].text,
                       style: TextStyle(color: AirnoteColors.text, fontSize: 15),
+                      textAlign: TextAlign.center,
                     ),
             ),
           )

@@ -340,7 +340,7 @@ class _EntryTitle extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 0.0),
           child: isLocked
               ? Icon(
                   Icons.lock_outline,
