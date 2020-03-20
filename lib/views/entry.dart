@@ -129,10 +129,16 @@ class _EntryViewState extends State<EntryView>
     return Scaffold(
       body: SlidingUpPanel(
         maxHeight: panelHeightOpen,
-            minHeight: panelHeightClosed,
-            parallaxEnabled: true,
-            parallaxOffset: .35,
-        panelBuilder: (sc) => _AirnoteEntryPanel(entry: _entryViewModel.currentEntry,),
+        minHeight: panelHeightClosed,
+        parallaxEnabled: true,
+        parallaxOffset: .3,
+        panelBuilder: (sc) =>
+            Consumer<EntryViewModel>(builder: (context, model, child) {
+          return _AirnoteEntryPanel(
+            entry: model.currentEntry,
+            scrollController: sc,
+          );
+        }),
         color: AirnoteColors.backgroundColor,
         borderRadius: radius,
         body: Container(
@@ -195,6 +201,7 @@ class _EntryViewState extends State<EntryView>
                 Expanded(
                   child: _buildAudioPlayer(localRecordingFilePath, entry),
                 ),
+                SizedBox(height: panelHeightClosed),
               ],
             );
           }),
@@ -427,65 +434,66 @@ class EntryHeader extends StatelessWidget {
 class _AirnoteEntryPanel extends StatelessWidget {
   final Entry entry;
   final ScrollController scrollController;
-  _AirnoteEntryPanel({Key key, this.entry, this.scrollController}) : super(key: key);
+  _AirnoteEntryPanel({Key key, this.entry, this.scrollController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (entry == null) {
       return AirnoteLoadingScreen();
     }
+    final content = entry.content;
     return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      child: ListView(
-        controller: scrollController,
-        children: <Widget>[
-          SizedBox(height: 12.0,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 30,
-                height: 5,
-                decoration: BoxDecoration(
-                color: AirnoteColors.primary,
-                  borderRadius: BorderRadius.all(Radius.circular(12.0))
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 18.0,),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Transcript",
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 18.0,
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 12.0,),
-
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        context: context,
+        removeTop: true,
+        child: ListView(
+          controller: scrollController,
+          children: <Widget>[
+            SizedBox(
+              height: 12.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  entry.imageUrl,
-                  softWrap: true,
+                Container(
+                  width: 30,
+                  height: 5,
+                  decoration: BoxDecoration(
+                      color: AirnoteColors.primary,
+                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
                 ),
               ],
             ),
-          ),
-        ],
-      )
-    );
+            SizedBox(
+              height: 18.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Transcript",
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 12.0,
+            ),
+            Container(
+              padding: const EdgeInsets.all(24),
+              child: content == null
+                  ? Center(
+                      child: Text("There are no transcripts for this entry"),
+                    )
+                  : Text(
+                      content,
+                      softWrap: true,
+                    ),
+            ),
+          ],
+        ));
   }
 }
