@@ -1,3 +1,4 @@
+import 'package:airnote/components/checkbox.dart';
 import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
@@ -93,6 +94,7 @@ class _QuestViewState extends State<QuestView> {
                               style: TextStyle(
                                   color: AirnoteColors.grey, fontSize: 15)),
                         ),
+                        _getCompletionStatus(quest),
                         ListTile(
                             contentPadding: EdgeInsets.fromLTRB(50, 10, 50, 10),
                             leading: Icon(Icons.show_chart),
@@ -159,6 +161,33 @@ class _QuestViewState extends State<QuestView> {
           }
           await _joinQuest(quest);
         });
+  }
+
+  Widget _getCompletionStatus(Quest quest) {
+    return quest.userHasJoined
+        ? Container(
+            height: 110,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: quest.routines.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final completed = quest.stage > index + 1;
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      children: <Widget>[
+                        AirnoteCirclarCheckBox(value: completed, interactive: false),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Day ${index + 1}"),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+          )
+        : Container();
   }
 
   _joinQuest(Quest quest) async {
