@@ -49,12 +49,12 @@ class _QuestsListState extends State<QuestsList> {
     }
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.only(top: 8.0, left: 25),
             child: AirnoteSmallerHeader(
               text: "Your Quests",
               subText: "Jump back in!",
@@ -73,7 +73,7 @@ class _QuestsListState extends State<QuestsList> {
                       },
                       child: Container(
                         width: size.width * 4 / 5,
-                        padding: EdgeInsets.only(right: 8),
+                        padding: index == 0 ? EdgeInsets.only(right: 8, left: 25) : EdgeInsets.only(right: 8),
                         child: AirnoteQuestListItem(
                           quest: userQuests[index],
                         ),
