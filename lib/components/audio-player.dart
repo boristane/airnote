@@ -135,6 +135,10 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.duration == 0)
+      return Text(
+          "There was a problem loading the recording.",
+        );
     return Container(
       child: Column(
         children: <Widget>[
