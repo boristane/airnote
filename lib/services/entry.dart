@@ -9,6 +9,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'dart:io' show Platform;
+import 'package:path/path.dart' as path;
 
 typedef void OnError(Exception exception);
 
@@ -46,7 +47,7 @@ class EntryService {
           data["recording"], passPhrase, encryptionKey);
       isEncrypted = true;
     }
-    final fileName = data["recording"].split("cache/")[1];
+    final fileName = path.basename(data["recording"]);
     await _saveRecordingToS3(data["recording"]);
     final requestBody = {
       "title": data["title"],
@@ -109,7 +110,7 @@ class EntryService {
 
   Future<void> _saveRecordingToS3(localFilePath) async{
     final file = new File(localFilePath);
-    final fileName = localFilePath.split("cache/")[1];
+    final fileName = path.basename(file.path);
     final s3Url = await this._getWriteS3Url(fileName);
     await Dio().put(
       s3Url,
