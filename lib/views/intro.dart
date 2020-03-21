@@ -18,17 +18,15 @@ class Intro extends StatelessWidget {
         onPressed: () => Navigator.of(context).pushNamed(Login.routeName));
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            alignment: Alignment.center,
-            child: Column(
-              children: <Widget>[
-                IntroSlide(slideData),
-                _signupButton,
-                _loginButton,
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              IntroSlide(slideData),
+              _signupButton,
+              _loginButton,
+            ],
           ),
         ),
       ),
@@ -50,7 +48,7 @@ class _IntroSlideState extends State<IntroSlide> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final cardHeight = screenHeight < 500 ? 460 : screenHeight * 0.7;
+    final cardHeight = screenHeight < 500 ? 460 : screenHeight * 0.75;
 
     final Container dots = Container(
       width: widget._data.length.toDouble() * 20,
@@ -102,7 +100,7 @@ class IntroSlideCard extends StatelessWidget {
       height: _height,
       child: Stack(children: <Widget>[
         Container(
-          height: this._height * 0.89,
+          height: this._height * 0.95,
           width: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -114,7 +112,7 @@ class IntroSlideCard extends StatelessWidget {
           ),
         ),
         Container(
-            height: this._height * 0.9,
+            height: this._height * 0.96,
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
                 AirnoteColors.backgroundColor.withOpacity(0.0),
@@ -124,10 +122,9 @@ class IntroSlideCard extends StatelessWidget {
           ),
           Container(
             child: Align(
-              alignment: Alignment(0.1, 1.0),
+              alignment: Alignment.bottomLeft,
               child: Container(
-                padding: EdgeInsets.all(15.0),
-                height: 100,
+                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 30.0),
                 width: double.infinity,
                 child: Text(
                   _currentSlide.title,

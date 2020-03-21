@@ -24,6 +24,10 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 
 Android: `10.0.2.2`
 
+## Screen video recording
+
+xcrun simctl io booted recordVideo --mask=black --display=internal --force  appVideo.mov
+
 ## References
 
 Photo by bruce mars from Pexels

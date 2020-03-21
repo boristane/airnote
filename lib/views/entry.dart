@@ -421,11 +421,11 @@ class EntryHeader extends StatelessWidget {
       ),
       placeholder: (context, url) => _EntryHeaderImage(
         heroTag: heroTag,
-        imageProvider: AssetImage("assets/placeholder.jpg"),
+        imageProvider: AssetImage("assets/placeholder.png"),
       ),
       errorWidget: (context, url, error) => _EntryHeaderImage(
         heroTag: heroTag,
-        imageProvider: AssetImage("assets/placeholder.jpg"),
+        imageProvider: AssetImage("assets/placeholder.png"),
       ),
     );
   }
