@@ -48,7 +48,7 @@ class _IntroSlideState extends State<IntroSlide> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final cardHeight = screenHeight < 500 ? 460 : screenHeight * 0.75;
+    final cardHeight = screenHeight - 190;
 
     final Container dots = Container(
       width: widget._data.length.toDouble() * 20,
