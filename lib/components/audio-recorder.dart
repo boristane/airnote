@@ -61,6 +61,8 @@ class _AudioRecorderState extends State<AudioRecorder> {
       if (hasPermission != PermissionStatus.granted) {
         await _askForPermission();
       }
+      hasPermission = await PermissionHandler()
+          .checkPermissionStatus(PermissionGroup.microphone);
       setState(() {
         _hasPermission =
             hasPermission == PermissionStatus.granted ? true : false;

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:airnote/components/audio-recorder.dart';
-import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/title-input-field.dart';
 import 'package:airnote/services/dialog.dart';
