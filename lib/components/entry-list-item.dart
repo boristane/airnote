@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
-
 class AirnoteEntryListItem extends StatelessWidget {
   final Entry entry;
   AirnoteEntryListItem({Key key, this.entry}) : super(key: key);
@@ -42,10 +41,12 @@ class AirnoteEntryListItem extends StatelessWidget {
             top: 10,
             right: 10,
             child: entry.isLocked
-                ? Icon(
-                    Icons.lock,
-                    size: 18,
-                    color: AirnoteColors.white.withOpacity(0.9),
+                ? AirnoteBadge(
+                    child: Icon(
+                      Icons.lock,
+                      size: 20,
+                      color: AirnoteColors.primary,
+                    ),
                   )
                 : Container(),
           ),
@@ -206,7 +207,10 @@ class _QuestIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return hasQuest
-        ? AirnoteBadge(text: "Quest", isDark: false,)
+        ? AirnoteBadge(
+            text: "Quest",
+            isDark: false,
+          )
         : Container();
   }
 }

@@ -63,10 +63,15 @@ class _QuestHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          quest.completed ? AirnoteBadge(
-            text: "✔",
-            isDark: true,
-          ) : Container()
+          quest.completed
+              ? AirnoteBadge(
+                  child: Icon(
+                    Icons.check,
+                    size: 20,
+                    color: AirnoteColors.primary,
+                  ),
+                )
+              : Container()
         ],
       ),
     );
