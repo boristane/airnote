@@ -153,7 +153,6 @@ class _EntryViewState extends State<EntryView>
             if (entry == null) {
               return AirnoteLoadingScreen();
             }
-            print(entry.toJson());
             final localRecordingFilePath = model.currentEntryRecording;
             final heroTag = "entry-image-${entry.id}";
             return Column(

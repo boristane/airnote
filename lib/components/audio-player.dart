@@ -29,9 +29,9 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   Timer _timer;
 
   void _play() async {
+    _backgroundMusicaudioPlayer.resume();
     int result = await _audioPlayer.resume();
     if (result == 1) {
-      _backgroundMusicaudioPlayer.resume();
       _stopwatch.start();
       const tick = const Duration(milliseconds: 50);
       _timer = new Timer.periodic(tick, (Timer t) async {
