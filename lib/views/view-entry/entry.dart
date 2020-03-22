@@ -1,5 +1,6 @@
 import 'package:airnote/components/audio-player.dart';
 import 'package:airnote/components/badge.dart';
+import 'package:airnote/components/formated-date.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/entry.dart';
@@ -11,9 +12,10 @@ import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/home.dart';
+import 'package:airnote/views/view-entry/entry-panel.dart';
+import 'package:airnote/views/view-entry/entry-title.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -135,7 +137,7 @@ class _EntryViewState extends State<EntryView>
         parallaxOffset: .3,
         panelBuilder: (sc) =>
             Consumer<EntryViewModel>(builder: (context, model, child) {
-          return _AirnoteEntryPanel(
+          return AirnoteEntryPanel(
             entry: model.currentEntry,
             scrollController: sc,
           );
@@ -168,7 +170,7 @@ class _EntryViewState extends State<EntryView>
                           Container(
                             padding: EdgeInsets.only(top: 230),
                             alignment: Alignment.center,
-                            child: _EntryDate(
+                            child: EntryDate(
                               date: entry.created,
                             ),
                           ),
@@ -176,7 +178,7 @@ class _EntryViewState extends State<EntryView>
                             padding:
                                 EdgeInsets.only(top: 250, left: 15, right: 15),
                             alignment: Alignment.center,
-                            child: _EntryTitle(
+                            child: EntryTitle(
                               title: entry.title,
                               isLocked: _isLocked,
                             ),
@@ -317,63 +319,6 @@ class _EntryViewState extends State<EntryView>
   }
 }
 
-class _EntryDate extends StatelessWidget {
-  final String date;
-  _EntryDate({Key key, this.date}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    final dateTime = DateTime.parse(date);
-    final formatter = new DateFormat("MMM d, y");
-    final dateString = formatter.format(dateTime);
-    return Text(
-      dateString,
-      style: TextStyle(
-        color: AirnoteColors.grey,
-        fontSize: 14,
-      ),
-    );
-  }
-}
-
-class _EntryTitle extends StatelessWidget {
-  final String title;
-  final bool isLocked;
-
-  _EntryTitle({Key key, this.title, this.isLocked}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          title,
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: AirnoteColors.grey,
-            letterSpacing: 1.0,
-          ),
-        ),
-        Padding(
-          padding: isLocked
-              ? EdgeInsets.symmetric(horizontal: 8.0)
-              : EdgeInsets.zero,
-          child: isLocked
-              ? Icon(
-                  Icons.lock_outline,
-                  size: 24,
-                  color: AirnoteColors.grey.withOpacity(0.7),
-                )
-              : Container(),
-        ),
-      ],
-    );
-  }
-}
-
 class _EntryHeaderImage extends StatelessWidget {
   final String heroTag;
   final ImageProvider imageProvider;
@@ -430,72 +375,5 @@ class EntryHeader extends StatelessWidget {
         imageProvider: AssetImage("assets/placeholder.png"),
       ),
     );
-  }
-}
-
-class _AirnoteEntryPanel extends StatelessWidget {
-  final Entry entry;
-  final ScrollController scrollController;
-  _AirnoteEntryPanel({Key key, this.entry, this.scrollController})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (entry == null) {
-      return AirnoteLoadingScreen();
-    }
-    final content = entry.transcript.content;
-    return MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
-        child: ListView(
-          controller: scrollController,
-          children: <Widget>[
-            SizedBox(
-              height: 12.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 30,
-                  height: 5,
-                  decoration: BoxDecoration(
-                      color: AirnoteColors.primary,
-                      borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 18.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Transcript",
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 12.0,
-            ),
-            Container(
-              padding: const EdgeInsets.all(24),
-              child: content == null
-                  ? Center(
-                      child: Text("There are no transcripts for this entry"),
-                    )
-                  : Text(
-                      content,
-                      softWrap: true,
-                    ),
-            ),
-          ],
-        ));
   }
 }

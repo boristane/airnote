@@ -6,9 +6,9 @@ import 'package:airnote/models/quest.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
-import 'package:airnote/views/entry.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/routine.dart';
+import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

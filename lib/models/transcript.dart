@@ -9,6 +9,7 @@ class Transcript {
   final String created;
   final bool isEncrypted;
   final bool isTranscribed;
+  final bool isTranscriptionSubmitted;
 
   Transcript({
     this.id,
@@ -16,6 +17,7 @@ class Transcript {
     this.created,
     this.isEncrypted,
     this.isTranscribed,
+    this.isTranscriptionSubmitted,
   });
   factory Transcript.fromJson(Map<String, dynamic> json) =>
       _$TranscriptFromJson(json);

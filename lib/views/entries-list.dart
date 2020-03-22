@@ -6,7 +6,7 @@ import 'package:airnote/services/local-auth.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
-import 'package:airnote/views/entry.dart';
+import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

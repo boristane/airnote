@@ -10,12 +10,12 @@ import 'package:airnote/views/create-entry/record.dart';
 import 'package:airnote/views/create-passphrase.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/login.dart';
-import 'package:airnote/views/entry.dart';
 import 'package:airnote/views/quest.dart';
 import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/routine.dart';
 import 'package:airnote/views/signup.dart';
+import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
