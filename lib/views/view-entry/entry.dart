@@ -128,7 +128,7 @@ class _EntryViewState extends State<EntryView>
   @override
   Widget build(BuildContext context) {
     double panelHeightOpen = MediaQuery.of(context).size.height * .80;
-    double panelHeightClosed = 35.0;
+    double panelHeightClosed = 40.0;
     return Scaffold(
       body: SlidingUpPanel(
         maxHeight: panelHeightOpen,

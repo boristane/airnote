@@ -1,5 +1,6 @@
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/entry.dart';
+import 'package:airnote/models/transcript.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -9,12 +10,42 @@ class AirnoteEntryPanel extends StatelessWidget {
   AirnoteEntryPanel({Key key, this.entry, this.scrollController})
       : super(key: key);
 
+  Widget getContent(Transcript transcript) {
+    final isTranscribed = transcript.isTranscribed;
+    final content = transcript.content;
+    final isTranscriptionSubmitted = transcript.isTranscriptionSubmitted;
+    if (isTranscribed && content != null) {
+      return Text(
+        content,
+        softWrap: true,
+      );
+    }
+
+    if (isTranscriptionSubmitted && !isTranscribed) {
+      return Center(
+        child: Text(
+            "I am currently transcribing your recording, please check back in a few moments."),
+      );
+    }
+
+    if (!isTranscriptionSubmitted) {
+      return Center(
+        child: Text("There are no transcripts for this entry."),
+      );
+    }
+
+    return Center(
+      child: Text(
+          "There was a problem with this transcript. Please contact the Lesley team."),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (entry == null) {
       return AirnoteLoadingScreen();
     }
-    final content = entry.transcript.content;
+    final transcript = entry.transcript;
     return MediaQuery.removePadding(
         context: context,
         removeTop: true,
@@ -37,7 +68,7 @@ class AirnoteEntryPanel extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 18.0,
+              height: 20.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -56,14 +87,7 @@ class AirnoteEntryPanel extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.all(24),
-              child: content == null
-                  ? Center(
-                      child: Text("There are no transcripts for this entry"),
-                    )
-                  : Text(
-                      content,
-                      softWrap: true,
-                    ),
+              child: getContent(transcript),
             ),
           ],
         ));
