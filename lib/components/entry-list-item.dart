@@ -32,7 +32,7 @@ class AirnoteEntryListItem extends StatelessWidget {
               bottom: 10,
               right: 10,
               child: _QuestIndicator(
-                hasQuest: entry.quest != null,
+                hasQuest: entry.questId != null,
               )),
           _EntryBlur(
             isLocked: entry.isLocked,
@@ -140,7 +140,7 @@ class _EntryDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.parse(entry.createdAt);
+    final date = DateTime.parse(entry.created);
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
     return Container(

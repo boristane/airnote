@@ -1,6 +1,5 @@
 import 'package:airnote/components/audio-player.dart';
 import 'package:airnote/components/badge.dart';
-import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/models/entry.dart';
@@ -82,8 +81,10 @@ class _EntryViewState extends State<EntryView>
     });
     final email = userViewModel.user.email;
     final encryptionKey = userViewModel.user.encryptionKey;
-    await this._entryViewModel.getRecording(id,
-        this._entryViewModel.currentEntry.isEncrypted, email, encryptionKey);
+    final isEncrypted = this._entryViewModel.currentEntry.recording.isEncrypted;
+    await this
+        ._entryViewModel
+        .getRecording(id, isEncrypted, email, encryptionKey);
     setState(() {
       _hasPlayer = _entryViewModel.currentEntryRecording == "" ? false : true;
     });
@@ -150,6 +151,7 @@ class _EntryViewState extends State<EntryView>
             if (entry == null) {
               return AirnoteLoadingScreen();
             }
+            print(entry.toJson());
             final localRecordingFilePath = model.currentEntryRecording;
             final heroTag = "entry-image-${entry.id}";
             return Column(
@@ -167,7 +169,7 @@ class _EntryViewState extends State<EntryView>
                             padding: EdgeInsets.only(top: 230),
                             alignment: Alignment.center,
                             child: _EntryDate(
-                              date: entry.createdAt,
+                              date: entry.created,
                             ),
                           ),
                           Container(
@@ -182,7 +184,7 @@ class _EntryViewState extends State<EntryView>
                           Positioned(
                             bottom: 0,
                             right: 0,
-                            child: entry.quest != null
+                            child: entry.questId != null
                                 ? Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: AirnoteBadge(
@@ -217,7 +219,7 @@ class _EntryViewState extends State<EntryView>
         child: AirnoteAudioPlayer(
           audioFilePath: localRecordingFilePath,
           backgroundMusicPath: entry.backgroundMusic,
-          duration: entry.duration,
+          duration: entry.recording.duration,
         ),
       );
     }
@@ -442,7 +444,7 @@ class _AirnoteEntryPanel extends StatelessWidget {
     if (entry == null) {
       return AirnoteLoadingScreen();
     }
-    final content = entry.content;
+    final content = entry.transcript.content;
     return MediaQuery.removePadding(
         context: context,
         removeTop: true,

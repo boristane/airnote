@@ -9,36 +9,36 @@ part of 'entry.dart';
 Entry _$EntryFromJson(Map<String, dynamic> json) {
   return Entry(
     id: json['id'] as int,
-    content: json['content'] as String,
-    createdAt: json['createdAt'] as String,
+    created: json['created'] as String,
     imageUrl: json['imageUrl'] as String,
     title: json['title'] as String,
-    audioUrl: json['audioUrl'] as String,
     sentiments: (json['sentiments'] as List)
         ?.map((e) =>
             e == null ? null : Sentiment.fromJson(e as Map<String, dynamic>))
         ?.toList(),
     isLocked: json['isLocked'] as bool,
-    isEncrypted: json['isEncrypted'] as bool,
+    routineId: json['routineId'] as int,
+    transcript: json['transcript'] == null
+        ? null
+        : Transcript.fromJson(json['transcript'] as Map<String, dynamic>),
     backgroundMusic: json['backgroundMusic'] as String,
-    duration: json['duration'] as int,
-    routine: json['routine'] as int,
-    quest: json['quest'] as int,
+    recording: json['recording'] == null
+        ? null
+        : Recording.fromJson(json['recording'] as Map<String, dynamic>),
+    questId: json['questId'] as int,
   );
 }
 
 Map<String, dynamic> _$EntryToJson(Entry instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
-      'content': instance.content,
       'imageUrl': instance.imageUrl,
-      'audioUrl': instance.audioUrl,
-      'createdAt': instance.createdAt,
-      'duration': instance.duration,
-      'isLocked': instance.isLocked,
-      'isEncrypted': instance.isEncrypted,
+      'created': instance.created,
       'backgroundMusic': instance.backgroundMusic,
-      'routine': instance.routine,
-      'quest': instance.quest,
+      'isLocked': instance.isLocked,
+      'routineId': instance.routineId,
+      'questId': instance.questId,
+      'recording': instance.recording,
+      'transcript': instance.transcript,
       'sentiments': instance.sentiments,
     };
