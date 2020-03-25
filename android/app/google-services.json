@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "401146116769",
+    "firebase_url": "https://lesley-1ac2f.firebaseio.com",
+    "project_id": "lesley-1ac2f",
+    "storage_bucket": "lesley-1ac2f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401146116769:android:bc62034d2ad02113a1cee0",
+        "android_client_info": {
+          "package_name": "com.example.airnote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401146116769-97rspniht0ho3pddl23gi4n2atbkelnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8NyMx7uskljdCRs2l--bOqlyQMzVoF9I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401146116769-97rspniht0ho3pddl23gi4n2atbkelnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "401146116769-ilrvi5uhtkbptjt1t051gj89vb15ea1k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.airnote"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
