@@ -184,10 +184,10 @@ class _RoutineHeader extends StatelessWidget {
         imageProvider: imageProvider,
       ),
       placeholder: (context, url) => _RoutineHeaderImage(
-        imageProvider: AssetImage("assets/placeholder.png"),
+        imageProvider: AssetImage("assets/images/placeholder.png"),
       ),
       errorWidget: (context, url, error) => _RoutineHeaderImage(
-        imageProvider: AssetImage("assets/placeholder.png"),
+        imageProvider: AssetImage("assets/images/placeholder.png"),
       ),
     );
   }

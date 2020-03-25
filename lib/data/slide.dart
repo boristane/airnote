@@ -1,7 +1,7 @@
 final slideData = [
-  SlideInfo(image: 'assets/image_1.png', title: 'Live in the moment'),
-  SlideInfo(image: 'assets/image_2.png', title: 'Record every instant'),
-  SlideInfo(image: 'assets/image_3.png', title: 'Reflect on your experiences'),
+  SlideInfo(image: 'assets/images/image_1.png', title: 'Live in the moment'),
+  SlideInfo(image: 'assets/images/image_2.png', title: 'Record every instant'),
+  SlideInfo(image: 'assets/images/image_3.png', title: 'Reflect on your experiences'),
 ];
 
 class SlideInfo {

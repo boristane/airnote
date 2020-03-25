@@ -75,13 +75,13 @@ class ImageHeader extends StatelessWidget {
       ),
       placeholder: (context, url) => _GradientImage(
         heroTag: heroTag,
-        imageProvider: AssetImage("assets/placeholder.png"),
+        imageProvider: AssetImage("assets/images/placeholder.png"),
         topColor: topColor,
         bottomColor: bottomColor,
       ),
       errorWidget: (context, url, error) => _GradientImage(
         heroTag: heroTag,
-        imageProvider: AssetImage("assets/placeholder.png"),
+        imageProvider: AssetImage("assets/images/placeholder.png"),
         topColor: topColor,
         bottomColor: bottomColor,
       ),
