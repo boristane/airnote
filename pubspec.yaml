@@ -35,9 +35,9 @@ dependencies:
   sleek_circular_slider: ^1.0.7
   sliding_up_panel: ^1.0.0
   permission_handler: '^4.2.0+hotfix.3'
-  firebase_core: ^0.4.0+9
-  firebase_analytics: ^5.0.2
-  firebase_messaging: ^5.0.2
+  firebase_core: ^0.4.4+3
+  firebase_analytics: ^5.0.11
+  firebase_messaging: ^6.0.13
   flutter:
     sdk: flutter
 
