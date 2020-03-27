@@ -98,6 +98,7 @@ class _RecordEntryState extends State<RecordEntry> {
                               hint: "What\'s on your mind?",
                               validator: InputValidator.title,
                               onSaved: _onTitleSaved,
+                              value: routineViewModel.routine?.name,
                             ),
                             prompt,
                             SizedBox(height: 45),
