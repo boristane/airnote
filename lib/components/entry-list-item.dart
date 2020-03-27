@@ -25,8 +25,12 @@ class AirnoteEntryListItem extends StatelessWidget {
             imageUrl: entry.imageUrl,
           ),
           Positioned(
-            top: 75.0,
-            child: _EntryDescription(entry: entry),
+            bottom: 0.0,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 4/5,
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: _EntryDescription(entry: entry),
+            ),
           ),
           Positioned(
               bottom: 10,
@@ -144,41 +148,38 @@ class _EntryDescription extends StatelessWidget {
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
     return Container(
-        child: Padding(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            entry.title,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-                color: AirnoteColors.white,
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700),
-          ),
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.event_note,
-                size: 18,
-                color: AirnoteColors.white.withOpacity(0.7),
-              ),
-              Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Text(
-                    dateString,
-                    style: TextStyle(
-                      color: AirnoteColors.white.withOpacity(0.7),
-                      fontSize: 14,
-                    ),
-                  ))
-            ],
-          ),
-        ],
-      ),
-    ));
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              entry.title,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: AirnoteColors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w700),
+            ),
+            Row(
+              children: <Widget>[
+                Icon(
+                  Icons.event_note,
+                  size: 18,
+                  color: AirnoteColors.white.withOpacity(0.7),
+                ),
+                Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      dateString,
+                      style: TextStyle(
+                        color: AirnoteColors.white.withOpacity(0.7),
+                        fontSize: 14,
+                      ),
+                    ))
+              ],
+            ),
+          ],
+        ));
   }
 }
 
