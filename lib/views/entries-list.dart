@@ -61,13 +61,16 @@ class _EntriesListState extends State<EntriesList> {
             margin: EdgeInsets.symmetric(horizontal: 15),
             child: ListView(
               children: <Widget>[
-                AirnoteHeader(
-                    text: "Your Space",
-                    subText:
-                        "Everything here remains between you and yourself...",
-                  ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                  child: AirnoteHeader(
+                      text: "Your Space",
+                      subText:
+                          "Reflect on your story",
+                    ),
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 5.0),
+                  padding: const EdgeInsets.only(bottom: 5.0),
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),

@@ -6,7 +6,6 @@ import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/notifications.dart';
-import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/user.dart';
@@ -152,18 +151,21 @@ class _QuestsListState extends State<QuestsList> {
             );
           }
           if (quests.length < 1 && userQuests.length < 1) return NoQuestFound();
+          final message = userQuests.length < 1 ? "Let's join a quest" : "Let's continue your quest";
           return Container(
             child: ListView(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      await _openQuest(topPick);
-                    },
-                    child: TopPickQuest(
-                      quest: topPick,
-                    ),
+                Container(
+                  child: AirnoteHeader(text: "Hi ${_userViewModel.user.forename}!", subText: message,),
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.all(30),
+                  ),
+                GestureDetector(
+                  onTap: () async {
+                    await _openQuest(topPick);
+                  },
+                  child: TopPickQuest(
+                    quest: topPick,
                   ),
                 ),
                 _displayUserQuests(userQuests),
