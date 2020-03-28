@@ -35,6 +35,12 @@ class EntryService {
     return response;
   }
 
+  Future<Response> getSingleEntryByRoutine(int id) async {
+    final url = "/routine/$id";
+    final response = await _apiClient.get(url);
+    return response;
+  }
+
   Future<Response> postEntry(
       Map<String, String> data, String email, String encryptionKey) async {
     final url = "/";

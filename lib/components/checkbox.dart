@@ -38,11 +38,11 @@ class _AirnoteCirclarCheckBoxState extends State<AirnoteCirclarCheckBox> {
                 borderRadius: BorderRadius.circular(50.0),
               ),
               onTap: () {
+                widget.onTap();
                 if(!widget.interactive) return;
                 setState(() {
                   _value = !_value;
                 });
-                widget.onTap();
               },
               child: Container(
                 child: Padding(

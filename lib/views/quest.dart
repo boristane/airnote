@@ -2,9 +2,14 @@ import 'package:airnote/components/checkbox.dart';
 import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
+import 'package:airnote/models/entry.dart';
 import 'package:airnote/models/quest.dart';
+import 'package:airnote/models/routine.dart';
+import 'package:airnote/services/local-auth.dart';
+import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
+import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/routine.dart';
@@ -20,6 +25,7 @@ class QuestView extends StatefulWidget {
 
 class _QuestViewState extends State<QuestView> {
   QuestViewModel _questViewModel;
+  final LocalAuthService _localAuth = locator<LocalAuthService>();
 
   @override
   void initState() {
@@ -163,6 +169,20 @@ class _QuestViewState extends State<QuestView> {
         });
   }
 
+  _openEntryByRoutine(Routine routine) async {
+    final EntryViewModel entryViewModel = Provider.of<EntryViewModel>(context);
+    await entryViewModel.getEntryByRoutine(routine.id);
+    final entry = entryViewModel.currentEntry;
+    if(entry == null) return;
+    if (entry.isLocked) {
+      await _localAuth.authenticate();
+      if (!_localAuth.isAuthenticated) {
+        return;
+      }
+    }
+    Navigator.of(context).pushNamed(EntryView.routeName, arguments: entry.id);
+  }
+
   Widget _getCompletionStatus(Quest quest) {
     return quest.userHasJoined
         ? Container(
@@ -173,12 +193,19 @@ class _QuestViewState extends State<QuestView> {
                 itemCount: quest.routines.length,
                 itemBuilder: (BuildContext context, int index) {
                   final completed = quest.stage > index + 1;
+                  final routine = quest.routines[index];
                   return Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       children: <Widget>[
                         AirnoteCirclarCheckBox(
-                            value: completed, interactive: false),
+                          value: completed,
+                          interactive: false,
+                          onTap: () async {
+                            if(!completed) return;
+                            await _openEntryByRoutine(routine);
+                          },
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text("Day ${index + 1}"),

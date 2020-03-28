@@ -8,7 +8,7 @@ class EntryDate extends StatelessWidget {
   EntryDate({Key key, this.date}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final dateTime = DateTime.parse(date);
+    final dateTime = DateTime.parse(date).toLocal();
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(dateTime);
     return Row(

@@ -53,6 +53,24 @@ class EntryViewModel extends BaseViewModel {
     return success;
   }
 
+  Future<bool> getEntryByRoutine(int id) async {
+    setStatus(ViewStatus.LOADING);
+    bool success = false;
+    try {
+      _message = "";
+      _entryService.setupClient();
+      final response = await _entryService.getSingleEntryByRoutine(id);
+      _currentEntry = Entry.fromJson(response.data);
+      success = true;
+    } on DioError catch(err) {
+      final data = err.response?.data ?? {};
+      final message = data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => setStatus(ViewStatus.READY));
+    }
+    setStatus(ViewStatus.READY);
+    return success;
+  }
+
   Future<bool> createEntry(Map<String, String> formData, String email, String encryptionKey) async {
     setStatus(ViewStatus.LOADING);
 

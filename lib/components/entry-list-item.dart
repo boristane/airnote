@@ -147,7 +147,7 @@ class _EntryDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final date = DateTime.parse(entry.created);
+    final date = DateTime.parse(entry.created).toLocal();
     final formatter = new DateFormat("MMM d, y");
     final dateString = formatter.format(date);
     return Container(
