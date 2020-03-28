@@ -1,12 +1,9 @@
-import 'package:airnote/components/flat-button.dart';
 import 'package:airnote/components/option-button.dart';
-import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/utils/colors.dart';
-import 'package:airnote/view-models/routine.dart';
-import 'package:airnote/views/create-entry/record.dart';
-import 'package:airnote/views/routine.dart';
+import 'package:airnote/views/settings/account.dart';
+import 'package:airnote/views/settings/notifications.dart';
+import 'package:airnote/views/settings/privacy.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SettingsView extends StatefulWidget {
   static const routeName = "settings";
@@ -25,26 +22,25 @@ class _SettingsViewState extends State<SettingsView> {
           child: ListView(shrinkWrap: true, children: <Widget>[
             ListTile(
                 title: Text("Account", style: style),
-                leading: Icon(Icons.person_outline),
+                leading: Icon(Icons.person_outline, color: AirnoteColors.primary,),
                 onTap: () {
-                  print("Account");
-                  // Navigator.of(context).pushNamed(SettingsView.routeName);
+                  Navigator.of(context).pushNamed(AccountView.routeName);
                 }),
             ListTile(
                 title: Text("Privacy", style: style),
-                leading: Icon(Icons.security),
+                leading: Icon(Icons.security, color: AirnoteColors.primary),
                 onTap: () {
-                  print("Privacy");
+                  Navigator.of(context).pushNamed(PrivacyView.routeName);
                 }),
-                ListTile(
+            ListTile(
                 title: Text("Notifications", style: style),
-                leading: Icon(Icons.notifications_none),
+                leading: Icon(Icons.notifications_none, color: AirnoteColors.primary),
                 onTap: () {
-                  print("Notifications");
+                  Navigator.of(context).pushNamed(NotificationsView.routeName);
                 }),
-                ListTile(
+            ListTile(
                 title: Text("Payment Details", style: style),
-                leading: Icon(Icons.credit_card),
+                leading: Icon(Icons.credit_card, color: AirnoteColors.primary),
                 onTap: () {
                   print("Payment");
                 }),

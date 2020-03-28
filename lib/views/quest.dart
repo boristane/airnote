@@ -2,7 +2,6 @@ import 'package:airnote/components/checkbox.dart';
 import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
-import 'package:airnote/models/entry.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/models/routine.dart';
 import 'package:airnote/services/local-auth.dart';
