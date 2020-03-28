@@ -8,20 +8,8 @@ class EntryTitle extends StatelessWidget {
   EntryTitle({Key key, this.title, this.isLocked}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // return Text(
-    //       title,
-    //       maxLines: 3,
-    //       overflow: TextOverflow.ellipsis,
-    //       textAlign: TextAlign.center,
-    //       style: TextStyle(
-    //         fontSize: 25,
-    //         fontWeight: FontWeight.bold,
-    //         color: AirnoteColors.grey,
-    //         letterSpacing: 1.0,
-    //       ),
-    //     );
+
     return Wrap(
-      // mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Center(
           child: Text(

@@ -167,7 +167,7 @@ class _EntryViewState extends State<EntryView>
                             imageUrl: entry.imageUrl,
                           ),
                           Container(
-                            padding: EdgeInsets.only(top: 230),
+                            padding: EdgeInsets.only(top: 225),
                             alignment: Alignment.center,
                             child: EntryDate(
                               date: entry.created,
