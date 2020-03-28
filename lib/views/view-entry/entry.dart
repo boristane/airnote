@@ -113,7 +113,13 @@ class _EntryViewState extends State<EntryView>
   _lockEntry() async {
     final id = ModalRoute.of(context).settings.arguments;
     await this._entryViewModel.updateIsLocked(id, !_isLocked);
-    _snackBarService.showSnackBar(icon: Icon(Icons.lock), text: "Entry locked");
+    if (_isLocked) {
+      _snackBarService.showSnackBar(
+          icon: Icon(Icons.lock_open), text: "Entry unlocked");
+    } else {
+      _snackBarService.showSnackBar(
+          icon: Icon(Icons.lock), text: "Entry locked");
+    }
     setState(() {
       _isLocked = !_isLocked;
     });
@@ -157,47 +163,65 @@ class _EntryViewState extends State<EntryView>
             final heroTag = "entry-image-${entry.id}";
             return Column(
               children: <Widget>[
-                Expanded(
-                  child: Column(
+                Column(
+                  children: <Widget>[
+                    Stack(
+                      children: <Widget>[
+                        EntryHeader(
+                          heroTag: heroTag,
+                          imageUrl: entry.imageUrl,
+                        ),
+                        Positioned(
+                          bottom: 25,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: EntryDate(
+                                    date: entry.created,
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: EntryTitle(
+                                    title: entry.title,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        _buildEntryOptions(),
+                      ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Stack(
-                        children: <Widget>[
-                          EntryHeader(
-                            heroTag: heroTag,
-                            imageUrl: entry.imageUrl,
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(top: 225),
-                            alignment: Alignment.center,
-                            child: EntryDate(
-                              date: entry.created,
-                            ),
-                          ),
-                          Container(
-                            padding:
-                                EdgeInsets.only(top: 250, left: 15, right: 15),
-                            alignment: Alignment.center,
-                            child: EntryTitle(
-                              title: entry.title,
-                              isLocked: _isLocked,
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: entry.questId != null
-                                ? Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: AirnoteBadge(
-                                      text: "Quest",
-                                      isDark: true,
-                                    ),
-                                  )
-                                : Container(),
-                          ),
-                          _buildEntryOptions(),
-                        ],
-                      ),
+                      _isLocked
+                          ? Container(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Icon(
+                                Icons.lock_outline,
+                                size: 24,
+                                color: AirnoteColors.grey.withOpacity(0.7),
+                              ),
+                            )
+                          : Container(),
+                      entry.questId != null
+                          ? Container(
+                              padding: EdgeInsets.only(left: 15),
+                              child: AirnoteBadge(
+                                text: "Quest",
+                                isDark: true,
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
