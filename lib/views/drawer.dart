@@ -1,7 +1,11 @@
+import 'dart:io' show Platform;
+
 import 'package:airnote/components/loading.dart';
+import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/root.dart';
+import 'package:airnote/views/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,13 +28,36 @@ class _AirnoteDrawerState extends State<AirnoteDrawer> {
     Future.microtask(this._userViewModel.getUser);
   }
 
+  Widget getLogOutButton(UserViewModel model) {
+    return Column(
+      children: <Widget>[
+        Divider(),
+        ListTile(
+          title: Text("Log out"),
+          leading: Icon(Icons.power_settings_new),
+          onTap: () {
+            model.logout();
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                Root.routeName, (Route<dynamic> route) => false);
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Container(
       child: Consumer<UserViewModel>(
         builder: (context, model, child) {
           if (model.getStatus() == ViewStatus.LOADING) {
-            return AirnoteLoadingScreen();
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Expanded(child: AirnoteLoadingScreen()),
+                getLogOutButton(model),
+              ],
+            );
           }
           final profile = model.user;
           if (profile == null) {
@@ -40,7 +67,7 @@ class _AirnoteDrawerState extends State<AirnoteDrawer> {
               child: Text("Ooops ! There was a problem getting the data..."),
             );
           }
-
+          final storeName = Platform.isAndroid ? "Play Store" : "App Store";
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -48,42 +75,36 @@ class _AirnoteDrawerState extends State<AirnoteDrawer> {
                 shrinkWrap: true,
                 children: <Widget>[
                   UserAccountsDrawerHeader(
-                    accountEmail: Text(profile.email),
-                    accountName: Text("${profile.forename} ${profile.surname}"),
+                    accountName: Text(
+                      "${profile.forename} ${profile.surname}",
+                      style: TextStyle(color: AirnoteColors.grey),
+                    ),
+                    accountEmail: Text(
+                      profile.email,
+                      style: TextStyle(color: AirnoteColors.inactive),
+                    ),
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage(
-                                "https://img00.deviantart.net/35f0/i/2015/018/2/6/low_poly_landscape__the_river_cut_by_bv_designs-d8eib00.jpg"),
+                            image: AssetImage("assets/images/placeholder.png"),
                             fit: BoxFit.fill)),
                   ),
                   ListTile(
-                      title: Text("Settings"),
+                      title: Text("Settings and Privacy"),
                       leading: Icon(Icons.settings),
                       onTap: () {
-                        print("page 1");
+                        Navigator.of(context)
+                          ..pop()
+                          ..pushNamed(SettingsView.routeName);
                       }),
                   ListTile(
-                      title: Text("Payment Details"),
-                      leading: Icon(Icons.credit_card),
+                      title: Text("Review on $storeName"),
+                      leading: Icon(Icons.store),
                       onTap: () {
-                        print("page two");
+                        print("Review on $storeName");
                       }),
                 ],
               ),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  ListTile(
-                    title: Text("Log out"),
-                    leading: Icon(Icons.power_settings_new),
-                    onTap: () {
-                      model.logout();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          Root.routeName, (Route<dynamic> route) => false);
-                    },
-                  ),
-                ],
-              ),
+              getLogOutButton(model),
             ],
           );
         },

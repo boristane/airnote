@@ -14,6 +14,7 @@ import 'package:airnote/views/quest.dart';
 import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/routine.dart';
+import 'package:airnote/views/settings.dart';
 import 'package:airnote/views/signup.dart';
 import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,7 @@ class Airnote extends StatelessWidget {
         RoutineView.routeName: (context) => RoutineView(),
         QuestView.routeName: (context) => QuestView(),
         SelectEntryType.routeName: (context) => SelectEntryType(),
+        SettingsView.routeName: (context) => SettingsView(),
       },
       home: Root(),
     );

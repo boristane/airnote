@@ -46,7 +46,7 @@ class NotificationsService {
 
   _saveDeviceToken(User user) async {
     String fcmToken = await _fcm.getToken();
-    if (fcmToken != null) {
+    if (fcmToken != null && user != null) {
       final os = Platform.operatingSystem;
       final requestBody = {
         "token": fcmToken,
