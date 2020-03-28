@@ -5,8 +5,8 @@ import 'package:airnote/components/smaller-header.dart';
 import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/services/locator.dart';
-import 'package:airnote/services/notifications.dart';
 import 'package:airnote/view-models/base.dart';
+import 'package:airnote/view-models/notifications.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/quest.dart';
@@ -21,7 +21,7 @@ class QuestsList extends StatefulWidget {
 class _QuestsListState extends State<QuestsList> {
   QuestViewModel _questViewModel;
   UserViewModel _userViewModel;
-  final NotificationsService _notificationsService = locator<NotificationsService>();
+  NotificationsViewModel _notificationsViewModel;
 
   @override
   void didChangeDependencies() {
@@ -33,14 +33,18 @@ class _QuestsListState extends State<QuestsList> {
     _questViewModel = questViewModel;
     Future.microtask(this._questViewModel.getQuests);
     final userViewModel = Provider.of<UserViewModel>(context);
-    super.didChangeDependencies();
     if (_userViewModel == userViewModel) {
       return;
     }
     _userViewModel = userViewModel;
+    final notificationsViewModel = Provider.of<NotificationsViewModel>(context);
+    if (_notificationsViewModel == notificationsViewModel) {
+      return;
+    }
+    _notificationsViewModel = notificationsViewModel;
     Future.microtask(() async {
       await _userViewModel.getUser();
-      _notificationsService.initPushNotifications(_userViewModel.user);
+      notificationsViewModel.initNotifications(_userViewModel.user);
     });
   }
 

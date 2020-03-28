@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:airnote/services/api.dart';
 import 'dart:io' show Platform;
 import 'package:airnote/models/user.dart';
-import 'package:airnote/utils/messages.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -34,7 +33,6 @@ class NotificationsService {
     );
     if (Platform.isIOS) {
       iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-        // save the token  OR subscribe to a topic here
         _saveDeviceToken(user);
       });
 
@@ -44,7 +42,7 @@ class NotificationsService {
     }
   }
 
-  _saveDeviceToken(User user) async {
+  void _saveDeviceToken(User user) async {
     String fcmToken = await _fcm.getToken();
     if (fcmToken != null && user != null) {
       final os = Platform.operatingSystem;
@@ -54,16 +52,13 @@ class NotificationsService {
         "os": os,
         "topic": "quotes"
       };
-      try {
-        print("Saving token to database $fcmToken for user ${user.uuid} on $os");
-        final response = await _apiClient.post("/user", data: requestBody);
-        return response;
-      } on DioError catch (err) {
-        final data = err.response?.data ?? {};    
-        final message = (data is String || data is ResponseBody) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
-        print(message);
-      }
+      await _apiClient.post("/user", data: requestBody);
     }
+  }
+
+  Future<Response> getNotificationsUser() async {
+    final response = await _apiClient.get("/user");
+    return response;
   }
 
   static String _getEndpoint() {
