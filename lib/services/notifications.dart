@@ -42,7 +42,18 @@ class NotificationsService {
     }
   }
 
-  void _saveDeviceToken(User user) async {
+  void updateNotificationsUser(User user, bool subToDailyReminder,
+      String reminderTime, bool subToQuotes) {
+    _saveDeviceToken(user,
+        subToDailyReminder: subToDailyReminder,
+        reminderTime: reminderTime,
+        subToQuotes: subToQuotes);
+  }
+
+  void _saveDeviceToken(User user,
+      {bool subToDailyReminder = true,
+      String reminderTime = "evening",
+      bool subToQuotes = true}) async {
     String fcmToken = await _fcm.getToken();
     if (fcmToken != null && user != null) {
       final os = Platform.operatingSystem;
@@ -50,7 +61,11 @@ class NotificationsService {
         "token": fcmToken,
         "uuid": user.uuid,
         "os": os,
-        "topic": "quotes"
+        "topics": [
+          {"name": "quotes", "value": subToQuotes}
+        ],
+        "reminderTime":
+            subToDailyReminder ?? subToDailyReminder ? reminderTime : "none",
       };
       await _apiClient.post("/user", data: requestBody);
     }

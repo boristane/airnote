@@ -10,17 +10,29 @@ import 'package:dio/dio.dart';
 class NotificationsViewModel extends BaseViewModel {
   String _message;
   final _dialogService = locator<DialogService>();
-  NotifiCationsUser _user;
+  NotificationsUser _user;
 
-  NotifiCationsUser get user => _user;
+  NotificationsUser get user => _user;
   String get message => _message;
 
   final NotificationsService _notificationsService =
       locator<NotificationsService>();
 
-  initNotifications(User user) async {
+  void initNotifications(User user) async {
     try {
       _notificationsService.initPushNotifications(user);
+    } on DioError catch (err) {
+      final data = err.response?.data ?? {};
+      _message = (data is String || data is ResponseBody)
+          ? AirnoteMessage.unknownError
+          : data["message"] ?? AirnoteMessage.unknownError;
+      print(_message);
+    }
+  }
+
+  void updateUser(User user, bool subToDailyReminder, String reminderTime, bool subToQuotes) async {
+    try {
+      _notificationsService.updateNotificationsUser(user, subToDailyReminder, reminderTime, subToQuotes);
     } on DioError catch (err) {
       final data = err.response?.data ?? {};
       _message = (data is String || data is ResponseBody)
@@ -35,7 +47,7 @@ class NotificationsViewModel extends BaseViewModel {
     try {
       final response = await _notificationsService.getNotificationsUser();
       final dynamic data = response.data ?? {};
-      _user = NotifiCationsUser.fromJson(data["user"]);
+      _user = NotificationsUser.fromJson(data["user"]);
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.unknownError;

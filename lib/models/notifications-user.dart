@@ -3,12 +3,22 @@ import 'package:json_annotation/json_annotation.dart';
 part 'notifications-user.g.dart';
 
 @JsonSerializable()
-class NotifiCationsUser {
+class NotificationsUser {
   final String uuid;
   final String reminderTime;
-  final List<String> topics;
+  final List<_Topic> topics;
 
-  NotifiCationsUser({this.topics, this.uuid, this.reminderTime});
-  factory NotifiCationsUser.fromJson(Map<String, dynamic> json) => _$NotifiCationsUserFromJson(json);
-  Map<String, dynamic> toJson() => _$NotifiCationsUserToJson(this);
+  NotificationsUser({this.topics, this.uuid, this.reminderTime});
+  factory NotificationsUser.fromJson(Map<String, dynamic> json) => _$NotificationsUserFromJson(json);
+  Map<String, dynamic> toJson() => _$NotificationsUserToJson(this);
+}
+
+@JsonSerializable()
+class _Topic {
+  final String name;
+  final bool value;
+
+  _Topic({this.name, this.value});
+  factory _Topic.fromJson(Map<String, dynamic> json) => _$_TopicFromJson(json);
+  Map<String, dynamic> toJson() => _$_TopicToJson(this);
 }

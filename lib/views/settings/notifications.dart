@@ -15,16 +15,48 @@ class NotificationsView extends StatefulWidget {
 
 class _NotificationsViewState extends State<NotificationsView> {
   NotificationsViewModel _notificationsViewModel;
+  UserViewModel _userViewModel;
+  bool subToQuotes = false;
+  bool subToDailyReminder = false;
+  String reminderTime = "none";
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _getNotificationsUser();
+    });
+  }
+
+  Future<void> _getNotificationsUser() async {
     final notificationsViewModel = Provider.of<NotificationsViewModel>(context);
-    super.didChangeDependencies();
     if (this._notificationsViewModel == notificationsViewModel) {
       return;
     }
     this._notificationsViewModel = notificationsViewModel;
-    Future.microtask(this._notificationsViewModel.getUser);
+    await this._notificationsViewModel.getUser();
+    final notificationsUser = this._notificationsViewModel.user;
+    final userTopics = notificationsUser.topics;
+    final quoteTopic = userTopics.firstWhere((topic) => topic.name == "quotes",
+        orElse: () => null);
+    setState(() {
+      if (quoteTopic != null) {
+        subToQuotes = quoteTopic.value;
+      }
+      subToDailyReminder = notificationsUser.reminderTime != "none";
+      reminderTime = notificationsUser.reminderTime == "none" ? "evening" : notificationsUser.reminderTime;
+    });
+
+    final userViewModel = Provider.of<UserViewModel>(context);
+    if (this._userViewModel == userViewModel) {
+      return;
+    }
+    this._userViewModel = userViewModel;
+  }
+
+  Future<bool> _onWillPop() async {
+    _notificationsViewModel.updateUser(_userViewModel.user, subToDailyReminder, reminderTime, subToQuotes);
+    return true;
   }
 
   @override
@@ -36,53 +68,94 @@ class _NotificationsViewState extends State<NotificationsView> {
       if (model.getStatus() == ViewStatus.LOADING) {
         return AirnoteLoadingScreen();
       }
-      final notificationsUser = model.user;
-      return Stack(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 90.0),
-            child: ListView(shrinkWrap: true, children: <Widget>[
-              CheckboxListTile(
-                title: Text("Daily Reminder", style: style),
-                value: notificationsUser.reminderTime != "none",
-                onChanged: (value) {
-                  print("changed");
-                },
-                subtitle: Text("Receive daily reminders to record your entry",
-                    style: subStyle),
-                activeColor: AirnoteColors.primary,
-                checkColor: AirnoteColors.white,
-              ),
-              CheckboxListTile(
-                title: Text("Daily Quote", style: style),
-                value: notificationsUser.topics.indexOf("quotes") != -1,
-                onChanged: (value) {
-                  print("changed");
-                },
-                subtitle:
-                    Text("Receive daily personalised quotes", style: subStyle),
-                activeColor: AirnoteColors.primary,
-                checkColor: AirnoteColors.white,
-              ),
-            ]),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: AirnoteOptionButton(
-                  icon: Icon(Icons.arrow_downward),
-                  onTap: () {
-                    if (Navigator.of(context).canPop()) {
-                      Navigator.of(context).pop();
-                    }
+      return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 90.0),
+              child: ListView(shrinkWrap: true, children: <Widget>[
+                CheckboxListTile(
+                  title: Text("Daily Reminder", style: style),
+                  value: subToDailyReminder,
+                  onChanged: (value) {
+                    setState(() {
+                      subToDailyReminder = !subToDailyReminder;
+                    });
                   },
+                  subtitle: Text("Receive daily reminders to record your entry",
+                      style: subStyle),
+                  activeColor: AirnoteColors.primary,
+                  checkColor: AirnoteColors.white,
+                ),
+                CheckboxListTile(
+                  title: Text("Daily Quote", style: style),
+                  value: subToQuotes,
+                  onChanged: (value) {
+                    setState(() {
+                      subToQuotes = !subToQuotes;
+                    });
+                  },
+                  subtitle: Text("Receive daily personalised quotes",
+                      style: subStyle),
+                  activeColor: AirnoteColors.primary,
+                  checkColor: AirnoteColors.white,
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("Daily reminder time", style: style),
+                  subtitle: Text("Set the time for the daily reminder",
+                      style: subStyle),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: DropdownButton(
+                    value: reminderTime,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        reminderTime = newValue;
+                      });
+                    },
+                    disabledHint: Text("None"),
+                    iconEnabledColor: AirnoteColors.primary,
+                    isExpanded: true,
+                    items: subToDailyReminder
+                        ? <String>["morning", "midday", "evening"]
+                            .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Text(
+                                  "${value[0].toUpperCase()}${value.substring(1)}",
+                                  style: subStyle),
+                            );
+                          }).toList()
+                        : null,
+                  ),
+                )
+              ]),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: AirnoteOptionButton(
+                    icon: Icon(Icons.arrow_downward),
+                    onTap: () {
+                      if (Navigator.of(context).canPop()) {
+                        _onWillPop().then((value) {
+                          if (value) {
+                            Navigator.of(context).pop();
+                          }
+                        });
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     })));
   }

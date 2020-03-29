@@ -81,7 +81,7 @@ class _AirnoteDrawerState extends State<AirnoteDrawer> {
                     ),
                     accountEmail: Text(
                       profile.email,
-                      style: TextStyle(color: AirnoteColors.inactive),
+                      style: TextStyle(color: AirnoteColors.grey),
                     ),
                     decoration: BoxDecoration(
                         image: DecorationImage(
