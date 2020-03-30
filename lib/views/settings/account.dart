@@ -26,6 +26,11 @@ class _AccountViewState extends State<AccountView> {
     Future.microtask(this._userViewModel.getUser);
   }
 
+  String _mapMembership(int membership) {
+    if (membership == 0) return "Basic";
+    return "Premium";
+  }
+
   @override
   Widget build(BuildContext context) {
     final style = TextStyle(color: AirnoteColors.primary);
@@ -63,7 +68,7 @@ class _AccountViewState extends State<AccountView> {
                 Icons.card_membership,
                 color: AirnoteColors.primary,
               ),
-              subtitle: Text("Premium", style: subStyle),
+              subtitle: Text(_mapMembership(user.membership), style: subStyle),
             ),
           ]),
         ),

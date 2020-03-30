@@ -9,8 +9,9 @@ class User {
   final String email;
   final String uuid;
   final String encryptionKey;
+  final int membership;
 
-  User({this.email, this.uuid, this.surname, this.forename, this.encryptionKey});
+  User({this.email, this.uuid, this.surname, this.forename, this.encryptionKey, this.membership});
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
