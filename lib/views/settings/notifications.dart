@@ -1,3 +1,4 @@
+import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/utils/colors.dart';
@@ -44,7 +45,9 @@ class _NotificationsViewState extends State<NotificationsView> {
         subToQuotes = quoteTopic.value;
       }
       subToDailyReminder = notificationsUser.reminderTime != "none";
-      reminderTime = notificationsUser.reminderTime == "none" ? "evening" : notificationsUser.reminderTime;
+      reminderTime = notificationsUser.reminderTime == "none"
+          ? "evening"
+          : notificationsUser.reminderTime;
     });
 
     final userViewModel = Provider.of<UserViewModel>(context);
@@ -55,7 +58,8 @@ class _NotificationsViewState extends State<NotificationsView> {
   }
 
   Future<bool> _onWillPop() async {
-    _notificationsViewModel.updateUser(_userViewModel.user, subToDailyReminder, reminderTime, subToQuotes);
+    _notificationsViewModel.updateUser(
+        _userViewModel.user, subToDailyReminder, reminderTime, subToQuotes);
     return true;
   }
 
@@ -73,66 +77,79 @@ class _NotificationsViewState extends State<NotificationsView> {
         child: Stack(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 90.0),
-              child: ListView(shrinkWrap: true, children: <Widget>[
-                CheckboxListTile(
-                  title: Text("Daily Reminder", style: style),
-                  value: subToDailyReminder,
-                  onChanged: (value) {
-                    setState(() {
-                      subToDailyReminder = !subToDailyReminder;
-                    });
-                  },
-                  subtitle: Text("Receive daily reminders to record your entry",
-                      style: subStyle),
-                  activeColor: AirnoteColors.primary,
-                  checkColor: AirnoteColors.white,
-                ),
-                CheckboxListTile(
-                  title: Text("Daily Quote", style: style),
-                  value: subToQuotes,
-                  onChanged: (value) {
-                    setState(() {
-                      subToQuotes = !subToQuotes;
-                    });
-                  },
-                  subtitle: Text("Receive daily personalised quotes",
-                      style: subStyle),
-                  activeColor: AirnoteColors.primary,
-                  checkColor: AirnoteColors.white,
-                ),
-                Divider(),
-                ListTile(
-                  title: Text("Daily reminder time", style: style),
-                  subtitle: Text("Set the time for the daily reminder",
-                      style: subStyle),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: DropdownButton(
-                    value: reminderTime,
-                    onChanged: (String newValue) {
+              padding: const EdgeInsets.only(top: 140.0),
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  CheckboxListTile(
+                    title: Text("Daily Reminder", style: style),
+                    value: subToDailyReminder,
+                    onChanged: (value) {
                       setState(() {
-                        reminderTime = newValue;
+                        subToDailyReminder = !subToDailyReminder;
                       });
                     },
-                    disabledHint: Text("None"),
-                    iconEnabledColor: AirnoteColors.primary,
-                    isExpanded: true,
-                    items: subToDailyReminder
-                        ? <String>["morning", "midday", "evening"]
-                            .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem(
-                              value: value,
-                              child: Text(
-                                  "${value[0].toUpperCase()}${value.substring(1)}",
-                                  style: subStyle),
-                            );
-                          }).toList()
-                        : null,
+                    subtitle: Text(
+                        "Receive daily reminders to record your entry",
+                        style: subStyle),
+                    activeColor: AirnoteColors.primary,
+                    checkColor: AirnoteColors.white,
                   ),
-                )
-              ]),
+                  CheckboxListTile(
+                    title: Text("Daily Quote", style: style),
+                    value: subToQuotes,
+                    onChanged: (value) {
+                      setState(() {
+                        subToQuotes = !subToQuotes;
+                      });
+                    },
+                    subtitle: Text("Receive daily personalised quotes",
+                        style: subStyle),
+                    activeColor: AirnoteColors.primary,
+                    checkColor: AirnoteColors.white,
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text("Daily reminder time", style: style),
+                    subtitle: Text("Set the time for the daily reminder",
+                        style: subStyle),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: DropdownButton(
+                      value: reminderTime,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          reminderTime = newValue;
+                        });
+                      },
+                      disabledHint: Text("None"),
+                      iconEnabledColor: AirnoteColors.primary,
+                      isExpanded: true,
+                      items: subToDailyReminder
+                          ? <String>["morning", "midday", "evening"]
+                              .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(
+                                    "${value[0].toUpperCase()}${value.substring(1)}",
+                                    style: subStyle),
+                              );
+                            }).toList()
+                          : null,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              top: 75,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: AirnoteHeaderText(
+                  text: "Notifications",
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.topLeft,

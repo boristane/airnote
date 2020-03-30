@@ -1,3 +1,4 @@
+import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/utils/colors.dart';
@@ -37,24 +38,43 @@ class _AccountViewState extends State<AccountView> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 90.0),
+          padding: const EdgeInsets.only(top: 140.0),
           child: ListView(shrinkWrap: true, children: <Widget>[
             ListTile(
               title: Text("Name", style: style),
-              leading: Icon(Icons.face, color: AirnoteColors.primary,),
-              subtitle: Text("${user.forename} ${user.surname}", style: subStyle),
+              leading: Icon(
+                Icons.face,
+                color: AirnoteColors.primary,
+              ),
+              subtitle:
+                  Text("${user.forename} ${user.surname}", style: subStyle),
             ),
             ListTile(
               title: Text("Email", style: style),
-              leading: Icon(Icons.alternate_email, color: AirnoteColors.primary,),
+              leading: Icon(
+                Icons.alternate_email,
+                color: AirnoteColors.primary,
+              ),
               subtitle: Text("${user.email}", style: subStyle),
             ),
             ListTile(
               title: Text("Membership", style: style),
-              leading: Icon(Icons.card_membership, color: AirnoteColors.primary,),
+              leading: Icon(
+                Icons.card_membership,
+                color: AirnoteColors.primary,
+              ),
               subtitle: Text("Premium", style: subStyle),
             ),
           ]),
+        ),
+        Positioned(
+          top: 100,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: AirnoteHeaderText(
+              text: "Account",
+            ),
+          ),
         ),
         Align(
           alignment: Alignment.topLeft,

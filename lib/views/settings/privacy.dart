@@ -1,3 +1,4 @@
+import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/utils/colors.dart';
@@ -37,7 +38,7 @@ class _PrivacyViewState extends State<PrivacyView> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 90.0),
+          padding: const EdgeInsets.only(top: 140.0),
           child: ListView(shrinkWrap: true, children: <Widget>[
             ListTile(
               title: Text("Encryption Key", style: style),
@@ -45,6 +46,15 @@ class _PrivacyViewState extends State<PrivacyView> {
               subtitle: Text("${user.encryptionKey}", style: subStyle,),
             ),
           ]),
+        ),
+        Positioned(
+          top: 100,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: AirnoteHeaderText(
+              text: "Privacy",
+            ),
+          ),
         ),
         Align(
           alignment: Alignment.topLeft,

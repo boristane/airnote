@@ -1,3 +1,4 @@
+import 'package:airnote/components/header-text.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/views/settings/account.dart';
@@ -18,7 +19,7 @@ class _SettingsViewState extends State<SettingsView> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 90.0),
+          padding: const EdgeInsets.only(top: 140.0),
           child: ListView(shrinkWrap: true, children: <Widget>[
             ListTile(
                 title: Text("Account", style: style),
@@ -45,6 +46,15 @@ class _SettingsViewState extends State<SettingsView> {
                   print("Payment");
                 }),
           ]),
+        ),
+        Positioned(
+          top: 100,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: AirnoteHeaderText(
+              text: "Settings",
+            ),
+          ),
         ),
         Align(
           alignment: Alignment.topLeft,
