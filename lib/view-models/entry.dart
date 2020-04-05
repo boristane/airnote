@@ -77,9 +77,8 @@ class EntryViewModel extends BaseViewModel {
     Response response;
     try {
       response = await _entryService.postEntry(formData, email, encryptionKey);
-    } on DioError catch(err) {
-      final data = err.response?.data ?? {};
-      final message = data["message"] ?? AirnoteMessage.unknownError;
+    } on DioError catch(_) {
+      final message = AirnoteMessage.unknownError;
       _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
     }
 

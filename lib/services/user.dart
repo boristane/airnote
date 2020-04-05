@@ -47,10 +47,10 @@ class UserService {
 
   static String _getEndpoint() {
     if (kReleaseMode) {
-      return "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/users";
+      return "https://cibiamj90i.execute-api.eu-west-1.amazonaws.com/dev/users";
     } else {
       if (Platform.isAndroid) {
-        return "http://10.0.2.2:8081/users";
+        return "https://cibiamj90i.execute-api.eu-west-1.amazonaws.com/dev/users";
       } else {
         return "http://localhost:8081/users";
       }

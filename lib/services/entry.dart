@@ -107,24 +107,26 @@ class EntryService {
     return (await this._apiClient.get("/recording/$id")).data["url"];
   }
 
-  Future<String> _getWriteS3Url(String filename) async {
+  Future<String> _getWriteS3Url(String filename, String fileType, int fileSize) async {
     return (await this
             ._apiClient
-            .get("/put-url/1", queryParameters: {"filePath": filename}))
+            .get("/put-url/1", queryParameters: {"filePath": filename, "fileType": fileType, "fileSize": fileSize}))
         .data["url"];
   }
 
   Future<void> _saveRecordingToS3(localFilePath) async{
     final file = new File(localFilePath);
     final fileName = path.basename(file.path);
-    final s3Url = await this._getWriteS3Url(fileName);
+    final fileSize = await file.length();
+    final fileType = MediaType("audio", "aac").type;
+    final s3Url = await this._getWriteS3Url(fileName, fileType, fileSize);
     await Dio().put(
       s3Url,
       data: file.openRead(),
       options: Options(
         headers: {
-          Headers.contentLengthHeader: await file.length(),
-          Headers.contentTypeHeader: MediaType("audio", "aac"),
+          "content-length": fileSize,
+          "content-Type": fileType,
         },
       ),
     );
@@ -132,10 +134,10 @@ class EntryService {
 
   static String _getEndpoint() {
     if (kReleaseMode) {
-      return "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/entries";
+      return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/entries";
     } else {
       if (Platform.isAndroid) {
-        return "http://10.0.2.2:8080/entries";
+        return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/entries";
       } else {
         return "http://localhost:8080/entries";
       }

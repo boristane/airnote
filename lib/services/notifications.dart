@@ -78,10 +78,10 @@ class NotificationsService {
 
   static String _getEndpoint() {
     if (kReleaseMode) {
-      return "http://ec2-3-8-125-65.eu-west-2.compute.amazonaws.com/notifications";
+      return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/notifications";
     } else {
       if (Platform.isAndroid) {
-        return "http://10.0.2.2:8080/notifications";
+        return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/notifications";
       } else {
         return "http://localhost:8080/notifications";
       }
