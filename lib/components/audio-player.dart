@@ -92,7 +92,7 @@ class _AirnoteAudioPlayerState extends State<AirnoteAudioPlayer> {
   void _initialisePlayer() async {
     await _audioPlayer.setUrl(widget.audioFilePath, isLocal: true);
     await _backgroundMusicaudioPlayer.setUrl(widget.backgroundMusicPath);
-    await _backgroundMusicaudioPlayer.setVolume(0.5);
+    await _backgroundMusicaudioPlayer.setVolume(0.05);
     _audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
       if (s == AudioPlayerState.COMPLETED) {
         _audioPlayer.stop();

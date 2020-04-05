@@ -123,6 +123,9 @@ class EntryViewModel extends BaseViewModel {
       final message = (data is String || data is ResponseBody) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
       _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
       _currentEntryRecording= "";
+    } on ArgumentError catch (_) {
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: "There was a problem decrypting your entry. Could you please double check your passphrase?", onPressed: () {});
+      _currentEntryRecording= "";
     }
   }
 }

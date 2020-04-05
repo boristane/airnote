@@ -240,7 +240,7 @@ class _EntryViewState extends State<EntryView>
   Widget _buildAudioPlayer(String localRecordingFilePath, Entry entry) {
     if (_hasPlayer) {
       return Padding(
-        padding: const EdgeInsets.all(50.0),
+        padding: const EdgeInsets.only(top: 40.0),
         child: AirnoteAudioPlayer(
           audioFilePath: localRecordingFilePath,
           backgroundMusicPath: entry.backgroundMusic,
