@@ -1,6 +1,4 @@
 import 'package:airnote/components/entry-list-item.dart';
-import 'package:airnote/components/flat-button.dart';
-import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';

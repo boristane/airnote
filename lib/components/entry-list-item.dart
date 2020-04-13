@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
-import 'package:weather_icons/weather_icons.dart';
-
 class AirnoteEntryListItem extends StatelessWidget {
   final Entry entry;
   AirnoteEntryListItem({Key key, this.entry}) : super(key: key);

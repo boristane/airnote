@@ -4,21 +4,26 @@ import 'package:airnote/components/quest-list-item.dart';
 import 'package:airnote/components/smaller-header.dart';
 import 'package:airnote/components/top-pick-quest.dart';
 import 'package:airnote/models/quest.dart';
-import 'package:airnote/services/locator.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/notifications.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/quest.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class QuestsList extends StatefulWidget {
+  final FirebaseAnalytics analytics;
+  QuestsList({Key key, this.analytics})
+      : super(key: key);
   @override
-  State<QuestsList> createState() => _QuestsListState();
+  _QuestsListState createState() => _QuestsListState(analytics);
 }
 
 class _QuestsListState extends State<QuestsList> {
+  _QuestsListState(this.analytics);
+  final FirebaseAnalytics analytics;
   QuestViewModel _questViewModel;
   UserViewModel _userViewModel;
   NotificationsViewModel _notificationsViewModel;

@@ -7,6 +7,7 @@ import 'package:airnote/views/login.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/view-models/base.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:airnote/view-models/user.dart';
@@ -14,11 +15,17 @@ import 'package:airnote/view-models/user.dart';
 class Signup extends StatefulWidget {
   static const routeName = "signup";
 
+  final FirebaseAnalytics analytics;
+
+  Signup({Key key, this.analytics})
+      : super(key: key);
   @override
-  _SignupState createState() => _SignupState();
+  _SignupState createState() => _SignupState(analytics);
 }
 
 class _SignupState extends State<Signup> {
+  _SignupState(this.analytics);
+  final FirebaseAnalytics analytics;
   final _formKey = GlobalKey<FormState>();
   Map<String, String> _formData = {};
 
@@ -56,6 +63,9 @@ class _SignupState extends State<Signup> {
       return;
     }
     final user = userViewModel.user;
+    await analytics.setUserId(user.uuid);
+    await analytics.logSignUp(signUpMethod: "email");
+    await analytics.logLogin();
     Navigator.of(context).pushNamedAndRemoveUntil(CreatePassPhrase.routeName, (Route<dynamic> route) => false, arguments: user.uuid);
   }
 

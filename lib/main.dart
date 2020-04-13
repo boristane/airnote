@@ -24,6 +24,9 @@ import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
@@ -53,6 +56,10 @@ void main() async {
 }
 
 class Airnote extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     final _inputDecorationTheme = InputDecorationTheme(
@@ -93,10 +100,10 @@ class Airnote extends StatelessWidget {
         ),
       ),
       routes: {
-        Login.routeName: (context) => Login(),
-        Signup.routeName: (context) => Signup(),
+        Login.routeName: (context) => Login(analytics: analytics),
+        Signup.routeName: (context) => Signup(analytics: analytics),
         EntryView.routeName: (context) => EntryView(),
-        Home.routeName: (context) => Home(),
+        Home.routeName: (context) => Home(analytics: analytics),
         CreatePassPhrase.routeName: (context) => CreatePassPhrase(),
         RememberPassPhrase.routeName: (context) => RememberPassPhrase(),
         RecordEntry.routeName: (context) => RecordEntry(),
@@ -108,7 +115,8 @@ class Airnote extends StatelessWidget {
         PrivacyView.routeName: (contect) => PrivacyView(),
         NotificationsView.routeName: (context) => NotificationsView(),
       },
-      home: Root(),
+      navigatorObservers: <NavigatorObserver>[observer],
+      home: Root(analytics: analytics,),
     );
   }
 }

@@ -11,16 +11,25 @@ import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/remember-passphrase.dart';
 import 'package:airnote/views/root.dart';
 import 'package:airnote/views/signup.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   static final routeName = "login";
+
+  final FirebaseAnalytics analytics;
+
+  Login({Key key, this.analytics})
+      : super(key: key);
   @override
-  _LoginState createState() => _LoginState();
+  _LoginState createState() => _LoginState(analytics);
 }
 
 class _LoginState extends State<Login> {
+  _LoginState(this.analytics);
+  final FirebaseAnalytics analytics;
+
   final _formKey = GlobalKey<FormState>();
   Map<String, String> _formData = {};
 
@@ -54,6 +63,8 @@ class _LoginState extends State<Login> {
     }
     final user = userModelView.user;
     final passPhrase = await dbService.getPassPhrase(user.uuid);
+    await analytics.setUserId(user.uuid);
+    await analytics.logLogin();
     if (passPhrase == null) {
       Navigator.of(context).pushNamedAndRemoveUntil(
           RememberPassPhrase.routeName, (Route<dynamic> route) => false,

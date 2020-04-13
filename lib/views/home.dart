@@ -3,15 +3,23 @@ import 'package:airnote/views/create-entry/entry-type.dart';
 import 'package:airnote/views/drawer.dart';
 import 'package:airnote/views/entries-list.dart';
 import 'package:airnote/views/quests-list.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
   static const routeName = 'home';
+
+  final FirebaseAnalytics analytics;
+  Home({Key key, this.analytics})
+      : super(key: key);
   @override
-  State<Home> createState() => _HomeState();
+  _HomeState createState() => _HomeState(analytics);
 }
 
 class _HomeState extends State<Home> {
+  _HomeState(this.analytics);
+  final FirebaseAnalytics analytics;
+  
   int _currentIndex = 0;
 
   _onBottomNavTapped(int index) {
