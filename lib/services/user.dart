@@ -50,7 +50,7 @@ class UserService {
       return "https://cibiamj90i.execute-api.eu-west-1.amazonaws.com/dev/users";
     } else {
       if (Platform.isAndroid) {
-        return "https://cibiamj90i.execute-api.eu-west-1.amazonaws.com/dev/users";
+        return "http://10.0.2.2:8081/users";
       } else {
         return "http://localhost:8081/users";
       }

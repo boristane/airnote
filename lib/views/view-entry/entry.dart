@@ -81,12 +81,12 @@ class _EntryViewState extends State<EntryView>
     setState(() {
       _isLocked = this._entryViewModel.currentEntry.isLocked;
     });
-    final email = userViewModel.user.email;
+    final uuid = userViewModel.user.uuid;
     final encryptionKey = userViewModel.user.encryptionKey;
     final isEncrypted = this._entryViewModel.currentEntry.recording.isEncrypted;
     await this
         ._entryViewModel
-        .getRecording(id, isEncrypted, email, encryptionKey);
+        .getRecording(id, isEncrypted, uuid, encryptionKey);
     setState(() {
       _hasPlayer = _entryViewModel.currentEntryRecording == "" ? false : true;
     });
@@ -148,6 +148,18 @@ class _EntryViewState extends State<EntryView>
             scrollController: sc,
           );
         }),
+        onPanelOpened: () async {
+          final model = this._entryViewModel;
+          final transcript = model.currentEntry.transcript;
+          if (!transcript.isTranscriptionSubmitted &&
+              !transcript.isTranscribed) {
+            final localRecordingFilePath = model.currentEntryRecording;
+            final id = model.currentEntry.id;
+            await model.savePlainAudio(localRecordingFilePath);
+            await model.updateOneNote(id, null, null, true);
+            await model.getEntry(id);
+          }
+        },
         color: AirnoteColors.backgroundColor,
         borderRadius: radius,
         body: Container(

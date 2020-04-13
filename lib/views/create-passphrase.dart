@@ -42,12 +42,12 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
     setState(() {
     _checked = _formData['checked'] == "checked";
     });
-    final email = ModalRoute.of(context).settings.arguments;
+    final uuid = ModalRoute.of(context).settings.arguments;
     final passPhraseService = locator<PassPhraseService>();
     final form = _formKey.currentState;
     if (!form.validate() || !_checked) return;
     form.save();
-    await passPhraseService.savePassPhrase(email, _formData["passPhrase"]);
+    await passPhraseService.savePassPhrase(uuid, _formData["passPhrase"]);
     Navigator.of(context).pushNamedAndRemoveUntil(
         Root.routeName, (Route<dynamic> route) => false);
   }

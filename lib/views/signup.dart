@@ -45,17 +45,18 @@ class _SignupState extends State<Signup> {
   }
 
   _handleSignupTap() async {
-    final userModelView = Provider.of<UserViewModel>(context);
-    final status = userModelView.getStatus();
+    final userViewModel = Provider.of<UserViewModel>(context);
+    final status = userViewModel.getStatus();
     if (status == ViewStatus.LOADING) return;
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    final success = await userModelView.signup(_formData);
+    final success = await userViewModel.signup(_formData);
     if(!success) {
       return;
     }
-    Navigator.of(context).pushNamedAndRemoveUntil(CreatePassPhrase.routeName, (Route<dynamic> route) => false, arguments: _formData['email']);
+    final user = userViewModel.user;
+    Navigator.of(context).pushNamedAndRemoveUntil(CreatePassPhrase.routeName, (Route<dynamic> route) => false, arguments: user.uuid);
   }
 
   @override

@@ -61,10 +61,18 @@ class _AirnoteDrawerState extends State<AirnoteDrawer> {
           }
           final profile = model.user;
           if (profile == null) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
-              alignment: Alignment.center,
-              child: Text("Ooops ! There was a problem getting the data..."),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                    child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  alignment: Alignment.center,
+                  child:
+                      Text("Ooops ! There was a problem getting the data..."),
+                )),
+                getLogOutButton(model),
+              ],
             );
           }
           final storeName = Platform.isAndroid ? "Play Store" : "App Store";

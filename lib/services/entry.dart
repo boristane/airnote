@@ -42,11 +42,11 @@ class EntryService {
   }
 
   Future<Response> postEntry(
-      Map<String, String> data, String email, String encryptionKey) async {
+      Map<String, String> data, String uuid, String encryptionKey) async {
     final url = "/";
     final fileEncryptionService = locator<FileEncryptionService>();
     final passPhraseService = locator<PassPhraseService>();
-    final passPhrase = await passPhraseService.getPassPhrase(email);
+    final passPhrase = await passPhraseService.getPassPhrase(uuid);
     bool isEncrypted = false;
     if (passPhrase != null) {
       await fileEncryptionService.encryptFile(
@@ -79,22 +79,33 @@ class EntryService {
     return response;
   }
 
+  Future<Response> updateNote(
+      int id, String text, bool isTranscribed, bool isTranscriptionSubmitted) {
+    final url = "/update-note/$id";
+    final response = _apiClient.post(url, data: {
+      "text": text,
+      "isTranscribed": isTranscribed,
+      "isTranscriptionSubmitted": isTranscriptionSubmitted
+    });
+    return response;
+  }
+
   Future<void> setupClient() async {
     await _apiService.clientSetup();
     this._apiClient = _apiService.client;
   }
 
   Future<String> loadRecording(
-      int id, bool isEncrypted, String email, String encryptionKey) async {
+      int id, bool isEncrypted, String uuid, String encryptionKey) async {
     final dir = await getTemporaryDirectory();
     final url = await this._getReadS3Url(id);
-    await Dio().download(url, "${dir.path}/audio.aac");
-    final file = new File("${dir.path}/audio.aac");
+    await Dio().download(url, "${dir.path}/${uuid}_$id.aac");
+    final file = new File("${dir.path}/${uuid}_$id.aac");
     if (await file.exists()) {
       if (isEncrypted) {
         final passPhraseService = locator<PassPhraseService>();
         final encryptionService = locator<FileEncryptionService>();
-        final passPhrase = await passPhraseService.getPassPhrase(email);
+        final passPhrase = await passPhraseService.getPassPhrase(uuid);
         await encryptionService.decryptFile(
             file.path, passPhrase, encryptionKey);
       }
@@ -107,14 +118,27 @@ class EntryService {
     return (await this._apiClient.get("/recording/$id")).data["url"];
   }
 
-  Future<String> _getWriteS3Url(String filename, String fileType, int fileSize) async {
-    return (await this
-            ._apiClient
-            .get("/put-url/1", queryParameters: {"filePath": filename, "fileType": fileType, "fileSize": fileSize}))
+  Future<String> _getWriteS3Url(
+      String filename, String fileType, int fileSize) async {
+    return (await this._apiClient.get("/put-url/1", queryParameters: {
+      "filePath": filename,
+      "fileType": fileType,
+      "fileSize": fileSize
+    }))
         .data["url"];
   }
 
-  Future<void> _saveRecordingToS3(localFilePath) async{
+  Future<String> _getWritePlainS3Url(
+      String filename, String fileType, int fileSize) async {
+    return (await this._apiClient.get("/put-plain-url/1", queryParameters: {
+      "filePath": filename,
+      "fileType": fileType,
+      "fileSize": fileSize
+    }))
+        .data["url"];
+  }
+
+  Future<void> _saveRecordingToS3(localFilePath) async {
     final file = new File(localFilePath);
     final fileName = path.basename(file.path);
     final fileSize = await file.length();
@@ -132,12 +156,30 @@ class EntryService {
     );
   }
 
+  Future<Response> savePlainRecordingToS3(localFilePath) async {
+    final file = new File(localFilePath);
+    final fileName = path.basename(file.path);
+    final fileSize = await file.length();
+    final fileType = MediaType("audio", "aac").type;
+    final s3Url = await this._getWritePlainS3Url(fileName, fileType, fileSize);
+    return await Dio().put(
+      s3Url,
+      data: file.openRead(),
+      options: Options(
+        headers: {
+          "content-length": fileSize,
+          "content-Type": fileType,
+        },
+      ),
+    );
+  }
+
   static String _getEndpoint() {
     if (kReleaseMode) {
       return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/entries";
     } else {
       if (Platform.isAndroid) {
-        return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/entries";
+        return "http://10.0.2.2:8080/entries";
       } else {
         return "http://localhost:8080/entries";
       }

@@ -20,13 +20,13 @@ class DatabaseService {
     this._passPhraseStore = StoreRef<String, String>.main();
   }
 
-  Future<void> savePassPhrase({String email, String passPhrase}) async {
-    await this._passPhraseStore.record(email).put(_db, passPhrase);
+  Future<void> savePassPhrase({String uuid, String passPhrase}) async {
+    await this._passPhraseStore.record(uuid).put(_db, passPhrase);
   }
 
-  Future<String> getPassPhrase(String email) async {
+  Future<String> getPassPhrase(String uuid) async {
     try {
-      final passPhrase = await _passPhraseStore.record(email).get(_db);
+      final passPhrase = await _passPhraseStore.record(uuid).get(_db);
       return passPhrase;
     } on Error catch (_) {
       return null;

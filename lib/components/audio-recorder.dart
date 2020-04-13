@@ -72,7 +72,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
       }
       final _userViewModel = Provider.of<UserViewModel>(context);
       String path =
-          "${_userViewModel.user.uuid}_entry_${DateTime.now().millisecondsSinceEpoch.toString()}.aac";
+          "entry_${_userViewModel.user.uuid}_${DateTime.now().millisecondsSinceEpoch.toString()}.aac";
       io.Directory dir = await getTemporaryDirectory();
       path = pt.join(dir.path, path);
       _recorder = FlutterAudioRecorder(path, audioFormat: AudioFormat.AAC);

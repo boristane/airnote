@@ -24,19 +24,19 @@ class AirnoteEntryPanel extends StatelessWidget {
     if (isTranscriptionSubmitted && !isTranscribed) {
       return Center(
         child: Text(
-            "I am currently transcribing your recording, please check back in a few moments."),
+            "I am currently transcribing your recording, please check back in a few moments.", textAlign: TextAlign.center,),
       );
     }
 
     if (!isTranscriptionSubmitted) {
       return Center(
-        child: Text("There are no transcripts for this entry."),
+        child: Text("There are no transcripts for this entry.", textAlign: TextAlign.center),
       );
     }
 
     return Center(
       child: Text(
-          "There was a problem with this transcript. Please contact the Lesley team."),
+          "There was a problem with this transcript. Please contact the Lesley team.", textAlign: TextAlign.center),
     );
   }
 

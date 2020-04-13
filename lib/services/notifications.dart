@@ -81,7 +81,7 @@ class NotificationsService {
       return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/notifications";
     } else {
       if (Platform.isAndroid) {
-        return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/notifications";
+        return "http://10.0.2.2:8080/notifications";
       } else {
         return "http://localhost:8080/notifications";
       }

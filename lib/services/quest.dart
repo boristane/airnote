@@ -45,7 +45,7 @@ class QuestService {
       return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/quests";
     } else {
       if (Platform.isAndroid) {
-        return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/quests";
+        return "http://10.0.2.2:8080/quests";
       } else {
         return "http://localhost:8080/quests";
       }

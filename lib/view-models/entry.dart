@@ -71,12 +71,28 @@ class EntryViewModel extends BaseViewModel {
     return success;
   }
 
-  Future<bool> createEntry(Map<String, String> formData, String email, String encryptionKey) async {
+  Future<bool> createEntry(Map<String, String> formData, String uuid, String encryptionKey) async {
     setStatus(ViewStatus.LOADING);
 
     Response response;
     try {
-      response = await _entryService.postEntry(formData, email, encryptionKey);
+      response = await _entryService.postEntry(formData, uuid, encryptionKey);
+    } on DioError catch(_) {
+      final message = AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
+    }
+
+    setStatus(ViewStatus.READY);
+    return response?.statusCode == 200;
+  }
+
+    Future<bool> savePlainAudio(String localFilePath) async {
+    setStatus(ViewStatus.LOADING);
+
+    Response response;
+    try {
+      response = await _entryService.savePlainRecordingToS3(localFilePath);
+      print("Saved the thing");
     } on DioError catch(_) {
       final message = AirnoteMessage.unknownError;
       _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});
@@ -112,11 +128,23 @@ class EntryViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> getRecording(int id, bool isEncrypted, String email, String encryptionKey) async {
+  Future<void> updateOneNote(int id, String text, bool isTranscribed, bool isTranscriptionSubmitted) async {
     try {
       _message = "";
       _entryService.setupClient();
-      final path = await _entryService.loadRecording(id, isEncrypted, email, encryptionKey);
+      await _entryService.updateNote(id, text, isTranscribed, isTranscriptionSubmitted);
+    } on DioError catch(err) {
+      final data = err.response?.data ?? {};
+      final message = (data is String) ? AirnoteMessage.unknownError : data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () {});
+    }
+  }
+
+  Future<void> getRecording(int id, bool isEncrypted, String uuid, String encryptionKey) async {
+    try {
+      _message = "";
+      _entryService.setupClient();
+      final path = await _entryService.loadRecording(id, isEncrypted, uuid, encryptionKey);
       _currentEntryRecording= path;
     } on DioError catch(err) {
       final data = err.response?.data ?? {};

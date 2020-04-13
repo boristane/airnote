@@ -32,7 +32,7 @@ class RoutineService {
       return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/routines";
     } else {
       if (Platform.isAndroid) {
-        return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/routines";
+        return "http://10.0.2.2:8080/routines";
       } else {
         return "http://localhost:8080/routines";
       }

@@ -52,11 +52,12 @@ class _LoginState extends State<Login> {
     if (!success) {
       return;
     }
-    final passPhrase = await dbService.getPassPhrase(_formData["email"]);
+    final user = userModelView.user;
+    final passPhrase = await dbService.getPassPhrase(user.uuid);
     if (passPhrase == null) {
       Navigator.of(context).pushNamedAndRemoveUntil(
           RememberPassPhrase.routeName, (Route<dynamic> route) => false,
-          arguments: _formData["email"]);
+          arguments: user.uuid);
       return;
     }
     Navigator.of(context).pushNamedAndRemoveUntil(

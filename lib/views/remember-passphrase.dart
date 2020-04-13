@@ -32,12 +32,12 @@ class _RememberPassPhraseState extends State<RememberPassPhrase> {
   }
 
   _handleRememberPassPhraseTap() async {
-    final email = ModalRoute.of(context).settings.arguments;
+    final uuid = ModalRoute.of(context).settings.arguments;
     final passPhraseService = locator<PassPhraseService>();
     final form = _formKey.currentState;
     if (!form.validate()) return;
     form.save();
-    await passPhraseService.savePassPhrase(email, _formData["passPhrase"]);
+    await passPhraseService.savePassPhrase(uuid, _formData["passPhrase"]);
     Navigator.of(context).pushNamedAndRemoveUntil(
         Root.routeName, (Route<dynamic> route) => false);
   }

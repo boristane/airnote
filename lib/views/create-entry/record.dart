@@ -204,10 +204,10 @@ class _RecordEntryState extends State<RecordEntry> {
       return;
     }
     form.save();
-    final email = userViewModel.user.email;
+    final uuid = userViewModel.user.uuid;
     final encryptionKey = userViewModel.user.encryptionKey;
     final response =
-        await entryViewModel.createEntry(_formData, email, encryptionKey);
+        await entryViewModel.createEntry(_formData, uuid, encryptionKey);
     if (response) {
       Navigator.of(context).pushNamedAndRemoveUntil(
           Home.routeName, (Route<dynamic> route) => false,

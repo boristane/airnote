@@ -26,7 +26,8 @@ class UserViewModel extends BaseViewModel {
         return false;
       }
       AuthHelper.saveToken(token);
-      _userService.setupClient();
+      await _userService.setupClient();
+      await this.getUser();
     } on DioError catch (e) {
       final data = e.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.unknownError;
@@ -49,7 +50,8 @@ class UserViewModel extends BaseViewModel {
         return false;
       }
       AuthHelper.saveToken(token);
-      _userService.setupClient();
+      await _userService.setupClient();
+      await this.getUser();
     } on DioError catch(err) {
       final data = err.response?.data ?? {};
       final message = data["message"] ?? AirnoteMessage.unknownError;
