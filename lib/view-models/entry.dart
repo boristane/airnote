@@ -76,6 +76,7 @@ class EntryViewModel extends BaseViewModel {
 
     Response response;
     try {
+      _entryService.setupClient();
       response = await _entryService.postEntry(formData, uuid, encryptionKey);
     } on DioError catch(_) {
       final message = AirnoteMessage.unknownError;
@@ -91,8 +92,8 @@ class EntryViewModel extends BaseViewModel {
 
     Response response;
     try {
+      _entryService.setupClient();
       response = await _entryService.savePlainRecordingToS3(localFilePath);
-      print("Saved the thing");
     } on DioError catch(_) {
       final message = AirnoteMessage.unknownError;
       _dialogService.showInfoDialog(title: AirnoteMessage.defaultErrorDialogTitle, content: message, onPressed: () => {});

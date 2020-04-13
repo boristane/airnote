@@ -15,7 +15,11 @@ class NotificationsService {
   StreamSubscription iosSubscription;
 
   NotificationsService() {
-    _apiService.clientSetup();
+    setupClient();
+  }
+
+  Future<void> setupClient() async {
+    await _apiService.clientSetup();
     this._apiClient = _apiService.client;
   }
 

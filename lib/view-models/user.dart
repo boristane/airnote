@@ -65,6 +65,7 @@ class UserViewModel extends BaseViewModel {
   Future<void> getUser() async {
     setStatus(ViewStatus.LOADING);
     try {
+      await _userService.setupClient();
       final response = await _userService.getUser();
       final dynamic data = response.data ?? {};
       _user = User.fromJson(data["user"]);
@@ -78,6 +79,5 @@ class UserViewModel extends BaseViewModel {
 
   void logout() async {
     await AuthHelper.deleteToken();
-    await _userService.setupClient();
   }
 }

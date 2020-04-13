@@ -5,17 +5,17 @@ class InputValidator {
     if (value.isEmpty) {
       return "Please provide your email address";
     }
-    if (!EmailValidator.validate(value)) {
+    if (!EmailValidator.validate(value.trim())) {
       return "Please provide a valid email address";
     }
     return null;
   }
 
   static String password(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return "Please provide your password";
     }
-    if (value.length < 8) {
+    if (value.trim().length < 8) {
       return "Passwords should be at leat 8 characters long";
     }
     if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
@@ -25,7 +25,7 @@ class InputValidator {
   }
 
   static String passPhrase(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return "Please provide your pass phrase";
     }
     if (value.length < 15) {
@@ -35,21 +35,21 @@ class InputValidator {
   }
 
   static String name(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return "Please provide your name";
     }
     return null;
   }
 
   static String title(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return "Please enter a headline";
     }
     return null;
   }
 
   static String content(String value) {
-    if (value.isEmpty) {
+    if (value.trim().isEmpty) {
       return 'Hey! You haven\'t told me anything yet!';
     }
     return null;
