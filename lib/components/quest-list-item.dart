@@ -1,7 +1,7 @@
 import 'package:airnote/components/badge.dart';
-import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/quest.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteQuestListItem extends StatelessWidget {
@@ -10,7 +10,6 @@ class AirnoteQuestListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final heroTag = "quest-image-${quest.id}";
     return GridTile(
       footer: _QuestDescription(quest: quest),
       header: _QuestHeader(quest: quest),
@@ -19,7 +18,6 @@ class AirnoteQuestListItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: ImageHeader(
-            heroTag: heroTag,
             imageUrl: quest.imageUrl,
           )),
     );
@@ -75,5 +73,75 @@ class _QuestHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class ImageHeader extends StatelessWidget {
+  final String heroTag;
+  final String imageUrl;
+  final Color topColor;
+  final Color bottomColor;
+
+  ImageHeader(
+      {Key key, this.imageUrl, this.heroTag, this.topColor, this.bottomColor})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      imageBuilder: (context, imageProvider) => _GradientImage(
+        imageProvider: imageProvider,
+        topColor: topColor,
+        bottomColor: bottomColor,
+      ),
+      placeholder: (context, url) => _GradientImage(
+        imageProvider: AssetImage("assets/images/placeholder.png"),
+        bottomColor: bottomColor,
+      ),
+      errorWidget: (context, url, error) => _GradientImage(
+        imageProvider: AssetImage("assets/images/placeholder.png"),
+        topColor: topColor,
+        bottomColor: bottomColor,
+      ),
+    );
+  }
+}
+
+class _GradientImage extends StatelessWidget {
+  final ImageProvider imageProvider;
+  final Color topColor;
+  final Color bottomColor;
+
+  _GradientImage(
+      {Key key,
+      this.imageProvider,
+      this.bottomColor,
+      this.topColor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              topColor != null
+                  ? topColor
+                  : AirnoteColors.primary.withOpacity(0.0),
+              bottomColor != null ? bottomColor : AirnoteColors.primary
+            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        )
+      ]);
   }
 }
