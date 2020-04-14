@@ -19,7 +19,7 @@ class _SelectEntryTypeState extends State<SelectEntryType> {
     final AirnoteRaisedButton _assistedButton = AirnoteRaisedButton(
         text: "Guided entry",
         onPressed: () => Navigator.of(context)
-            .pushNamed(RoutineView.routeName, arguments: 1));
+            .pushNamed(RoutineView.routeName, arguments: 0));
     final AirnoteFlatButton _soloButton = AirnoteFlatButton(
         text: "Free flow",
         onPressed: () {

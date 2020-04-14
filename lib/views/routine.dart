@@ -73,12 +73,12 @@ class _RoutineViewState extends State<RoutineView> {
                                 color: AirnoteColors.grey,
                                 letterSpacing: 1.0),
                           ),
-                          Text(
+                          routine.position != null ? Text(
                             "Day ${routine.position}",
                             style: TextStyle(
                               color: AirnoteColors.grey,
                             ),
-                          ),
+                          ) : Container(),
                         ],
                       ),
                     ),
