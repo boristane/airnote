@@ -97,10 +97,13 @@ class EntryService {
 
   Future<String> loadRecording(
       int id, bool isEncrypted, String uuid, String encryptionKey) async {
-    final dir = await getTemporaryDirectory();
+        final filename = "${uuid}_$id.aac";
+    final dir = await getApplicationDocumentsDirectory();
+    final file = new File("${dir.path}/$filename");
+    if(await file.exists()) return file.path;
+    print("Downloading the file");
     final url = await this._getReadS3Url(id);
-    await Dio().download(url, "${dir.path}/${uuid}_$id.aac");
-    final file = new File("${dir.path}/${uuid}_$id.aac");
+    await Dio().download(url, "${dir.path}/$filename");
     if (await file.exists()) {
       if (isEncrypted) {
         final passPhraseService = locator<PassPhraseService>();

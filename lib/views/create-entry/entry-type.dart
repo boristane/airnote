@@ -27,36 +27,38 @@ class _SelectEntryTypeState extends State<SelectEntryType> {
           routineViewModel.reset();
           Navigator.of(context).pushNamed(RecordEntry.routeName);
         });
-    return Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _assistedButton,
-              _soloButton,
-            ],
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _assistedButton,
+                _soloButton,
+              ],
+            ),
           ),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(15),
-              child: AirnoteOptionButton(
-                icon: Icon(Icons.arrow_downward),
-                onTap: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
-                  }
-                },
+          Align(
+            alignment: Alignment.topLeft,
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: AirnoteOptionButton(
+                  icon: Icon(Icons.arrow_downward),
+                  onTap: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
