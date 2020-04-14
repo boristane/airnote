@@ -52,13 +52,13 @@ class _QuestViewState extends State<QuestView> {
     return Scaffold(
           body: Container(
         child: Consumer<QuestViewModel>(builder: (context, model, child) {
-          if (model.getStatus() == ViewStatus.LOADING) {
-            return AirnoteLoadingScreen();
-          }
+          // if (model.getStatus() == ViewStatus.LOADING) {
+          //   return AirnoteLoadingScreen();
+          // }
           final quest = model.currentQuest;
-          if (quest == null) {
-            return AirnoteLoadingScreen();
-          }
+          // if (quest == null) {
+          //   return AirnoteLoadingScreen();
+          // }
           final routines = quest.routines;
           final heroTag = "quest-image-${quest.id}";
           return Stack(

@@ -164,13 +164,13 @@ class _EntryViewState extends State<EntryView>
         borderRadius: radius,
         body: Container(
           child: Consumer<EntryViewModel>(builder: (context, model, child) {
-            if (model.getStatus() == ViewStatus.LOADING) {
-              return AirnoteLoadingScreen();
-            }
+            // if (model.getStatus() == ViewStatus.LOADING) {
+            //   return AirnoteLoadingScreen();
+            // }
             final entry = model.currentEntry;
-            if (entry == null) {
-              return AirnoteLoadingScreen();
-            }
+            // if (entry == null) {
+          //   return AirnoteLoadingScreen();
+            // }
             final localRecordingFilePath = model.currentEntryRecording;
             final heroTag = "entry-image-${entry.id}";
             return Column(
