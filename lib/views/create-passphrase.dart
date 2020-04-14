@@ -40,7 +40,7 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
 
   _handleSavePassPhraseTap() async {
     setState(() {
-    _checked = _formData['checked'] == "checked";
+      _checked = _formData['checked'] == "checked";
     });
     final uuid = ModalRoute.of(context).settings.arguments;
     final passPhraseService = locator<PassPhraseService>();
@@ -56,98 +56,105 @@ class _CreatePassPhraseState extends State<CreatePassPhrase> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AirnoteAppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  child: AirnoteHeaderText(
-                      text: "A pass phrase to protect your privacy."),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
-                  child: Text(
-                    "With a pass phrase, your journal is encrypted on your phone. You and only you (not even us) can read or listen to your stories. Please make sure you remember your Pass Phrase, your stories will not display properly otherwise.",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: AirnoteColors.grey,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20.0),
+                    child: AirnoteHeaderText(
+                        text: "A pass phrase to protect your privacy."),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
+                    child: Text(
+                      "With a pass phrase, your journal is encrypted on your phone. You and only you (not even us) can read or listen to your stories. Please make sure you remember your Pass Phrase, your stories will not display properly otherwise.",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: AirnoteColors.grey,
+                      ),
                     ),
                   ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      AirnoteTextInputField(
-                        hint: "Your big secret",
-                        label: "Pass Phrase",
-                        validator: InputValidator.passPhrase,
-                        save: _setPassphrase,
-                        obscure: true,
-                        suffix: Icon(Icons.lock_outline),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _formData['checked'] =
-                                  _formData['checked'] == "not-checked"
-                                      ? "checked"
-                                      : "not-checked";
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Transform.scale(
-                                scale: 1.2,
-                                child: Checkbox(
-                                  value: _formData["checked"] == "checked",
-                                  onChanged: _setChecked,
-                                  activeColor: AirnoteColors.primary,
-                                  checkColor: AirnoteColors.white,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        AirnoteTextInputField(
+                          hint: "Your big secret",
+                          label: "Pass Phrase",
+                          validator: InputValidator.passPhrase,
+                          save: _setPassphrase,
+                          obscure: true,
+                          suffix: Icon(Icons.lock_outline),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _formData['checked'] =
+                                    _formData['checked'] == "not-checked"
+                                        ? "checked"
+                                        : "not-checked";
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Transform.scale(
+                                  scale: 1.2,
+                                  child: Checkbox(
+                                    value: _formData["checked"] == "checked",
+                                    onChanged: _setChecked,
+                                    activeColor: AirnoteColors.primary,
+                                    checkColor: AirnoteColors.white,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "I have written my pass phrase down.",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: _checked ? AirnoteColors.grey : AirnoteColors.danger,
+                                Text(
+                                  "I have written my pass phrase down.",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: _checked
+                                        ? AirnoteColors.grey
+                                        : AirnoteColors.danger,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      AirnoteSubmitButton(
-                        text: "Let's go!",
-                        onPressed: _handleSavePassPhraseTap,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Not for encryption? ",
-                          style: TextStyle(color: AirnoteColors.grey)),
-                      GestureDetector(
-                        onTap: _handleProceedTap,
-                        child: Text(
-                          "Proceed",
-                          style: TextStyle(color: AirnoteColors.primary),
+                        AirnoteSubmitButton(
+                          text: "Let's go!",
+                          onPressed: _handleSavePassPhraseTap,
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Not for encryption? ",
+                            style: TextStyle(color: AirnoteColors.grey)),
+                        GestureDetector(
+                          onTap: _handleProceedTap,
+                          child: Text(
+                            "Proceed",
+                            style: TextStyle(color: AirnoteColors.primary),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

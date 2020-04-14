@@ -75,95 +75,102 @@ class _RecordEntryState extends State<RecordEntry> {
     return Scaffold(
       body: WillPopScope(
         onWillPop: _onWillPop,
-        child: SafeArea(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            child: Stack(
-              children: <Widget>[
-                ListView(
-                  children: <Widget>[
-                    Theme(
-                      data: ThemeData(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        inputDecorationTheme:
-                            InputDecorationTheme(border: InputBorder.none),
-                      ),
-                      child: Form(
-                        key: _addEntryFormKey,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 45),
-                            TitleInputField(
-                              hint: "What\'s on your mind?",
-                              validator: InputValidator.title,
-                              onSaved: _onTitleSaved,
-                              value: routineViewModel.routine?.name,
-                            ),
-                            prompt,
-                            SizedBox(height: 45),
-                            AudioRecorder(
-                              durations: _hasRoutine
-                                  ? routineViewModel.prompts.map<int>((item) {
-                                      return item.duration;
-                                    }).toList()
-                                  : [widget.maxDuration],
-                              onComplete: (recording) {
-                                _formData["recording"] = recording.path;
-                                _formData["duration"] = recording
-                                    .duration.inMilliseconds
-                                    .toString();
-                                _formData["routine"] = (routineViewModel.routine?.id).toString();
-                                setState(() {
-                                  _isRecorded = true;
-                                });
-                                _currentRoutineItemIndex = -1;
-                                _isShowingText = false;
-                              },
-                              onStatusChanged: (status) {
-                                if (status == RecorderState.recording) {
-                                  _stopWatch.start();
-                                }
-                                if (status == RecorderState.paused) {
-                                  _stopWatch.stop();
-                                }
-                                if (status == RecorderState.stopped) {
-                                  _stopWatch.reset();
-                                }
-                                setState(() {
-                                  _isRecording =
-                                      status == RecorderState.paused ||
-                                              status == RecorderState.recording
-                                          ? true
-                                          : false;
-                                });
-                              },
-                              onStart: () {
-                                _displayNextRoutineItem();
-                              },
-                              onLapComplete: () {
-                                if (_currentRoutineItemIndex >=
-                                    routineViewModel.prompts.length - 1) return;
-                                _displayNextRoutineItem();
-                              },
-                            ),
-                          ],
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SafeArea(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Stack(
+                children: <Widget>[
+                  ListView(
+                    children: <Widget>[
+                      Theme(
+                        data: ThemeData(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          inputDecorationTheme:
+                              InputDecorationTheme(border: InputBorder.none),
+                        ),
+                        child: Form(
+                          key: _addEntryFormKey,
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(height: 45),
+                              TitleInputField(
+                                hint: "What\'s on your mind?",
+                                validator: InputValidator.title,
+                                onSaved: _onTitleSaved,
+                                value: routineViewModel.routine?.name,
+                              ),
+                              prompt,
+                              SizedBox(height: 45),
+                              AudioRecorder(
+                                durations: _hasRoutine
+                                    ? routineViewModel.prompts.map<int>((item) {
+                                        return item.duration;
+                                      }).toList()
+                                    : [widget.maxDuration],
+                                onComplete: (recording) {
+                                  _formData["recording"] = recording.path;
+                                  _formData["duration"] = recording
+                                      .duration.inMilliseconds
+                                      .toString();
+                                  _formData["routine"] =
+                                      (routineViewModel.routine?.id).toString();
+                                  setState(() {
+                                    _isRecorded = true;
+                                  });
+                                  _currentRoutineItemIndex = -1;
+                                  _isShowingText = false;
+                                },
+                                onStatusChanged: (status) {
+                                  if (status == RecorderState.recording) {
+                                    _stopWatch.start();
+                                  }
+                                  if (status == RecorderState.paused) {
+                                    _stopWatch.stop();
+                                  }
+                                  if (status == RecorderState.stopped) {
+                                    _stopWatch.reset();
+                                  }
+                                  setState(() {
+                                    _isRecording = status ==
+                                                RecorderState.paused ||
+                                            status == RecorderState.recording
+                                        ? true
+                                        : false;
+                                  });
+                                },
+                                onStart: () {
+                                  _displayNextRoutineItem();
+                                },
+                                onLapComplete: () {
+                                  if (_currentRoutineItemIndex >=
+                                      routineViewModel.prompts.length - 1)
+                                    return;
+                                  _displayNextRoutineItem();
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                AirnoteOptionButton(
-                  icon: Icon(Icons.arrow_downward),
-                  onTap: () {
-                    _onWillPop().then((value) {
-                      if (value) {
-                        Navigator.of(context).pop();
-                      }
-                    });
-                  },
-                ),
-              ],
+                    ],
+                  ),
+                  AirnoteOptionButton(
+                    icon: Icon(Icons.arrow_downward),
+                    onTap: () {
+                      _onWillPop().then((value) {
+                        if (value) {
+                          Navigator.of(context).pop();
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -200,7 +207,8 @@ class _RecordEntryState extends State<RecordEntry> {
     if (!(form.validate())) return;
     if (!_isRecorded) {
       _snackBarService.showSnackBar(
-          icon: Icon(Icons.mic_none), text: "Please finish recording by pressing  ⬜");
+          icon: Icon(Icons.mic_none),
+          text: "Please finish recording by pressing  ⬜");
       return;
     }
     form.save();

@@ -46,64 +46,69 @@ class _RememberPassPhraseState extends State<RememberPassPhrase> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AirnoteAppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  child: AirnoteHeaderText(
-                      text: "Do you remember your Pass Phrase?"),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
-                  child: Text(
-                    "Please make sure you enter the Pass Phrase you used to sign up. Otherwise your stories will not display properly.",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: AirnoteColors.grey,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20.0),
+                    child: AirnoteHeaderText(
+                        text: "Do you remember your Pass Phrase?"),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
+                    child: Text(
+                      "Please make sure you enter the Pass Phrase you used to sign up. Otherwise your stories will not display properly.",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: AirnoteColors.grey,
+                      ),
                     ),
                   ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      AirnoteTextInputField(
-                        hint: "Your big secret",
-                        label: "Pass Phrase",
-                        validator: InputValidator.passPhrase,
-                        save: _setPassphrase,
-                        obscure: true,
-                        suffix: Icon(Icons.lock_outline),
-                      ),
-                      AirnoteSubmitButton(
-                        text: "Let's go!",
-                        onPressed: _handleRememberPassPhraseTap,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("You do not have a pass phrase? ",
-                          style: TextStyle(color: AirnoteColors.grey)),
-                      GestureDetector(
-                        onTap: _handleProceedTap,
-                        child: Text(
-                          "Proceed",
-                          style: TextStyle(color: AirnoteColors.primary),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        AirnoteTextInputField(
+                          hint: "Your big secret",
+                          label: "Pass Phrase",
+                          validator: InputValidator.passPhrase,
+                          save: _setPassphrase,
+                          obscure: true,
+                          suffix: Icon(Icons.lock_outline),
                         ),
-                      )
-                    ],
+                        AirnoteSubmitButton(
+                          text: "Let's go!",
+                          onPressed: _handleRememberPassPhraseTap,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("You do not have a pass phrase? ",
+                            style: TextStyle(color: AirnoteColors.grey)),
+                        GestureDetector(
+                          onTap: _handleProceedTap,
+                          child: Text(
+                            "Proceed",
+                            style: TextStyle(color: AirnoteColors.primary),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

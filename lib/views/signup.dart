@@ -17,8 +17,7 @@ class Signup extends StatefulWidget {
 
   final FirebaseAnalytics analytics;
 
-  Signup({Key key, this.analytics})
-      : super(key: key);
+  Signup({Key key, this.analytics}) : super(key: key);
   @override
   _SignupState createState() => _SignupState(analytics);
 }
@@ -59,81 +58,89 @@ class _SignupState extends State<Signup> {
     if (!form.validate()) return;
     form.save();
     final success = await userViewModel.signup(_formData);
-    if(!success) {
+    if (!success) {
       return;
     }
     final user = userViewModel.user;
     await analytics.setUserId(user.uuid);
     await analytics.logSignUp(signUpMethod: "email");
     await analytics.logLogin();
-    Navigator.of(context).pushNamedAndRemoveUntil(CreatePassPhrase.routeName, (Route<dynamic> route) => false, arguments: user.uuid);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        CreatePassPhrase.routeName, (Route<dynamic> route) => false,
+        arguments: user.uuid);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AirnoteAppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.0),
-                  child: AirnoteHeaderText(text: "Let's introduce ourselves!"),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      AirnoteTextInputField(
-                        hint: "Nice to meet you!",
-                        label: "Forename",
-                        validator: InputValidator.name,
-                        save: _setForename,
-                        suffix: Icon(Icons.face),
-                      ),
-                      AirnoteTextInputField(
-                        hint: "How can we reach you?",
-                        label: "Email",
-                        validator: InputValidator.email,
-                        save: _setEmail,
-                        suffix: Icon(Icons.alternate_email),
-                      ),
-                      AirnoteTextInputField(
-                        hint: "Our little secret",
-                        label: "Password",
-                        validator: InputValidator.password,
-                        save: _setPassword,
-                        obscure: true,
-                        suffix: Icon(Icons.lock_outline),
-                      ),
-                      AirnoteSubmitButton(
-                        text: "Create Account",
-                        onPressed: _handleSignupTap,
-                      ),
-                    ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20.0),
+                    child:
+                        AirnoteHeaderText(text: "Let's introduce ourselves!"),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Already have an account? ",
-                          style: TextStyle(color: AirnoteColors.grey)),
-                      GestureDetector(
-                        onTap: _handleLoginTap,
-                        child: Text(
-                          "Login",
-                          style: TextStyle(color: AirnoteColors.primary),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        AirnoteTextInputField(
+                          hint: "Nice to meet you!",
+                          label: "Forename",
+                          validator: InputValidator.name,
+                          save: _setForename,
+                          suffix: Icon(Icons.face),
                         ),
-                      )
-                    ],
+                        AirnoteTextInputField(
+                          hint: "How can we reach you?",
+                          label: "Email",
+                          validator: InputValidator.email,
+                          save: _setEmail,
+                          suffix: Icon(Icons.alternate_email),
+                        ),
+                        AirnoteTextInputField(
+                          hint: "Our little secret",
+                          label: "Password",
+                          validator: InputValidator.password,
+                          save: _setPassword,
+                          obscure: true,
+                          suffix: Icon(Icons.lock_outline),
+                        ),
+                        AirnoteSubmitButton(
+                          text: "Create Account",
+                          onPressed: _handleSignupTap,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Already have an account? ",
+                            style: TextStyle(color: AirnoteColors.grey)),
+                        GestureDetector(
+                          onTap: _handleLoginTap,
+                          child: Text(
+                            "Login",
+                            style: TextStyle(color: AirnoteColors.primary),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
