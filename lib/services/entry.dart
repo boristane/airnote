@@ -79,13 +79,14 @@ class EntryService {
     return response;
   }
 
-  Future<Response> updateNote(
-      int id, String text, bool isTranscribed, bool isTranscriptionSubmitted) {
+  Future<Response> updateNote(int id, String text, bool isTranscribed,
+      bool isTranscriptionSubmitted, bool isPlain) {
     final url = "/update-note/$id";
     final response = _apiClient.post(url, data: {
       "text": text,
       "isTranscribed": isTranscribed,
-      "isTranscriptionSubmitted": isTranscriptionSubmitted
+      "isTranscriptionSubmitted": isTranscriptionSubmitted,
+      "isPlain": isPlain,
     });
     return response;
   }
@@ -97,10 +98,10 @@ class EntryService {
 
   Future<String> loadRecording(
       int id, bool isEncrypted, String uuid, String encryptionKey) async {
-        final filename = "${uuid}_$id.aac";
+    final filename = "${uuid}_$id.aac";
     final dir = await getApplicationDocumentsDirectory();
     final file = new File("${dir.path}/$filename");
-    if(await file.exists()) return file.path;
+    if (await file.exists()) return file.path;
     print("Downloading the file");
     final url = await this._getReadS3Url(id);
     await Dio().download(url, "${dir.path}/$filename");
@@ -115,6 +116,16 @@ class EntryService {
       return file.path;
     }
     return "";
+  }
+
+  Future<void> encryptAndUpdateTranscript(
+      int id, String content, String uuid, String encryptionKey) async {
+    final passPhraseService = locator<PassPhraseService>();
+    final encryptionService = locator<FileEncryptionService>();
+    final passPhrase = await passPhraseService.getPassPhrase(uuid);
+    final encryptedContent =
+        encryptionService.encryptText(content, passPhrase, encryptionKey);
+    await updateNote(id, encryptedContent, null, null, false);
   }
 
   Future<String> _getReadS3Url(int id) async {

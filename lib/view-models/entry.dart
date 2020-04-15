@@ -1,7 +1,9 @@
 import 'package:airnote/models/entry.dart';
+import 'package:airnote/services/file-encryption.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/entry.dart';
+import 'package:airnote/services/passphrase.dart';
 import 'package:airnote/utils/messages.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:dio/dio.dart';
@@ -11,12 +13,14 @@ class EntryViewModel extends BaseViewModel {
   String _message;
   Entry _currentEntry;
   String _currentEntryRecording = "";
+  String _currentEntryTranscript = "";
   final _dialogService = locator<DialogService>();
 
   String get message => _message;
   List<Entry> get entries => _entries;
   Entry get currentEntry => _currentEntry;
   String get currentEntryRecording => _currentEntryRecording;
+  String get currentEntryTranscript => _currentEntryTranscript;
 
   final _entryService = locator<EntryService>();
 
@@ -35,7 +39,7 @@ class EntryViewModel extends BaseViewModel {
     setStatus(ViewStatus.READY);
   }
 
-  Future<bool> getEntry(int id) async {
+  Future<bool> getEntry(int id, String uuid, String encryptionKey) async {
     setStatus(ViewStatus.LOADING);
     bool success = false;
     try {
@@ -43,6 +47,7 @@ class EntryViewModel extends BaseViewModel {
       _entryService.setupClient();
       final response = await _entryService.getSingleEntry(id);
       _currentEntry = Entry.fromJson(response.data);
+      await _setCurrentEntryTranscript(uuid, encryptionKey);
       success = true;
     } on DioError catch (err) {
       final data = err.response?.data ?? {};
@@ -56,7 +61,25 @@ class EntryViewModel extends BaseViewModel {
     return success;
   }
 
-  Future<bool> getEntryByRoutine(int id) async {
+  Future _setCurrentEntryTranscript(String uuid, String encryptionKey) async {
+    final transcript = _currentEntry.transcript;
+    final shouldDecrypt = transcript.isEncrypted &&
+        transcript.isTranscribed &&
+        !transcript.isPlain;
+    if (shouldDecrypt) {
+      final PassPhraseService passPhraseService =
+          locator<PassPhraseService>();
+      final FileEncryptionService encryptionService =
+          locator<FileEncryptionService>();
+      final passPhrase = await passPhraseService.getPassPhrase(uuid);
+      _currentEntryTranscript = encryptionService.decryptText(
+          transcript.content, passPhrase, encryptionKey);
+    } else {
+      _currentEntryTranscript = transcript.content;
+    }
+  }
+
+  Future<bool> getEntryByRoutine(int id, String uuid, String encryptionKey) async {
     setStatus(ViewStatus.LOADING);
     bool success = false;
     try {
@@ -64,6 +87,7 @@ class EntryViewModel extends BaseViewModel {
       _entryService.setupClient();
       final response = await _entryService.getSingleEntryByRoutine(id);
       _currentEntry = Entry.fromJson(response.data);
+      await _setCurrentEntryTranscript(uuid, encryptionKey);
       success = true;
     } on DioError catch (err) {
       final data = err.response?.data ?? {};
@@ -151,12 +175,12 @@ class EntryViewModel extends BaseViewModel {
   }
 
   Future<void> updateOneNote(int id, String text, bool isTranscribed,
-      bool isTranscriptionSubmitted) async {
+      bool isTranscriptionSubmitted, bool isPlain) async {
     try {
       _message = "";
       _entryService.setupClient();
       await _entryService.updateNote(
-          id, text, isTranscribed, isTranscriptionSubmitted);
+          id, text, isTranscribed, isTranscriptionSubmitted, isPlain);
     } on DioError catch (err) {
       final data = err.response?.data ?? {};
       final message = (data is String)
@@ -192,6 +216,33 @@ class EntryViewModel extends BaseViewModel {
           title: AirnoteMessage.defaultErrorDialogTitle,
           content:
               "There was a problem decrypting your entry. Could you please double check your passphrase?",
+          onPressed: () {});
+      _currentEntryRecording = "";
+    }
+  }
+
+  Future<void> encryptAndUpdateTranscript(
+      String uuid, String encryptionKey) async {
+    try {
+      final transcript = currentEntry.transcript;
+      final id = currentEntry.id;
+      await _entryService.encryptAndUpdateTranscript(
+          id, transcript.content, uuid, encryptionKey);
+    } on DioError catch (err) {
+      final data = err.response?.data ?? {};
+      final message = (data is String || data is ResponseBody)
+          ? AirnoteMessage.unknownError
+          : data["message"] ?? AirnoteMessage.unknownError;
+      _dialogService.showInfoDialog(
+          title: AirnoteMessage.defaultErrorDialogTitle,
+          content: message,
+          onPressed: () {});
+      _currentEntryRecording = "";
+    } on ArgumentError catch (_) {
+      _dialogService.showInfoDialog(
+          title: AirnoteMessage.defaultErrorDialogTitle,
+          content:
+              "There was a problem encrypting the transcript of your entry. Could you please double check your passphrase?",
           onPressed: () {});
       _currentEntryRecording = "";
     }

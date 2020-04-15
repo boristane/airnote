@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 
 class FileEncryptionService {
-  
   Future<Uint8List> _readFile(String path) async {
     Uint8List data;
     try {
@@ -30,6 +29,29 @@ class FileEncryptionService {
     final encrypted = encrypter.encryptBytes(data, iv: iv);
 
     await _writeFile(encrypted.bytes, path);
+  }
+
+  String encryptText(String text, String passPhrase, String encryptionKey) {
+    final key = Key.fromUtf8(passPhrase);
+    final iv = IV.fromBase64(encryptionKey);
+
+    final encrypter = Encrypter(AES(key));
+
+    final encrypted = encrypter.encrypt(text, iv: iv);
+
+    return encrypted.base64;
+  }
+
+  String decryptText(
+      String encryptedString, String passPhrase, String encryptionKey) {
+    final key = Key.fromUtf8(passPhrase);
+    final iv = IV.fromBase64(encryptionKey);
+
+    final encrypter = Encrypter(AES(key));
+
+    final encrypted = Encrypted.fromBase64(encryptedString);
+    final decrypted = encrypter.decrypt(encrypted, iv: iv);
+    return decrypted;
   }
 
   decryptFile(String path, String passPhrase, String encryptionKey) async {

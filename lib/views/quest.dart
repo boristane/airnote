@@ -10,6 +10,7 @@ import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/quest.dart';
+import 'package:airnote/view-models/user.dart';
 import 'package:airnote/views/home.dart';
 import 'package:airnote/views/routine.dart';
 import 'package:airnote/views/view-entry/entry.dart';
@@ -180,7 +181,9 @@ class _QuestViewState extends State<QuestView> {
 
   _openEntryByRoutine(Routine routine) async {
     final EntryViewModel entryViewModel = Provider.of<EntryViewModel>(context);
-    await entryViewModel.getEntryByRoutine(routine.id);
+    final UserViewModel userViewModel = Provider.of<UserViewModel>(context);
+    final user = userViewModel.user;
+    await entryViewModel.getEntryByRoutine(routine.id, user.uuid, user.encryptionKey);
     final entry = entryViewModel.currentEntry;
     if (entry == null) return;
     if (entry.isLocked) {

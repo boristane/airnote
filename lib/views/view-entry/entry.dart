@@ -73,16 +73,22 @@ class _EntryViewState extends State<EntryView>
       return;
     }
     this._entryViewModel = entryViewModel;
+    final user = userViewModel.user;
     final id = ModalRoute.of(context).settings.arguments;
-    final success = await this._entryViewModel.getEntry(id);
+    final success = await this._entryViewModel.getEntry(id, user.uuid, user.encryptionKey);
     if (!success && Navigator.of(context).canPop()) {
       return Navigator.of(context).pop();
     }
     setState(() {
       _isLocked = this._entryViewModel.currentEntry.isLocked;
     });
+    final transcript = this._entryViewModel.currentEntry.transcript;
+    final shouldEncryptTranscript = transcript.isPlain && transcript.isTranscribed && transcript.isEncrypted;
     final uuid = userViewModel.user.uuid;
     final encryptionKey = userViewModel.user.encryptionKey;
+    if(shouldEncryptTranscript) {
+      this._entryViewModel.encryptAndUpdateTranscript(uuid, encryptionKey);
+    }
     final isEncrypted = this._entryViewModel.currentEntry.recording.isEncrypted;
     await this
         ._entryViewModel
@@ -145,10 +151,17 @@ class _EntryViewState extends State<EntryView>
             Consumer<EntryViewModel>(builder: (context, model, child) {
           return AirnoteEntryPanel(
             entry: model.currentEntry,
+            transcript: model.currentEntryTranscript,
             scrollController: sc,
           );
         }),
         onPanelOpened: () async {
+          final userViewModel = Provider.of<UserViewModel>(context);
+          final user = userViewModel.user;
+          // Don't do anything for non premium users;
+          if(user.membership <= 0) {
+            return;
+          }
           final model = this._entryViewModel;
           final transcript = model.currentEntry.transcript;
           if (!transcript.isTranscriptionSubmitted &&
@@ -156,8 +169,8 @@ class _EntryViewState extends State<EntryView>
             final localRecordingFilePath = model.currentEntryRecording;
             final id = model.currentEntry.id;
             await model.savePlainAudio(localRecordingFilePath);
-            await model.updateOneNote(id, null, null, true);
-            await model.getEntry(id);
+            await model.updateOneNote(id, null, null, true, null);
+            await model.getEntry(id, user.uuid, user.encryptionKey);
           }
         },
         color: AirnoteColors.backgroundColor,

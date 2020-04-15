@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 class AirnoteEntryPanel extends StatelessWidget {
   final Entry entry;
+  final String transcript;
   final ScrollController scrollController;
-  AirnoteEntryPanel({Key key, this.entry, this.scrollController})
+  AirnoteEntryPanel({Key key, this.entry, this.scrollController, this.transcript})
       : super(key: key);
 
   Widget getContent(Transcript transcript) {
@@ -16,7 +17,7 @@ class AirnoteEntryPanel extends StatelessWidget {
     final isTranscriptionSubmitted = transcript.isTranscriptionSubmitted;
     if (isTranscribed && content != null) {
       return Text(
-        content,
+        this.transcript,
         softWrap: true,
       );
     }
