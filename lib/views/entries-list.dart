@@ -46,9 +46,6 @@ class _EntriesListState extends State<EntriesList> {
       child: Container(child: Consumer<EntryViewModel>(
         builder: (context, model, child) {
           List<Entry> entries = model.entries;
-          if (model.getStatus() == ViewStatus.LOADING) {
-            return AirnoteLoadingScreen();
-          }
           if (entries == null) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 25.0),

@@ -149,9 +149,6 @@ class _QuestsListState extends State<QuestsList> {
           List<Quest> quests = model.quests;
           List<Quest> userQuests = model.userQuests;
           Quest topPick = model.topPickQuest;
-          if (model.getStatus() == ViewStatus.LOADING) {
-            return AirnoteLoadingScreen();
-          }
           if (quests == null) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 25.0),

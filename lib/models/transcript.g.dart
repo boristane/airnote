@@ -14,6 +14,7 @@ Transcript _$TranscriptFromJson(Map<String, dynamic> json) {
     isEncrypted: json['isEncrypted'] as bool,
     isTranscribed: json['isTranscribed'] as bool,
     isTranscriptionSubmitted: json['isTranscriptionSubmitted'] as bool,
+    isPlain: json['isPlain'] as bool,
   );
 }
 
@@ -25,4 +26,5 @@ Map<String, dynamic> _$TranscriptToJson(Transcript instance) =>
       'isEncrypted': instance.isEncrypted,
       'isTranscribed': instance.isTranscribed,
       'isTranscriptionSubmitted': instance.isTranscriptionSubmitted,
+      'isPlain': instance.isPlain,
     };
