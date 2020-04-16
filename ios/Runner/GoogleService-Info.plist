@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:401146116769:ios:0ef64eaee110b3b8a1cee0</string>
+	<string>1:401146116769:ios:8613700ac470a008a1cee0</string>
 	<key>DATABASE_URL</key>
 	<string>https://lesley-1ac2f.firebaseio.com</string>
 </dict>
