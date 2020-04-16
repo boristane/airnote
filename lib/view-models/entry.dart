@@ -39,6 +39,10 @@ class EntryViewModel extends BaseViewModel {
     setStatus(ViewStatus.READY);
   }
 
+  clearCurrentEntry() {
+    _currentEntry = null;
+  }
+
   Future<bool> getEntry(int id, String uuid, String encryptionKey) async {
     setStatus(ViewStatus.LOADING);
     bool success = false;

@@ -343,6 +343,7 @@ class _EntryViewState extends State<EntryView>
 
   void _onCloseEntryTap() {
     if (Navigator.of(context).canPop()) {
+    this._entryViewModel.clearCurrentEntry();
       Navigator.of(context).pushNamedAndRemoveUntil(
           Home.routeName, (Route<dynamic> route) => false,
           arguments: 1);

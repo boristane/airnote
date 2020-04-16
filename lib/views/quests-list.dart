@@ -150,11 +150,12 @@ class _QuestsListState extends State<QuestsList> {
           List<Quest> userQuests = model.userQuests;
           Quest topPick = model.topPickQuest;
           if (quests == null) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 25.0),
-              alignment: Alignment.center,
-              child: Text("Ooops ! There was a problem getting the data..."),
-            );
+            return AirnoteLoadingScreen();
+            // return Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 25.0),
+            //   alignment: Alignment.center,
+            //   child: Text("Ooops ! There was a problem getting the data..."),
+            // );
           }
           if (quests.length < 1 && userQuests.length < 1) return NoQuestFound();
           final message = userQuests.length < 1 ? "Let's join a quest" : "Let's continue your quest";

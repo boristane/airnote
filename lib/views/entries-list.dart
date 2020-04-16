@@ -1,10 +1,8 @@
 import 'package:airnote/components/header.dart';
-import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/entry-list-item.dart';
 import 'package:airnote/models/entry.dart';
 import 'package:airnote/services/local-auth.dart';
 import 'package:airnote/services/locator.dart';
-import 'package:airnote/view-models/base.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
