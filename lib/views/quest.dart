@@ -139,6 +139,7 @@ class _QuestViewState extends State<QuestView> {
                       icon: Icon(Icons.arrow_downward),
                       onTap: () {
                         if (Navigator.of(context).canPop()) {
+                          this._questViewModel.clearCurrentQuest();
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               Home.routeName, (Route<dynamic> route) => false,
                               arguments: 0);

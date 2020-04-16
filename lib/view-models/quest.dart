@@ -59,6 +59,10 @@ class QuestViewModel extends BaseViewModel {
     return success;
   }
 
+  clearCurrentQuest() {
+    _currentQuest = null;
+  }
+
   Future<bool> joinQuest(int id) async {
     bool success = false;
     try {
