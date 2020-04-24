@@ -23,6 +23,7 @@ import 'package:airnote/views/signup.dart';
 import 'package:airnote/views/view-entry/entry.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -85,6 +86,10 @@ class Airnote extends StatelessWidget {
       textTheme: _textTheme,
     );
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarBrightness: Brightness.light,
+    ));
+
     return MaterialApp(
       title: "Lesley",
       theme: _theme,
@@ -116,7 +121,9 @@ class Airnote extends StatelessWidget {
         NotificationsView.routeName: (context) => NotificationsView(),
       },
       navigatorObservers: <NavigatorObserver>[observer],
-      home: Root(analytics: analytics,),
+      home: Root(
+        analytics: analytics,
+      ),
     );
   }
 }
