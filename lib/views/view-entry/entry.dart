@@ -75,7 +75,8 @@ class _EntryViewState extends State<EntryView>
     this._entryViewModel = entryViewModel;
     final user = userViewModel.user;
     final id = ModalRoute.of(context).settings.arguments;
-    final success = await this._entryViewModel.getEntry(id, user.uuid, user.encryptionKey);
+    final success =
+        await this._entryViewModel.getEntry(id, user.uuid, user.encryptionKey);
     if (!success && Navigator.of(context).canPop()) {
       return Navigator.of(context).pop();
     }
@@ -83,10 +84,12 @@ class _EntryViewState extends State<EntryView>
       _isLocked = this._entryViewModel.currentEntry.isLocked;
     });
     final transcript = this._entryViewModel.currentEntry.transcript;
-    final shouldEncryptTranscript = transcript.isPlain && transcript.isTranscribed && transcript.isEncrypted;
+    final shouldEncryptTranscript = transcript.isPlain &&
+        transcript.isTranscribed &&
+        transcript.isEncrypted;
     final uuid = userViewModel.user.uuid;
     final encryptionKey = userViewModel.user.encryptionKey;
-    if(shouldEncryptTranscript) {
+    if (shouldEncryptTranscript) {
       this._entryViewModel.encryptAndUpdateTranscript(uuid, encryptionKey);
     }
     final isEncrypted = this._entryViewModel.currentEntry.recording.isEncrypted;
@@ -140,26 +143,30 @@ class _EntryViewState extends State<EntryView>
   @override
   Widget build(BuildContext context) {
     double panelHeightOpen = MediaQuery.of(context).size.height * .80;
-    double panelHeightClosed = 40.0;
+    double panelHeightClosed = 80.0;
     return Scaffold(
       body: SlidingUpPanel(
         maxHeight: panelHeightOpen,
         minHeight: panelHeightClosed,
         parallaxEnabled: true,
         parallaxOffset: .3,
-        panelBuilder: (sc) =>
-            Consumer<EntryViewModel>(builder: (context, model, child) {
-          return AirnoteEntryPanel(
-            entry: model.currentEntry,
-            transcript: model.currentEntryTranscript,
-            scrollController: sc,
-          );
-        }),
+        panelBuilder: (sc) {
+          final userViewModel = Provider.of<UserViewModel>(context);
+          final user = userViewModel.user;
+          return Consumer<EntryViewModel>(builder: (context, model, child) {
+            return AirnoteEntryPanel(
+              user: user,
+              entry: model.currentEntry,
+              transcript: model.currentEntryTranscript,
+              scrollController: sc,
+            );
+          });
+        },
         onPanelOpened: () async {
           final userViewModel = Provider.of<UserViewModel>(context);
           final user = userViewModel.user;
           // Don't do anything for non premium users;
-          if(user.membership <= 0) {
+          if (user.membership <= 0) {
             return;
           }
           final model = this._entryViewModel;
@@ -178,78 +185,82 @@ class _EntryViewState extends State<EntryView>
         body: Container(
           child: Consumer<EntryViewModel>(builder: (context, model, child) {
             final entry = model.currentEntry;
-            final isLoading = model.getStatus() == ViewStatus.LOADING || entry == null;
+            final isLoading =
+                model.getStatus() == ViewStatus.LOADING || entry == null;
             final localRecordingFilePath = model.currentEntryRecording;
-            return isLoading ? AirnoteLoadingScreen() : Column(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        EntryHeader(
-                          heroTag: "entry-image-${entry.id}",
-                          imageUrl: entry.imageUrl,
-                        ),
-                        Positioned(
-                          bottom: 25,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: EntryDate(
-                                    date: entry.created,
-                                  ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: EntryTitle(
-                                    title: entry.title,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        _buildEntryOptions(),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+            return isLoading
+                ? AirnoteLoadingScreen()
+                : Column(
                     children: <Widget>[
-                      _isLocked
-                          ? Container(
-                              padding: EdgeInsets.only(left: 15),
-                              child: Icon(
-                                Icons.lock_outline,
-                                size: 24,
-                                color: AirnoteColors.grey.withOpacity(0.7),
+                      Column(
+                        children: <Widget>[
+                          Stack(
+                            children: <Widget>[
+                              EntryHeader(
+                                heroTag: "entry-image-${entry.id}",
+                                imageUrl: entry.imageUrl,
                               ),
-                            )
-                          : Container(),
-                      entry.questId != null
-                          ? Container(
-                              padding: EdgeInsets.only(left: 15),
-                              child: AirnoteBadge(
-                                text: "Quest",
-                                isDark: true,
+                              Positioned(
+                                bottom: 25,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: EntryDate(
+                                          date: entry.created,
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: EntryTitle(
+                                          title: entry.title,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            )
-                          : Container(),
+                              _buildEntryOptions(),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            _isLocked
+                                ? Container(
+                                    padding: EdgeInsets.only(left: 15),
+                                    child: Icon(
+                                      Icons.lock_outline,
+                                      size: 24,
+                                      color:
+                                          AirnoteColors.grey.withOpacity(0.7),
+                                    ),
+                                  )
+                                : Container(),
+                            entry.questId != null
+                                ? Container(
+                                    padding: EdgeInsets.only(left: 15),
+                                    child: AirnoteBadge(
+                                      text: "Quest",
+                                      isDark: true,
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildAudioPlayer(localRecordingFilePath, entry),
+                      ),
+                      SizedBox(height: panelHeightClosed),
                     ],
-                  ),
-                ),
-                Expanded(
-                  child: _buildAudioPlayer(localRecordingFilePath, entry),
-                ),
-                SizedBox(height: panelHeightClosed),
-              ],
-            );
+                  );
           }),
         ),
       ),
@@ -343,7 +354,7 @@ class _EntryViewState extends State<EntryView>
 
   void _onCloseEntryTap() {
     if (Navigator.of(context).canPop()) {
-    this._entryViewModel.clearCurrentEntry();
+      this._entryViewModel.clearCurrentEntry();
       Navigator.of(context).pushNamedAndRemoveUntil(
           Home.routeName, (Route<dynamic> route) => false,
           arguments: 1);

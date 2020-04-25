@@ -1,11 +1,11 @@
 import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/loading.dart';
 import 'package:airnote/components/option-button.dart';
+import 'package:airnote/components/page-header-image.dart';
 import 'package:airnote/models/prompt.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/views/create-entry/record.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +55,7 @@ class _RoutineViewState extends State<RoutineView> {
               children: <Widget>[
                 Stack(
                   children: <Widget>[
-                    _RoutineHeader(
+                    PageHeader(
                       imageUrl: routine.imageUrl,
                     ),
                     Container(
@@ -168,55 +168,6 @@ class PromptView extends StatelessWidget {
         "Duration: ${millisecondsToTimeString(item.duration)}",
         style: TextStyle(color: AirnoteColors.inactive),
       ),
-    );
-  }
-}
-
-class _RoutineHeader extends StatelessWidget {
-  final String imageUrl;
-
-  _RoutineHeader({Key key, this.imageUrl}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => _RoutineHeaderImage(
-        imageProvider: imageProvider,
-      ),
-      placeholder: (context, url) => _RoutineHeaderImage(
-        imageProvider: AssetImage("assets/images/placeholder.png"),
-      ),
-      errorWidget: (context, url, error) => _RoutineHeaderImage(
-        imageProvider: AssetImage("assets/images/placeholder.png"),
-      ),
-    );
-  }
-}
-
-class _RoutineHeaderImage extends StatelessWidget {
-  final ImageProvider imageProvider;
-
-  _RoutineHeaderImage({Key key, this.imageProvider}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          height: 299,
-          decoration: BoxDecoration(
-              image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
-        ),
-        Container(
-          height: 300,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              AirnoteColors.backgroundColor.withOpacity(0.0),
-              AirnoteColors.backgroundColor
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-          ),
-        ),
-      ],
     );
   }
 }

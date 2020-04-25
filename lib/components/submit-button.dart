@@ -7,8 +7,7 @@ import 'package:airnote/view-models/user.dart';
 class AirnoteSubmitButton extends Container {
   final String text;
   final Function onPressed;
-  final Icon icon;
-  AirnoteSubmitButton({Key key, this.text, this.onPressed, this.icon})
+  AirnoteSubmitButton({Key key, this.text, this.onPressed})
       : super(key: key);
 
   Widget _getText(BuildContext context) {

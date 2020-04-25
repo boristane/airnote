@@ -1,14 +1,21 @@
 import 'package:airnote/components/loading.dart';
+import 'package:airnote/components/raised-button.dart';
 import 'package:airnote/models/entry.dart';
 import 'package:airnote/models/transcript.dart';
+import 'package:airnote/models/user.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/views/root.dart';
+import 'package:airnote/views/view-entry/entry.dart';
+import 'package:airnote/views/premium.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteEntryPanel extends StatelessWidget {
   final Entry entry;
+  final User user;
   final String transcript;
   final ScrollController scrollController;
-  AirnoteEntryPanel({Key key, this.entry, this.scrollController, this.transcript})
+  AirnoteEntryPanel(
+      {Key key, this.entry, this.scrollController, this.user, this.transcript})
       : super(key: key);
 
   Widget getContent(Transcript transcript) {
@@ -25,19 +32,23 @@ class AirnoteEntryPanel extends StatelessWidget {
     if (isTranscriptionSubmitted && !isTranscribed) {
       return Center(
         child: Text(
-            "I am currently transcribing your recording, please check back in a few moments.", textAlign: TextAlign.center,),
+          "I am currently transcribing your recording, please check back in a few moments.",
+          textAlign: TextAlign.center,
+        ),
       );
     }
 
     if (!isTranscriptionSubmitted) {
       return Center(
-        child: Text("There are no transcripts for this entry.", textAlign: TextAlign.center),
+        child: Text("There are no transcripts for this entry.",
+            textAlign: TextAlign.center),
       );
     }
 
     return Center(
       child: Text(
-          "There was a problem with this transcript. Please contact the Lesley team.", textAlign: TextAlign.center),
+          "There was a problem with this transcript. Please contact the Lesley team.",
+          textAlign: TextAlign.center),
     );
   }
 
@@ -88,7 +99,14 @@ class AirnoteEntryPanel extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.all(24),
-              child: getContent(transcript),
+              child: user.membership > 0
+                  ? getContent(transcript)
+                  : AirnoteRaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(JoinPremium.routeName, (Route<dynamic> route) => route.settings.name == Root.routeName);
+                      },
+                      text: "Unlock",
+                    ),
             ),
           ],
         ));
