@@ -5,14 +5,23 @@ import 'package:airnote/components/page-header-image.dart';
 import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/data/premium-item.dart';
 import 'package:airnote/models/prompt.dart';
+import 'package:airnote/services/dialog.dart';
+import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/utils/input-validator.dart';
 import 'package:airnote/views/create-entry/record.dart';
 import 'package:flutter/material.dart';
 
-class JoinPremium extends StatelessWidget {
+class JoinPremium extends StatefulWidget {
   static const routeName = "join-premium";
 
+  @override
+  _JoinPremiumState createState() => _JoinPremiumState();
+}
+
+class _JoinPremiumState extends State<JoinPremium> {
   final imageUrl = "http://d1apvrodb6vxub.cloudfront.net/premium.png";
+  final _dialogService = locator<DialogService>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -109,8 +118,18 @@ class JoinPremium extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: AirnoteSubmitButton(
                 text: "Join",
-                onPressed: () {
-                  print("joining");
+                onPressed: () async {
+                  await _dialogService.showInputDialog(
+                    title: "Promotion Code",
+                    content:
+                        "As part of the selected few Lesley early users, we offer you 3 months of Premium. Please enter the promotion code we sent you via email.",
+                    onPressed: (String value) {
+                      print("Got the code $value ready to send");
+                    },
+                    inputHint: "Promotion Code",
+                    inputValidator: InputValidator.promotionCode,
+                    inputSuffix: Icon(Icons.star)
+                  );
                 },
               ),
             ),
@@ -122,13 +141,22 @@ class JoinPremium extends StatelessWidget {
 }
 
 DataRow buildRow(PremiumItem item) {
-return DataRow(
-      cells: [
-        DataCell(Text(item.title)),
-        DataCell(item.isAvailableBasic ? Icon(Icons.check, color: AirnoteColors.primary,) : Icon(Icons.lock_outline, color: AirnoteColors.grey,)),
-        DataCell(Icon(Icons.check, color: AirnoteColors.primary,)),
-      ]
-    );
+  return DataRow(cells: [
+    DataCell(Text(item.title)),
+    DataCell(item.isAvailableBasic
+        ? Icon(
+            Icons.check,
+            color: AirnoteColors.primary,
+          )
+        : Icon(
+            Icons.lock_outline,
+            color: AirnoteColors.grey,
+          )),
+    DataCell(Icon(
+      Icons.check,
+      color: AirnoteColors.primary,
+    )),
+  ]);
 }
 
 class _ItemDescriptionView extends StatelessWidget {

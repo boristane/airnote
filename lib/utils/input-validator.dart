@@ -48,6 +48,13 @@ class InputValidator {
     return null;
   }
 
+  static String promotionCode(String value) {
+    if (value.trim().isEmpty) {
+      return "Please enter a promotion code";
+    }
+    return null;
+  }
+
   static String content(String value) {
     if (value.trim().isEmpty) {
       return 'Hey! You haven\'t told me anything yet!';

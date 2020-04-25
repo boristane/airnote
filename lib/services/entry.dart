@@ -102,7 +102,6 @@ class EntryService {
     final dir = await getApplicationDocumentsDirectory();
     final file = new File("${dir.path}/$filename");
     if (await file.exists()) return file.path;
-    print("Downloading the file");
     final url = await this._getReadS3Url(id);
     await Dio().download(url, "${dir.path}/$filename");
     if (await file.exists()) {

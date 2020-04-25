@@ -1,5 +1,7 @@
 import 'package:airnote/components/primary-flat-button.dart';
 import 'package:airnote/components/secondary-flat-button.dart';
+import 'package:airnote/components/text-input-field.dart';
+import 'package:airnote/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class AirnoteDialogInfo extends StatefulWidget {
@@ -18,13 +20,13 @@ class _AirnoteDialogInfoState extends State<AirnoteDialogInfo> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       title: Text(widget.title),
-      content: Text(widget.content),
+      content: Text(widget.content, style: TextStyle(color: AirnoteColors.grey),),
       actions: <Widget>[
         Container(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
             child: AirnotePrimaryFlatButton(
               text: "OK",
               onPressed: widget.onPressed,
@@ -54,9 +56,9 @@ class _AirnoteDialogQuestion extends State<AirnoteDialogQuestion> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       title: Container(alignment: Alignment.center, child: Text(widget.title)),
-      content: Text(widget.content),
+      content: Text(widget.content, style: TextStyle(color: AirnoteColors.grey),),
       actions: <Widget>[
         Container(
           child: Padding(
@@ -69,7 +71,7 @@ class _AirnoteDialogQuestion extends State<AirnoteDialogQuestion> {
         ),
         Container(
           child: Padding(
-            padding: EdgeInsets.only(bottom: 10, left: 30, right: 30),
+            padding: EdgeInsets.only(bottom: 15, left: 30, right: 30),
             child: AirnoteSecondaryFlatButton(
               text: "No",
               onPressed: widget.onNo,
@@ -78,5 +80,77 @@ class _AirnoteDialogQuestion extends State<AirnoteDialogQuestion> {
         ),
       ],
     );
+  }
+}
+
+class AirnoteDialogInput extends StatefulWidget {
+  final String title;
+  final String content;
+  final String inputHint;
+  final Icon inputSuffix;
+  final Function onPressed;
+  final Function inputValidator;
+
+  AirnoteDialogInput(
+      {Key key,
+      @required this.title,
+      @required this.content,
+      @required this.onPressed,
+      @required this.inputSuffix,
+      @required this.inputHint,
+      @required this.inputValidator})
+      : super(key: key);
+
+  @override
+  State<AirnoteDialogInput> createState() => _AirnoteInputQuestion();
+}
+
+class _AirnoteInputQuestion extends State<AirnoteDialogInput> {
+  String input;
+  final _formKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      title: Container(alignment: Alignment.center, child: Text(widget.title)),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(widget.content, style: TextStyle(color: AirnoteColors.grey),),
+            AirnoteTextInputField(
+                hint: widget.inputHint,
+                suffix: widget.inputSuffix,
+                label: "",
+                validator: widget.inputValidator,
+                save: _setPassphrase)
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        Container(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            child: AirnotePrimaryFlatButton(
+              text: "Submit",
+              onPressed: () {
+                final form = _formKey.currentState;
+                if (!form.validate()) return;
+                form.save();;
+                widget.onPressed(input);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _setPassphrase(value) {
+    setState(() {
+      input = value;
+    });
   }
 }

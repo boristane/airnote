@@ -16,11 +16,12 @@ class AppManager extends StatefulWidget {
 class _AppManagerState extends State<AppManager> {
   DialogService _dialogService = locator<DialogService>();
   SnackBarService _snackBarService = locator<SnackBarService>();
-  
+
   @override
   void initState() {
     super.initState();
-    _dialogService.setOnShowListener(_showDialogInfo, _showDialogQuestion);
+    _dialogService.setOnShowListener(
+        _showDialogInfo, _showDialogQuestion, _showDialogInput);
     _snackBarService.setOnShowListener(_showSnackbar);
   }
 
@@ -38,6 +39,33 @@ class _AppManagerState extends State<AppManager> {
 
     final dialog = AirnoteDialogInfo(
         title: title, content: content, onPressed: onPressedEdited);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => dialog,
+    );
+  }
+
+  void _showDialogInput(
+      {String title,
+      String content,
+      Function onPressed,
+      Function inputValidator,
+      String inputHint,
+      Icon inputSuffix}) {
+    void onPressedEdited(String value) async {
+      await onPressed(value);
+      Navigator.of(context, rootNavigator: true).pop();
+      _dialogService.dialogCompleted();
+    }
+
+    final dialog = AirnoteDialogInput(
+      title: title,
+      content: content,
+      onPressed: onPressedEdited,
+      inputValidator: inputValidator,
+      inputHint: inputHint,
+      inputSuffix: inputSuffix,
+    );
     showDialog(
       context: context,
       builder: (BuildContext context) => dialog,
