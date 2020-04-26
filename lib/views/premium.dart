@@ -37,9 +37,8 @@ class _JoinPremiumState extends State<JoinPremium> {
                   ),
                   Container(
                     margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.only(top: 220),
                     height: 250,
-                    alignment: Alignment.center,
+                    alignment: Alignment.bottomCenter,
                     child: Text(
                       "Your journal, your journey",
                       textAlign: TextAlign.center,
