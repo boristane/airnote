@@ -3,6 +3,7 @@ import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/view-models/entry.dart';
 import 'package:airnote/view-models/notifications.dart';
+import 'package:airnote/view-models/promotion-code.dart';
 import 'package:airnote/view-models/quest.dart';
 import 'package:airnote/view-models/routine.dart';
 import 'package:airnote/view-models/user.dart';
@@ -50,6 +51,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => NotificationsViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PromotionCodeViewModel(),
         ),
       ],
       child: Airnote(),

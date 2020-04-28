@@ -1,16 +1,16 @@
-import 'package:airnote/components/checkbox.dart';
-import 'package:airnote/components/forward-button.dart';
 import 'package:airnote/components/option-button.dart';
 import 'package:airnote/components/page-header-image.dart';
 import 'package:airnote/components/submit-button.dart';
 import 'package:airnote/data/premium-item.dart';
-import 'package:airnote/models/prompt.dart';
 import 'package:airnote/services/dialog.dart';
 import 'package:airnote/services/locator.dart';
 import 'package:airnote/utils/colors.dart';
 import 'package:airnote/utils/input-validator.dart';
-import 'package:airnote/views/create-entry/record.dart';
+import 'package:airnote/view-models/base.dart';
+import 'package:airnote/view-models/promotion-code.dart';
+import 'package:airnote/views/root.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class JoinPremium extends StatefulWidget {
   static const routeName = "join-premium";
@@ -22,6 +22,23 @@ class JoinPremium extends StatefulWidget {
 class _JoinPremiumState extends State<JoinPremium> {
   final imageUrl = "http://d1apvrodb6vxub.cloudfront.net/premium.png";
   final _dialogService = locator<DialogService>();
+  PromotionCodeViewModel _promotionCodeViewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final promotionCodeViewModel = Provider.of<PromotionCodeViewModel>(context);
+    if (this._promotionCodeViewModel == promotionCodeViewModel) {
+      return;
+    }
+    this._promotionCodeViewModel = promotionCodeViewModel;
+  }
+
+  Future<bool> _redeemPromoCode(String code) async {
+    final result = await _promotionCodeViewModel.redeemCode(code);
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -119,16 +136,21 @@ class _JoinPremiumState extends State<JoinPremium> {
                 text: "Join",
                 onPressed: () async {
                   await _dialogService.showInputDialog(
-                    title: "Promotion Code",
-                    content:
-                        "As part of the selected few Lesley early users, we offer you 3 months of Premium. Please enter the promotion code we sent you via email.",
-                    onPressed: (String value) {
-                      print("Got the code $value ready to send");
-                    },
-                    inputHint: "Promotion Code",
-                    inputValidator: InputValidator.promotionCode,
-                    inputSuffix: Icon(Icons.star)
-                  );
+                      title: "Promotion Code",
+                      content:
+                          "Please enter the promotion code we sent you via email.",
+                      isLoading: false,
+                      onPressed: (String value) async {
+                        final result = await _redeemPromoCode(value);
+                        if (result) {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              Root.routeName, (Route<dynamic> route) => false);
+                        }
+                      },
+                      inputHint: "Promotion Code",
+                      inputValidator: InputValidator.promotionCode,
+                      inputSuffix: Icon(Icons.star));
                 },
               ),
             ),

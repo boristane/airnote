@@ -7,6 +7,7 @@ import 'package:airnote/services/file-encryption.dart';
 import 'package:airnote/services/local-auth.dart';
 import 'package:airnote/services/notifications.dart';
 import 'package:airnote/services/passphrase.dart';
+import 'package:airnote/services/promotion-code.dart';
 import 'package:airnote/services/quest.dart';
 import 'package:airnote/services/routine.dart';
 import 'package:airnote/services/snackbar.dart';
@@ -27,4 +28,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => PassPhraseService());
   locator.registerLazySingleton(() => FileEncryptionService());
   locator.registerLazySingleton(() => RoutineService());
+  locator.registerLazySingleton(() => PromotionCodeService());
 }

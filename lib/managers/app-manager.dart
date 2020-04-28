@@ -51,10 +51,11 @@ class _AppManagerState extends State<AppManager> {
       Function onPressed,
       Function inputValidator,
       String inputHint,
-      Icon inputSuffix}) {
+      Icon inputSuffix,
+      bool isLoading}) {
     void onPressedEdited(String value) async {
       await onPressed(value);
-      Navigator.of(context, rootNavigator: true).pop();
+      // Navigator.of(context, rootNavigator: true).pop();
       _dialogService.dialogCompleted();
     }
 
@@ -65,6 +66,7 @@ class _AppManagerState extends State<AppManager> {
       inputValidator: inputValidator,
       inputHint: inputHint,
       inputSuffix: inputSuffix,
+      isLoading: isLoading,
     );
     showDialog(
       context: context,

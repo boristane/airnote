@@ -37,7 +37,8 @@ class DialogService {
       @required Function onPressed,
       @required Function inputValidator,
       @required String inputHint,
-      @required Icon inputSuffix}) {
+      @required Icon inputSuffix,
+      bool isLoading, }) {
     _dialogInputCompleter = Completer();
     _onShowInputListener(
         title: title,
@@ -45,7 +46,8 @@ class DialogService {
         onPressed: onPressed,
         inputValidator: inputValidator,
         inputHint: inputHint,
-        inputSuffix: inputSuffix);
+        inputSuffix: inputSuffix,
+        isLoading: isLoading);
     return _dialogInputCompleter.future;
   }
 

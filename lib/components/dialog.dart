@@ -22,7 +22,10 @@ class _AirnoteDialogInfoState extends State<AirnoteDialogInfo> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       title: Text(widget.title),
-      content: Text(widget.content, style: TextStyle(color: AirnoteColors.grey),),
+      content: Text(
+        widget.content,
+        style: TextStyle(color: AirnoteColors.grey),
+      ),
       actions: <Widget>[
         Container(
           child: Padding(
@@ -56,9 +59,12 @@ class _AirnoteDialogQuestion extends State<AirnoteDialogQuestion> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       title: Container(alignment: Alignment.center, child: Text(widget.title)),
-      content: Text(widget.content, style: TextStyle(color: AirnoteColors.grey),),
+      content: Text(
+        widget.content,
+        style: TextStyle(color: AirnoteColors.grey),
+      ),
       actions: <Widget>[
         Container(
           child: Padding(
@@ -90,6 +96,7 @@ class AirnoteDialogInput extends StatefulWidget {
   final Icon inputSuffix;
   final Function onPressed;
   final Function inputValidator;
+  final bool isLoading;
 
   AirnoteDialogInput(
       {Key key,
@@ -98,7 +105,8 @@ class AirnoteDialogInput extends StatefulWidget {
       @required this.onPressed,
       @required this.inputSuffix,
       @required this.inputHint,
-      @required this.inputValidator})
+      @required this.inputValidator,
+      this.isLoading})
       : super(key: key);
 
   @override
@@ -119,7 +127,10 @@ class _AirnoteInputQuestion extends State<AirnoteDialogInput> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(widget.content, style: TextStyle(color: AirnoteColors.grey),),
+            Text(
+              widget.content,
+              style: TextStyle(color: AirnoteColors.grey),
+            ),
             AirnoteTextInputField(
                 hint: widget.inputHint,
                 suffix: widget.inputSuffix,
@@ -133,15 +144,23 @@ class _AirnoteInputQuestion extends State<AirnoteDialogInput> {
         Container(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-            child: AirnotePrimaryFlatButton(
-              text: "Submit",
-              onPressed: () {
-                final form = _formKey.currentState;
-                if (!form.validate()) return;
-                form.save();;
-                widget.onPressed(input);
-              },
-            ),
+            child: widget.isLoading
+                ? SizedBox(
+                    width: 20.0,
+                    height: 20.0,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(AirnoteColors.white),
+                    ),
+                  )
+                : AirnotePrimaryFlatButton(
+                    text: "Submit",
+                    onPressed: () {
+                      final form = _formKey.currentState;
+                      if (!form.validate()) return;
+                      form.save();
+                      widget.onPressed(input);
+                    },
+                  ),
           ),
         ),
       ],

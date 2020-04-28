@@ -4,8 +4,8 @@ import 'package:airnote/models/entry.dart';
 import 'package:airnote/models/transcript.dart';
 import 'package:airnote/models/user.dart';
 import 'package:airnote/utils/colors.dart';
+import 'package:airnote/views/home.dart';
 import 'package:airnote/views/root.dart';
-import 'package:airnote/views/view-entry/entry.dart';
 import 'package:airnote/views/premium.dart';
 import 'package:flutter/material.dart';
 
@@ -103,7 +103,10 @@ class AirnoteEntryPanel extends StatelessWidget {
                   ? getContent(transcript)
                   : AirnoteRaisedButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(JoinPremium.routeName, (Route<dynamic> route) => route.settings.name == Root.routeName);
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            JoinPremium.routeName,
+                            (Route<dynamic> route) =>
+                                route.settings.name == Root.routeName);
                       },
                       text: "Unlock",
                     ),
