@@ -119,6 +119,9 @@ class _RecordEntryState extends State<RecordEntry> {
                                       .toString();
                                   _formData["routine"] =
                                       (routineViewModel.routine?.id).toString();
+                                  if(int.parse(_formData["duration"]) <= 0) {
+                                    return;
+                                  }
                                   setState(() {
                                     _isRecorded = true;
                                   });
