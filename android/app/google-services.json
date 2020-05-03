@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:401146116769:android:bc62034d2ad02113a1cee0",
+        "mobilesdk_app_id": "1:401146116769:android:96cb29370ab41532a1cee0",
         "android_client_info": {
-          "package_name": "com.example.airnote"
+          "package_name": "com.airnote.app"
         }
       },
       "oauth_client": [

@@ -26,12 +26,16 @@ Android: `10.0.2.2`
 
 ## Screen video recording
 
+```bash
 xcrun simctl io booted recordVideo --mask=black --display=internal --force  appVideo.mov
+```
 
-## References
+## Create an android keystore
 
-Photo by bruce mars from Pexels
+```bash
+keytool -genkey -v -keystore ~/key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
+```
 
-Photo by Milena Santos from Pexels
+## Release
 
-Photo by Eduardo Dutra from Pexels
+[Android](https://flutter.dev/docs/deployment/android)

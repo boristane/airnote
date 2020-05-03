@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>401146116769-ilrvi5uhtkbptjt1t051gj89vb15ea1k.apps.googleusercontent.com</string>
+	<string>401146116769-grcrfrtpksd0l4j9km8oc3h9iaki3hfr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.401146116769-ilrvi5uhtkbptjt1t051gj89vb15ea1k</string>
+	<string>com.googleusercontent.apps.401146116769-grcrfrtpksd0l4j9km8oc3h9iaki3hfr</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAztnlyN2GXf7k4l1FXo3B2ghLjuivBlyE</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.airnote</string>
+	<string>com.airnote.app</string>
 	<key>PROJECT_ID</key>
 	<string>lesley-1ac2f</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:401146116769:ios:8613700ac470a008a1cee0</string>
+	<string>1:401146116769:ios:a3d97f503c848d0fa1cee0</string>
 	<key>DATABASE_URL</key>
 	<string>https://lesley-1ac2f.firebaseio.com</string>
 </dict>

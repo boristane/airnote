@@ -130,6 +130,7 @@ class Airnote extends StatelessWidget {
       home: Root(
         analytics: analytics,
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
