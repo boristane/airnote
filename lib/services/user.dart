@@ -47,7 +47,7 @@ class UserService {
 
   static String _getEndpoint() {
     if (kReleaseMode) {
-      return "https://cibiamj90i.execute-api.eu-west-1.amazonaws.com/dev/users";
+      return "https://bakwfgeapk.execute-api.eu-west-2.amazonaws.com/prod/users";
     } else {
       if (Platform.isAndroid) {
         return "http://10.0.2.2:8081/users";

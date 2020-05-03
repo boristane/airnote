@@ -111,7 +111,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                   Divider(),
                   ListTile(
                     title: Text("Daily reminder time", style: style),
-                    subtitle: Text("Set the time for the daily reminder",
+                    subtitle: Text("Set the time for the daily reminder (UTC)",
                         style: subStyle),
                   ),
                   Padding(

@@ -189,7 +189,7 @@ class EntryService {
 
   static String _getEndpoint() {
     if (kReleaseMode) {
-      return "https://3v02oweo38.execute-api.eu-west-1.amazonaws.com/dev/entries";
+      return "https://va0lnfcg4a.execute-api.eu-west-2.amazonaws.com/prod/entries";
     } else {
       if (Platform.isAndroid) {
         return "http://10.0.2.2:8080/entries";
